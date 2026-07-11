@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { AnalyticsService } from '../../../core/analytics.service';
+import { ToastService } from '../../../core/toast.service';
 import { Icon } from '../../../shared/ui';
 import { OnboardingStore } from '../onboarding.store';
 
@@ -27,14 +27,15 @@ import { OnboardingStore } from '../onboarding.store';
 export class VerifyBanner {
   protected readonly store = inject(OnboardingStore);
   private readonly analytics = inject(AnalyticsService);
-  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
   protected readonly pending = () => false;
 
   protected verify(): void {
-    // Opens the (to-be-built) Elm verification flow. It will flip
-    // `businessVerified` on success — which then removes this banner and ticks
-    // the checklist. Until that flow lands, the sections stay put.
+    // Demo: mark the business verified — this removes the banner for the rest of
+    // the session (it returns only after a fresh sign-in). A real build opens the
+    // Elm verification flow and flips `businessVerified` on success.
     this.analytics.track('onboarding_verify_clicked', {});
-    this.router.navigate(['/settings/company']);
+    this.store.verifyBusiness();
+    this.toast.show('Business verified — you’re all set to ship', 'success');
   }
 }

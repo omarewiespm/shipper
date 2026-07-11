@@ -78,6 +78,9 @@ export class OnboardingStore {
   readonly collapsed = signal(this.storage.get<boolean>(COLLAPSED_KEY, true));
 
   load(): void {
+    // Initialise once per session so a completed action (e.g. verifying the
+    // business) is not undone when Home re-mounts. `reset()` clears it on logout.
+    if (this.state()) return;
     // Mock: a fresh signup starts empty; returning users are steady-state.
     if (this.session.firstRun()) {
       this.state.set({ accountCreated: true, businessVerified: false, hasReceiver: false, hasShipment: false, hasTeamMember: false });
@@ -85,6 +88,13 @@ export class OnboardingStore {
     } else {
       this.state.set({ accountCreated: true, businessVerified: true, hasReceiver: true, hasShipment: true, hasTeamMember: true });
     }
+  }
+
+  /** Clear onboarding state on sign-out so the next sign-in starts fresh. */
+  reset(): void {
+    this.state.set(null);
+    this.stepsDone.set(new Set());
+    this.failed.set(false);
   }
 
   verifyBusiness(): void {

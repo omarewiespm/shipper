@@ -10,6 +10,7 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { AppHub } from './app-hub/app-hub';
 import { MenuStateService } from '../../core/menu-state.service';
 import { SessionService } from '../../core/session.service';
+import { OnboardingStore } from '../../features/home/onboarding.store';
 import { UiStateStore } from '../ui-state.store';
 
 const ACCOUNT_ID = 'account';
@@ -48,6 +49,7 @@ export class Header implements OnInit {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly session = inject(SessionService);
+  private readonly onboarding = inject(OnboardingStore);
   protected readonly wallet = inject(WalletStore);
 
   protected readonly company = 'Rawabi Trading Co.';
@@ -105,6 +107,7 @@ export class Header implements OnInit {
   protected signOut(): void {
     this.closeAccount();
     this.session.signOut();
+    this.onboarding.reset();
     this.router.navigate(['/auth']);
     this.toast.show('Signed out');
   }

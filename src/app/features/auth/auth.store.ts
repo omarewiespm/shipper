@@ -152,7 +152,9 @@ export class AuthStore {
 
   // --- Helpers -------------------------------------------------------------
   private succeed(): void {
-    this.session.signIn('mock-token');
+    // Demo: each sign-in starts a fresh onboarding session, so the verify-account
+    // widget reappears after a logout → login (until it's verified again).
+    this.session.signIn('mock-token', { firstRun: true });
     this.router.navigate(['/home']);
   }
 
