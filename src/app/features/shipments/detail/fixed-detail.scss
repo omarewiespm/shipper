@@ -1,0 +1,220 @@
+:host { display: block; }
+
+/* Title */
+.fd__ttl { display: flex; align-items: center; gap: 12px; margin-block-end: 20px; }
+.fd__back { inline-size: 34px; block-size: 34px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+.fd__back:hover { background: var(--line-soft); border-color: var(--navy); color: var(--navy); }
+.fd__back:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+.fd__id { margin: 0; font-size: 22px; font-weight: 700; color: var(--strong); font-variant-numeric: tabular-nums; }
+
+/* Layout: main + sticky panel */
+.fd__layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+.fd__main { min-inline-size: 0; }
+
+/* Tabs */
+.fd__tabs { display: flex; gap: 26px; border-block-end: 1px solid var(--line); margin-block-end: 20px; overflow-x: auto; scrollbar-width: none; }
+.fd__tabs::-webkit-scrollbar { display: none; }
+.fd__tab { flex: none; block-size: 42px; border: none; background: none; border-block-end: 2px solid transparent; margin-block-end: -1px; font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.fd__tab:hover { color: var(--strong); }
+.fd__tab.is-on { color: var(--navy); border-block-end-color: var(--navy); }
+
+.fd__card { border: 1px solid var(--line); border-radius: 16px; background: var(--card); padding: 18px; margin-block-end: 16px; }
+.fd__ck { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-3); margin-block-end: 14px; }
+.fd__empty { font-size: 13px; color: var(--ink-3); line-height: 1.5; margin: 0; }
+
+/* Route: origin / destination */
+.fd__route { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; margin-block-end: 16px; }
+.fd__loc { border: 1px solid var(--line); border-radius: 16px; background: var(--card); padding: 16px; }
+.fd__loc-h { display: flex; align-items: center; gap: 8px; margin-block-end: 10px; }
+.fd__loc-tile { inline-size: 26px; block-size: 26px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
+.fd__loc-tile--from { background: var(--nav-active); color: var(--navy); }
+.fd__loc-tile--to { background: #fce9e3; color: var(--orange); }
+.fd__loc-lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-3); }
+.fd__loc-city { font-size: 18px; font-weight: 700; color: var(--strong); }
+.fd__loc-place { font-size: 12.5px; color: var(--ink-2); margin-block-start: 2px; }
+.fd__contact { display: flex; align-items: center; gap: 10px; margin-block-start: 14px; padding-block-start: 14px; border-block-start: 1px solid var(--line-soft); flex-wrap: wrap; }
+.fd__cbody { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.fd__cname { font-size: 13px; font-weight: 600; color: var(--strong); }
+.fd__crole { font-size: 11px; color: var(--ink-3); }
+.fd__ccall { display: inline-flex; align-items: center; gap: 6px; block-size: 32px; padding-inline: 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); font-family: var(--font); font-size: 12px; font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; }
+.fd__ccall:hover { background: var(--nav-active); border-color: var(--navy); }
+.fd__route-arrow { align-self: center; color: var(--mut); }
+
+/* On-map overlays — distance/time chips (top-left) + the searching strip (bottom) */
+.fd__mapmeta { position: absolute; inset-block-start: 12px; inset-inline-start: 12px; z-index: 500; display: flex; gap: 8px; pointer-events: none; }
+.fd__mm { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: var(--card); box-shadow: var(--shadow); font-size: 12px; font-weight: 700; color: var(--strong); }
+.fd__mm app-icon { color: var(--navy); }
+
+/* "Finding a carrier" strip — sits along the bottom of the map, map stays visible */
+.fd__mapfind {
+  position: absolute; inset-inline: 12px; inset-block-end: 12px; z-index: 600;
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 14px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-lift);
+}
+.fd__mapfind .fd__beacon { inline-size: 32px; block-size: 32px; flex: none; }
+.fd__mapfind-txt { display: flex; flex-direction: column; font-size: 13px; font-weight: 700; color: var(--strong); line-height: 1.25; }
+.fd__mapfind-sub { font-size: 11px; font-weight: 500; color: var(--ink-2); }
+.fd__dots { display: inline-flex; gap: 4px; margin-inline-start: auto; }
+.fd__dots i { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--navy); opacity: 0.35; animation: fd-dots 1.2s ease-in-out infinite; }
+.fd__dots i:nth-child(2) { animation-delay: 0.2s; }
+.fd__dots i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes fd-dots { 0%, 100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .fd__dots i { animation: none; } }
+
+/* Property list — clean icon-led rows, no boxes or dividers */
+.fd__specname { font-size: 15px; font-weight: 700; color: var(--strong); margin-block-end: 10px; }
+.fd__props { list-style: none; margin: 0; padding: 0; }
+.fd__prop { display: grid; grid-template-columns: minmax(160px, 220px) 1fr; align-items: center; gap: var(--sp-3); padding-block: 11px; }
+.fd__prop-k { display: inline-flex; align-items: center; gap: 11px; font-size: 13px; color: var(--ink-2); min-inline-size: 0; }
+.fd__prop-ic { flex: none; color: var(--ink-3); }
+.fd__prop-v { font-size: 13.5px; font-weight: 600; color: var(--strong); overflow-wrap: anywhere; }
+.fd__prop-v--ok { color: var(--ok); }
+.fd__prop-v--mut { color: var(--ink-3); font-weight: 500; }
+.fd__link { color: var(--navy); font-weight: 600; cursor: pointer; }
+.fd__link:hover { text-decoration: underline; }
+.fd__int { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; padding: 1px 5px; border-radius: 5px; background: var(--line-soft); color: var(--ink-3); }
+
+/* Notes — a block, since it's free text */
+.fd__notes { margin-block-start: 14px; padding-block-start: 14px; border-block-start: 1px solid var(--line-soft); }
+.fd__notes-body { margin: 8px 0 0; font-size: 13px; line-height: 1.55; color: var(--ink); }
+.fd__notes-body--mut { color: var(--ink-3); }
+
+@media (max-width: 560px) {
+  .fd__prop { grid-template-columns: 1fr; gap: 3px; }
+  .fd__prop-v { padding-inline-start: 27px; }
+}
+
+/* Driver */
+.fd__driver { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fd__dinfo { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.fd__dname { font-size: 14.5px; font-weight: 600; color: var(--strong); }
+.fd__dmeta { font-size: 12px; color: var(--ink-2); }
+.fd__dact { display: flex; gap: 8px; }
+.fd__btn { display: inline-flex; align-items: center; gap: 6px; block-size: 38px; padding-inline: 13px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); font-family: var(--font); font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.fd__btn--ghost:hover { background: var(--line-soft); }
+
+/* Finding-a-carrier state (no loading spinner — a calm beacon cue) */
+.fd__finding { display: flex; align-items: center; gap: 14px; }
+.fd__finding--lg { flex-direction: column; text-align: center; gap: 10px; padding: 22px 16px; margin-block-end: 16px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, var(--nav-active), var(--card)); }
+.fd__wbody { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; min-inline-size: 0; }
+.fd__finding--lg .fd__wbody { align-items: center; }
+.fd__wt { font-size: 14.5px; font-weight: 700; color: var(--strong); }
+.fd__ws { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; max-inline-size: 42ch; }
+
+/* Beacon: soft navy tile with a gentle expanding ring — reads as "actively searching" */
+.fd__beacon { position: relative; inline-size: 40px; block-size: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--nav-active); color: var(--navy); }
+.fd__beacon--lg { inline-size: 52px; block-size: 52px; }
+.fd__beacon::before, .fd__beacon::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--navy); opacity: 0; animation: fd-beacon 2.4s ease-out infinite; }
+.fd__beacon::after { animation-delay: 1.2s; }
+@keyframes fd-beacon { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.7); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fd__beacon::before, .fd__beacon::after { animation: none; } }
+
+/* Estimate pill under the finding copy */
+.fd__eta-pill { display: inline-flex; align-items: center; gap: 6px; margin-block-start: 6px; padding: 4px 10px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); font-size: 11.5px; font-weight: 600; }
+.fd__eta-pill app-icon { flex: none; }
+
+.fd__cancelled { display: inline-flex; align-items: center; gap: 8px; margin-block-end: 14px; font-size: 13.5px; color: var(--danger); }
+
+/* Documents */
+.fd__doclist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.fd__doc { display: flex; align-items: center; gap: var(--sp-3); padding: 10px; border-radius: 10px; }
+.fd__doc:hover { background: var(--line-soft); }
+.fd__docic { inline-size: 32px; block-size: 32px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; background: var(--nav-active); color: var(--navy); }
+.fd__docbody { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.fd__docname { font-size: 13px; font-weight: 500; color: var(--strong); }
+.fd__docsub { font-size: 11px; color: var(--ink-3); }
+.fd__docmail { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 999px; background: var(--ok-bg); color: var(--ok); font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.fd__docmail app-icon { flex: none; }
+.fd__docgo { color: var(--ink-3); }
+
+/* Timeline — one continuous two-tone spine behind the dots */
+.fd__tl { list-style: none; margin: 0; padding: 0; position: relative; }
+.fd__tl::before { content: ''; position: absolute; inset-inline-start: 6px; inset-block: 9px; inline-size: 2px; border-radius: 2px; background: var(--line); }
+.fd__tl::after { content: ''; position: absolute; inset-inline-start: 6px; inset-block-start: 9px; inline-size: 2px; border-radius: 2px; background: var(--navy); block-size: calc((100% - 18px) * var(--done, 0)); }
+.fd__ti { display: flex; gap: 12px; padding-block-end: 22px; position: relative; }
+.fd__ti:last-child { padding-block-end: 0; }
+.fd__tdot { inline-size: 14px; block-size: 14px; flex: none; margin-block-start: 2px; border-radius: 50%; background: var(--navy); border: 2px solid var(--navy); z-index: 1; }
+.fd__ti.is-upcoming .fd__tdot { background: var(--card); border-color: var(--line); }
+.fd__ti.is-latest .fd__tdot { box-shadow: 0 0 0 4px var(--ring); }
+.fd__tbody { display: flex; flex-direction: column; gap: 1px; }
+.fd__tlabel { font-size: 13px; font-weight: 500; color: var(--strong); }
+.fd__ti.is-upcoming .fd__tlabel { color: var(--ink-3); }
+.fd__ti.is-latest .fd__tlabel { font-weight: 700; }
+.fd__ttime { font-size: 11.5px; color: var(--ink-3); }
+
+/* Status view — stretch the Activity card to the summary panel's height and
+   spread the stages so the timeline fills it. */
+.fd__layout--status .fd__main { align-self: stretch; display: flex; flex-direction: column; }
+.fd__layout--status .fd__main > .fd__card { flex: 1 1 auto; }
+.fd__card--activity { display: flex; flex-direction: column; }
+.fd__card--activity .fd__tl { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; gap: 22px; }
+.fd__card--activity .fd__ti { padding-block-end: 0; }
+
+/* Sticky price panel */
+.fd__panel { position: sticky; inset-block-start: var(--sp-4); }
+.fd__pcard { border: 1px solid var(--line); border-radius: 16px; background: var(--card); padding: 16px; box-shadow: var(--shadow); }
+/* Highlighted price block */
+.fd__phi { background: var(--nav-active); border-radius: 12px; padding: 14px; }
+.fd__ptop { display: flex; align-items: center; justify-content: space-between; }
+.fd__plabel { font-size: 12px; font-weight: 600; color: var(--navy); }
+.fd__ptag { font-size: 10.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--card); color: var(--navy); }
+.fd__pfig { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--navy-900); margin-block-start: 4px; }
+/* Summary list */
+.fd__psum { list-style: none; margin: 14px 0 16px; padding: 0; }
+.fd__psum li { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding-block: 7px; border-block-end: 1px solid var(--line-soft); }
+.fd__psum li:last-child { border-block-end: none; }
+.fd__psum span { font-size: 12.5px; color: var(--ink-2); }
+.fd__psum b { font-size: 12.5px; font-weight: 600; color: var(--strong); text-align: end; }
+.fd__pcta { inline-size: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px; block-size: 46px; border: none; border-radius: 12px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 14px; font-weight: 600; }
+.fd__pcta:hover { background: var(--navy-700); }
+.fd__psecondary { inline-size: 100%; margin-block-start: 10px; block-size: 42px; border: 1px solid var(--line); border-radius: 11px; background: var(--card); font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.fd__psecondary:hover { background: var(--line-soft); }
+.fd__pnote { display: flex; align-items: flex-start; gap: 7px; margin: 14px 0 0; font-size: 11.5px; color: var(--ink-3); line-height: 1.45; }
+.fd__pnote app-icon { flex: none; margin-block-start: 1px; }
+
+/* Panel payment state */
+.fd__pstate { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block-start: 12px; }
+.fd__psurch { border: none; background: none; padding: 0; font-family: var(--font); font-size: 11.5px; font-weight: 600; color: var(--orange); cursor: pointer; }
+.fd__psurch:hover { text-decoration: underline; }
+
+/* Payment pill — tone via data-tone */
+.fd__pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: var(--info-bg); color: var(--info); }
+.fd__pill[data-tone='ok'] { background: var(--ok-bg); color: var(--ok); }
+.fd__pill[data-tone='warn'] { background: var(--warn-bg); color: var(--warn); }
+.fd__pill[data-tone='info'] { background: var(--info-bg); color: var(--info); }
+
+/* Map (details + tracking) */
+.fd__map { display: block; margin-block-end: 16px; }
+
+/* Tracking status bar */
+.fd__trackbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.fd__trackstate { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px; background: var(--line-soft); font-size: 12.5px; font-weight: 700; color: var(--strong); }
+.fd__trackstate--live { background: var(--ok-bg); color: var(--ok); }
+.fd__trackstate--live i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--ok); }
+.fd__trackstate--ok { background: var(--ok-bg); color: var(--ok); }
+.fd__trackmeta { font-size: 12.5px; color: var(--ink-2); }
+
+/* Billing */
+.fd__bill { list-style: none; margin: 0; padding: 0; }
+.fd__bill-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding-block: 10px; border-block-end: 1px solid var(--line-soft); }
+.fd__bill-row span { font-size: 13px; color: var(--ink-2); }
+.fd__bill-row b { font-size: 13.5px; font-weight: 600; color: var(--strong); font-variant-numeric: tabular-nums; }
+.fd__bill-empty { padding-block: 10px; font-size: 12.5px; color: var(--ink-3); border-block-end: 1px solid var(--line-soft); }
+.fd__bill-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); padding-block-start: 12px; }
+.fd__bill-total span { font-size: 13.5px; font-weight: 600; color: var(--strong); }
+.fd__bill-total b { font-size: 18px; font-weight: 800; color: var(--navy-900); font-variant-numeric: tabular-nums; }
+.fd__bill-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block-start: 16px; }
+.fd__bill-actions .fd__pcta { inline-size: auto; flex: 1; min-inline-size: 170px; }
+.fd__bill-hint { display: flex; align-items: flex-start; gap: 8px; margin: 14px 0 0; font-size: 12px; line-height: 1.5; color: var(--ink-3); }
+.fd__bill-hint app-icon { flex: none; margin-block-start: 1px; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) {
+  .fd__layout { grid-template-columns: 1fr; }
+  .fd__panel { position: static; }
+  .fd__route { grid-template-columns: 1fr; }
+  .fd__route-arrow { transform: rotate(90deg); justify-self: center; }
+}

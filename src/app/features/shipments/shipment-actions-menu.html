@@ -1,0 +1,48 @@
+<button
+  #trigger
+  type="button"
+  class="ram__btn"
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  [class.is-open]="isOpen()"
+  [attr.aria-label]="triggerLabel()"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="isOpen()"
+  (click)="toggle($event)"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <app-icon name="more-vertical" [size]="18" />
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayPush]="true"
+  (backdropClick)="close()"
+  (detach)="close()"
+  (attach)="focusFirst()"
+>
+  <div #menu class="ram__menu" role="menu" [attr.aria-label]="'Actions for ' + shipment().id" (keydown)="onKeydown($event)">
+    <button class="ram__item" type="button" role="menuitem" (click)="viewDetails()">
+      <app-icon name="eye" [size]="16" /> View details
+    </button>
+
+    <button class="ram__item" type="button" role="menuitem" (click)="trackLive()">
+      <app-icon name="pin" [size]="16" /> Live tracking
+    </button>
+
+    <button class="ram__item" type="button" role="menuitem" (click)="duplicate()">
+      <app-icon name="copy" [size]="16" /> Duplicate / Ship again
+    </button>
+
+    <div class="ram__divider"></div>
+
+    <button class="ram__item" type="button" role="menuitem" (click)="download()">
+      <app-icon name="download" [size]="16" /> Download documents
+    </button>
+  </div>
+</ng-template>

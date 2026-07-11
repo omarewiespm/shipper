@@ -1,0 +1,189 @@
+@if (order(); as o) {
+  @if (doc(); as d) {
+    <!-- Header -->
+    <header class="od__head">
+      <button class="od__back" type="button" (click)="back()" aria-label="Back to orders"><app-icon name="arrow-left" [size]="18" /></button>
+      <h1 class="od__id tabular">{{ o.id }}</h1>
+      <span class="od__type" [attr.data-tone]="typeView().tone">{{ typeView().label }}</span>
+      <app-status-chip [label]="statusView().label" [tone]="statusView().tone" />
+      <div class="od__spacer"></div>
+      @if (isSales()) {
+        @if (draft()) {
+          <button class="od__btn od__btn--primary" type="button" (click)="approve()"><app-icon name="check" [size]="15" /> Approve sales order</button>
+        } @else if (!o.shipmentId) {
+          <button class="od__btn od__btn--primary" type="button" (click)="createShipment()"><app-icon name="package" [size]="15" /> Create shipment</button>
+        } @else {
+          <button class="od__btn od__btn--ghost" type="button" (click)="goShipment()"><app-icon name="navigation" [size]="15" /> View shipment</button>
+        }
+      } @else {
+        @if (o.status === 'created' && !confirmed()) {
+          <button class="od__btn od__btn--primary" type="button" (click)="confirm()"><app-icon name="check" [size]="15" /> Confirm — create Sales Order</button>
+        } @else if (o.shipmentId) {
+          <button class="od__btn od__btn--ghost" type="button" (click)="goShipment()"><app-icon name="navigation" [size]="15" /> View shipment</button>
+        }
+      }
+    </header>
+
+    <!-- ===================== SALES ORDER (single document) ===================== -->
+    @if (isSales()) {
+      <section class="od__doc">
+        <div class="od__band">
+          <div class="od__fact"><span class="od__flabel">SO number</span><span class="od__fval tabular">{{ soNo() }}</span></div>
+          <div class="od__fact"><span class="od__flabel">Customer PO ref</span><span class="od__fval tabular">{{ custRef() }}</span></div>
+          <div class="od__fact"><span class="od__flabel">SO date</span><span class="od__fval">{{ o.soDate ? (o.soDate | date: 'dd MMM yyyy') : 'Draft' }}</span></div>
+          <div class="od__fact"><span class="od__flabel">Status</span><span class="od__fval">{{ statusView().label }}</span></div>
+        </div>
+
+        <div class="od__parties">
+          <div class="od__party"><h2 class="od__h">Seller</h2><p class="od__co">{{ d.seller.company }}</p><p class="od__line">{{ d.seller.address }}</p><p class="od__line">{{ d.seller.contact }}</p><p class="od__line">{{ d.seller.phone }} · {{ d.seller.email }}</p></div>
+          <div class="od__party"><h2 class="od__h">Customer / buyer</h2><p class="od__co">{{ d.buyer.company }}</p><p class="od__line">{{ d.buyer.address }}</p><p class="od__line">{{ d.buyer.contact }}</p><p class="od__line">{{ d.buyer.phone }} · {{ d.buyer.email }}</p></div>
+        </div>
+
+        <div class="od__parties">
+          <div class="od__party"><h2 class="od__h">Shipping</h2><p class="od__line"><b>Ship-to:</b> {{ d.shipTo }}</p><p class="od__line"><b>Promised delivery:</b> {{ d.requestedDelivery | date: 'dd MMM yyyy' }}</p><p class="od__line"><b>Method:</b> {{ d.shippingMethod }}</p></div>
+          <div class="od__party"><h2 class="od__h">Terms</h2><p class="od__line"><b>Payment:</b> {{ d.paymentTerms }}</p></div>
+        </div>
+
+        <ng-container [ngTemplateOutlet]="itemsTpl" />
+        <ng-container [ngTemplateOutlet]="footerTpl" />
+
+        @if (o.shipmentId) {
+          <div class="od__fulblock">
+            <h2 class="od__h">Fulfilment</h2>
+            <div class="od__frow"><span class="od__flabel">Shipment</span><button class="od__link tabular" type="button" (click)="goShipment()"><app-icon name="package" [size]="14" /> {{ o.shipmentId }}</button></div>
+            <div class="od__frow"><span class="od__flabel">Delivery note</span><span class="od__fval tabular">{{ o.deliveryNoteId }}</span></div>
+            <p class="od__note"><app-icon name="info" [size]="14" /> The waybill generated for this shipment carries delivery note {{ o.deliveryNoteId }}.</p>
+          </div>
+        }
+      </section>
+    } @else {
+
+    <!-- Tabs (purchase order — buyer side) -->
+    <div class="od__tabs" role="tablist">
+      <button class="od__tab" [class.is-on]="tab() === 'po'" (click)="tab.set('po')" role="tab">Purchase Order</button>
+      <button class="od__tab" [class.is-on]="tab() === 'so'" (click)="tab.set('so')" role="tab">Sales Order</button>
+      <button class="od__tab" [class.is-on]="tab() === 'fulfillment'" (click)="tab.set('fulfillment')" role="tab">Fulfilment</button>
+    </div>
+
+    <!-- ===== PURCHASE ORDER ===== -->
+    @if (tab() === 'po') {
+      <section class="od__doc">
+        <div class="od__band">
+          <div class="od__fact"><span class="od__flabel">PO number</span><span class="od__fval tabular">{{ d.poNumber }}</span></div>
+          @if (o.type === 'selling') { <div class="od__fact"><span class="od__flabel">Customer PO ref</span><span class="od__fval tabular">{{ custRef() }}</span></div> }
+          <div class="od__fact"><span class="od__flabel">PO date</span><span class="od__fval">{{ d.poDate | date: 'dd MMM yyyy' }}</span></div>
+          <div class="od__fact"><span class="od__flabel">Payment terms</span><span class="od__fval">{{ d.paymentTerms }}</span></div>
+        </div>
+
+        <div class="od__parties">
+          <div class="od__party"><h2 class="od__h">Buyer</h2><p class="od__co">{{ d.buyer.company }}</p><p class="od__line">{{ d.buyer.address }}</p><p class="od__line">{{ d.buyer.contact }}</p><p class="od__line">{{ d.buyer.phone }} · {{ d.buyer.email }}</p></div>
+          <div class="od__party"><h2 class="od__h">Vendor / supplier</h2><p class="od__co">{{ d.seller.company }}</p><p class="od__line">{{ d.seller.address }}</p><p class="od__line">{{ d.seller.contact }}</p><p class="od__line">{{ d.seller.phone }} · {{ d.seller.email }}</p></div>
+        </div>
+
+        <div class="od__parties">
+          <div class="od__party"><h2 class="od__h">Shipping</h2><p class="od__line"><b>Ship-to:</b> {{ d.shipTo }}</p><p class="od__line"><b>Requested delivery:</b> {{ d.requestedDelivery | date: 'dd MMM yyyy' }}</p><p class="od__line"><b>Method:</b> {{ d.shippingMethod }}</p></div>
+        </div>
+
+        <ng-container [ngTemplateOutlet]="itemsTpl" />
+        <ng-container [ngTemplateOutlet]="footerTpl" />
+      </section>
+    }
+
+    <!-- ===== SALES ORDER ===== -->
+    @if (tab() === 'so') {
+      @if (confirmed()) {
+        <section class="od__doc">
+          <div class="od__band">
+            <div class="od__fact"><span class="od__flabel">SO number</span><span class="od__fval tabular">{{ o.soNumber }}</span></div>
+            <div class="od__fact"><span class="od__flabel">SO date</span><span class="od__fval">{{ o.soDate | date: 'dd MMM yyyy' }}</span></div>
+            <div class="od__fact"><span class="od__flabel">Related PO</span><span class="od__fval tabular">{{ d.poNumber }}</span></div>
+            <div class="od__fact"><span class="od__flabel">Status</span><span class="od__fval">Confirmed · in fulfilment</span></div>
+          </div>
+
+          <div class="od__parties">
+            <div class="od__party"><h2 class="od__h">Seller</h2><p class="od__co">{{ d.seller.company }}</p><p class="od__line">{{ d.seller.address }}</p><p class="od__line">{{ d.seller.contact }}</p><p class="od__line">{{ d.seller.phone }} · {{ d.seller.email }}</p></div>
+            <div class="od__party"><h2 class="od__h">Customer / buyer</h2><p class="od__co">{{ d.buyer.company }}</p><p class="od__line">{{ d.buyer.address }}</p><p class="od__line">{{ d.buyer.contact }}</p><p class="od__line">{{ d.buyer.phone }} · {{ d.buyer.email }}</p></div>
+          </div>
+
+          <div class="od__parties">
+            <div class="od__party"><h2 class="od__h">Shipping</h2><p class="od__line"><b>Ship-to:</b> {{ d.shipTo }}</p><p class="od__line"><b>Promised delivery:</b> {{ d.requestedDelivery | date: 'dd MMM yyyy' }}</p><p class="od__line"><b>Method:</b> {{ d.shippingMethod }}</p></div>
+          </div>
+
+          <ng-container [ngTemplateOutlet]="itemsTpl" />
+          <ng-container [ngTemplateOutlet]="footerTpl" />
+        </section>
+      } @else {
+        <section class="od__empty">
+          <span class="od__empty-ic"><app-icon name="file-check" [size]="24" /></span>
+          <h2 class="od__empty-t">Awaiting confirmation</h2>
+          <p class="od__empty-b">{{ d.seller.company }} has been notified of this PO. Confirming raises the Sales Order and creates the shipment and delivery note.</p>
+          <button class="od__btn od__btn--primary" type="button" (click)="confirm()"><app-icon name="check" [size]="15" /> Confirm — create Sales Order</button>
+        </section>
+      }
+    }
+
+    <!-- ===== FULFILMENT ===== -->
+    @if (tab() === 'fulfillment') {
+      @if (o.shipmentId) {
+        <section class="od__doc od__fulfil">
+          <div class="od__frow"><span class="od__flabel">Shipment</span><button class="od__link tabular" type="button" (click)="goShipment()"><app-icon name="package" [size]="14" /> {{ o.shipmentId }}</button></div>
+          <div class="od__frow"><span class="od__flabel">Delivery note</span><span class="od__fval tabular">{{ o.deliveryNoteId }}</span></div>
+          <div class="od__frow"><span class="od__flabel">Waybill</span><span class="od__fval">Generated with the shipment — carries delivery note {{ o.deliveryNoteId }}</span></div>
+          <p class="od__note"><app-icon name="info" [size]="14" /> When the system generates the waybill for this shipment, the delivery note ID is attached to it.</p>
+        </section>
+      } @else {
+        <section class="od__empty">
+          <span class="od__empty-ic"><app-icon name="package" [size]="24" /></span>
+          <h2 class="od__empty-t">No shipment yet</h2>
+          <p class="od__empty-b">Fulfilment starts once the Sales Order is confirmed — the shipment and delivery note are created automatically.</p>
+        </section>
+      }
+    }
+    }
+  }
+} @else {
+  <div class="od__missing">
+    <p class="od__missing-t">Order not found</p>
+    <button class="od__btn od__btn--primary" type="button" (click)="back()">Back to Orders</button>
+  </div>
+}
+
+<!-- Shared: line items + totals -->
+<ng-template #itemsTpl>
+  @if (doc(); as d) {
+    <div class="od__lwrap">
+      <table class="od__ltable">
+        <thead><tr><th>Item / SKU</th><th>Description</th><th class="od__num-h">Qty</th><th class="od__num-h">Unit price</th><th class="od__num-h">Line total</th></tr></thead>
+        <tbody>
+          @for (li of d.items; track $index) {
+            <tr>
+              <td class="tabular">{{ li.sku }}</td>
+              <td>{{ li.description }}</td>
+              <td class="od__num tabular">{{ li.qty }}</td>
+              <td class="od__num tabular">{{ fmt(li.unitPrice) }}</td>
+              <td class="od__num tabular">{{ fmt(lineTot(li)) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (totals(); as t) {
+      <div class="od__totals">
+        <div class="od__trow"><span>Subtotal</span><b class="tabular">SAR {{ fmt(t.subtotal) }}</b></div>
+        @if (t.discount) { <div class="od__trow"><span>Discount</span><b class="tabular">– SAR {{ fmt(t.discount) }}</b></div> }
+        <div class="od__trow"><span>Tax ({{ d.taxPct }}%)</span><b class="tabular">SAR {{ fmt(t.tax) }}</b></div>
+        <div class="od__trow"><span>Shipping / freight</span><b class="tabular">SAR {{ fmt(t.freight) }}</b></div>
+        <div class="od__trow od__trow--grand"><span>Grand total</span><b class="tabular">SAR {{ fmt(t.grand) }}</b></div>
+      </div>
+    }
+  }
+</ng-template>
+
+<ng-template #footerTpl>
+  @if (doc(); as d) {
+    <div class="od__footer">
+      <div class="od__fcol"><span class="od__flabel">Notes / special instructions</span><p class="od__fval">{{ d.notes || '—' }}</p></div>
+      <div class="od__fcol"><span class="od__flabel">Authorized by</span><p class="od__fval">{{ d.authorizedBy }}</p></div>
+    </div>
+  }
+</ng-template>

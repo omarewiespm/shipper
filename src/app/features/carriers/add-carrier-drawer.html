@@ -1,0 +1,61 @@
+@if (open()) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd ac" role="dialog" aria-modal="true" aria-label="Add carrier"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="truck" [size]="18" /></span>
+      <h2 class="sd__title">Add carrier</h2>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <form class="sd__body ac__body" (submit)="$event.preventDefault(); submit()">
+      <div class="ac__field">
+        <label class="ac__label">Fleet / carrier name</label>
+        <input class="ac__input" [value]="name()" (input)="name.set($any($event.target).value)" placeholder="e.g. Iron Clad Arabia" aria-label="Carrier name" />
+      </div>
+
+      <div class="ac__field">
+        <label class="ac__label">How you work with them</label>
+        <div class="ac__types">
+          @for (t of types; track t.key) {
+            <button class="ac__type" type="button" [class.is-on]="type() === t.key" (click)="type.set(t.key)">
+              <span class="ac__type-l">{{ t.label }}</span><span class="ac__type-h">{{ t.hint }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="ac__field">
+        <label class="ac__label">City</label>
+        <input class="ac__input" [value]="city()" (input)="city.set($any($event.target).value)" placeholder="e.g. Jeddah" aria-label="City" />
+      </div>
+
+      <div class="ac__field">
+        <label class="ac__label">Fleet contact name</label>
+        <input class="ac__input" [value]="contactName()" (input)="contactName.set($any($event.target).value)" placeholder="Full name" aria-label="Contact name" />
+      </div>
+
+      <div class="ac__2col">
+        <div class="ac__field">
+          <label class="ac__label">Phone / WhatsApp</label>
+          <input class="ac__input" [value]="phone()" (input)="phone.set($any($event.target).value)" placeholder="+966…" aria-label="Phone" />
+        </div>
+        <div class="ac__field">
+          <label class="ac__label">Email</label>
+          <input class="ac__input" [value]="email()" (input)="email.set($any($event.target).value)" placeholder="fleet@company.com" aria-label="Email" />
+        </div>
+      </div>
+
+      <div class="ac__note">
+        <app-icon name="info" [size]="16" />
+        <span>We'll check if this fleet is already on Madar. <strong>If they are</strong>, they get a request (email / WhatsApp) to accept working with you. <strong>If not</strong>, they're invited to join Madar and connect to your account.</span>
+      </div>
+    </form>
+
+    <div class="ac__foot">
+      <button class="ac__cancel" type="button" (click)="closed.emit()">Cancel</button>
+      <button class="ac__save" type="button" [disabled]="!canSave()" (click)="submit()"><app-icon name="send" [size]="15" /> Send invitation</button>
+    </div>
+  </aside>
+}

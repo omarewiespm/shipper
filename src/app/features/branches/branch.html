@@ -1,0 +1,58 @@
+<a class="bp__back" routerLink="/settings/branches"><app-icon name="arrow-left" [size]="16" /> Branches</a>
+
+@if (branch(); as b) {
+  <header class="bp__hero">
+    <app-avatar [name]="b.name" [size]="64" tone="neutral" [square]="true" />
+    <div class="bp__id">
+      <h1 class="bp__name">{{ b.name }}</h1>
+      <p class="bp__meta">{{ b.code }} · {{ b.city }}</p>
+      <div class="bp__badges">
+        @if (b.primary) { <span class="bp__primary">Primary branch</span> }
+        @if (b.status === 'active') { <span class="bp__status bp__status--active"><span class="bp__dot"></span> Active</span> }
+        @else { <span class="bp__status bp__status--off"><span class="bp__dot"></span> Inactive</span> }
+      </div>
+    </div>
+    <div class="bp__heroactions">
+      @if (!b.primary) { <button class="bp__btn bp__btn--ghost" type="button" (click)="setPrimary()"><app-icon name="check" [size]="15" /> Set as primary</button> }
+      <button class="bp__btn bp__btn--ghost" type="button" (click)="toggleActive()">
+        <app-icon [name]="b.status === 'active' ? 'minus' : 'check'" [size]="15" /> {{ b.status === 'active' ? 'Deactivate' : 'Activate' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="bp__grid">
+    <section class="bp__card">
+      <h2 class="bp__h">Location</h2>
+      <dl class="bp__kv">
+        <div class="bp__row"><dt><app-icon name="building" [size]="14" /> Branch</dt><dd>{{ b.name }}</dd></div>
+        <div class="bp__row"><dt><app-icon name="pin" [size]="14" /> City</dt><dd>{{ b.city }}</dd></div>
+        <div class="bp__row"><dt><app-icon name="map-pin" [size]="14" /> Address</dt><dd>{{ b.address }}</dd></div>
+        <div class="bp__row"><dt><app-icon name="clock" [size]="14" /> Created</dt><dd>{{ b.createdAt }}</dd></div>
+      </dl>
+    </section>
+
+    <aside class="bp__side">
+      <section class="bp__card">
+        <h2 class="bp__h">Manager &amp; team</h2>
+        <dl class="bp__kv">
+          <div class="bp__row"><dt><app-icon name="user" [size]="14" /> Manager</dt><dd>{{ b.manager }}</dd></div>
+          <div class="bp__row"><dt><app-icon name="phone" [size]="14" /> Mobile</dt><dd class="tabular">{{ b.mobile }}</dd></div>
+          <div class="bp__row"><dt><app-icon name="users" [size]="14" /> Team members</dt><dd class="tabular">{{ b.members }}</dd></div>
+        </dl>
+      </section>
+
+      @if (!b.primary) {
+        <section class="bp__card bp__danger">
+          <h2 class="bp__h">Remove branch</h2>
+          <p class="bp__note">Delete this branch from your account. This can't be undone.</p>
+          <button class="bp__btn bp__btn--danger" type="button" (click)="remove()"><app-icon name="x" [size]="15" /> Remove branch</button>
+        </section>
+      }
+    </aside>
+  </div>
+} @else {
+  <div class="bp__missing">
+    <p class="bp__missing-t">Branch not found</p>
+    <a class="bp__btn bp__btn--primary" routerLink="/settings/branches">Back to Branches</a>
+  </div>
+}

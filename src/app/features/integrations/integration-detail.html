@@ -1,0 +1,147 @@
+<a class="idp__back" routerLink="/integrations"><app-icon name="arrow-left" [size]="16" /> Integrations</a>
+
+@if (app(); as a) {
+  <!-- Hero -->
+  <header class="idp__hero">
+    <app-int-logo [domain]="a.domain" [initials]="a.initials" [color]="a.color" [name]="a.name" [size]="64" [radius]="16" />
+    <div class="idp__id">
+      <h1 class="idp__name">{{ a.name }}</h1>
+      <p class="idp__prov">{{ a.provider }} · {{ catLabel(a) }}</p>
+      <div class="idp__meta">
+        <span class="idp__stars">
+          @for (i of starArray; track i) { <app-icon name="star" [size]="14" [class.is-on]="filled(i)" /> }
+          <b>{{ a.rating }}</b>
+        </span>
+        <span class="idp__mdot">·</span>
+        <span>{{ installsLabel() }} installs</span>
+      </div>
+    </div>
+    <div class="idp__cta">
+      @if (a.connected) {
+        <span class="idp__on"><app-icon name="check" [size]="14" /> Connected</span>
+        <button class="idp__btn idp__btn--danger" type="button" (click)="disconnect()">Disconnect</button>
+      } @else {
+        <button class="idp__btn idp__btn--primary" type="button" (click)="connect()">Connect</button>
+      }
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="idp__tabs" role="tablist">
+    @for (t of tabs; track t.key) {
+      <button class="idp__tab" type="button" role="tab" [class.is-on]="tab() === t.key" (click)="tab.set(t.key)">{{ t.label }}</button>
+    }
+  </div>
+
+  @if (detail(); as d) {
+    <!-- DETAILS -->
+    @if (tab() === 'details') {
+      <div class="idp__panel idp__panel--top">
+        <p class="idp__about">{{ d.about }}</p>
+        <button class="idp__video" type="button" (click)="playVideo()">
+          <span class="idp__play"><app-icon name="chevron-right" [size]="22" /></span>
+          <span class="idp__videotxt"><span class="idp__videot">Watch the 2-minute walkthrough</span><span class="idp__videos">{{ d.video }}</span></span>
+        </button>
+      </div>
+      <div class="idp__gallery">
+        <button class="idp__gnav idp__gnav--prev" type="button" aria-label="Previous screens" (click)="scrollScreens(-1)"><app-icon name="chevron-left" [size]="20" /></button>
+        <div class="idp__screens" #strip>
+          @for (s of screens; track s.title) {
+            <figure class="idp__screen" [style.--c]="a.color">
+              <div class="idp__scr-chrome">
+                <span class="idp__scr-dots"><i></i><i></i><i></i></span>
+                <span class="idp__scr-url"><app-int-logo [domain]="a.domain" [initials]="a.initials" [color]="a.color" [name]="a.name" [size]="16" [radius]="4" /> {{ a.name }} · Madar</span>
+              </div>
+              <div class="idp__scr-app">
+                <div class="idp__scr-side"><i></i><i class="on"></i><i></i><i></i><i></i></div>
+                <div class="idp__scr-main">
+                  <div class="idp__scr-head"><span class="idp__scr-title"></span><span class="idp__scr-btn"></span></div>
+                  @switch (s.kind) {
+                    @case ('chart') {
+                      <div class="idp__scr-kpis"><span></span><span></span><span></span></div>
+                      <div class="idp__scr-chart"><i style="height:40%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:88%"></i><i style="height:62%"></i><i style="height:78%"></i></div>
+                    }
+                    @case ('list') {
+                      <div class="idp__scr-rows"><i></i><i></i><i></i><i></i></div>
+                    }
+                    @case ('form') {
+                      <div class="idp__scr-form"><i></i><i></i><i></i><i class="wide"></i></div>
+                    }
+                    @default {
+                      <div class="idp__scr-tiles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    }
+                  }
+                </div>
+              </div>
+              <figcaption class="idp__scr-cap">{{ s.title }}</figcaption>
+            </figure>
+          }
+        </div>
+        <button class="idp__gnav idp__gnav--next" type="button" aria-label="Next screens" (click)="scrollScreens(1)"><app-icon name="chevron-right" [size]="20" /></button>
+      </div>
+    }
+
+    <!-- HOW TO INSTALL -->
+    @if (tab() === 'install') {
+      <div class="idp__panel">
+        <section class="idp__sec">
+          <h2 class="idp__h">Before you start</h2>
+          <ul class="idp__list idp__list--prereq">
+            @for (p of d.prerequisites; track p) { <li><app-icon name="shield" [size]="15" /> {{ p }}</li> }
+          </ul>
+        </section>
+        <section class="idp__sec">
+          <h2 class="idp__h">Step by step</h2>
+          <ol class="idp__steps">
+            @for (s of d.steps; track s.title; let i = $index) {
+              <li class="idp__step"><span class="idp__stepn">{{ i + 1 }}</span><span class="idp__stepbody"><span class="idp__stept">{{ s.title }}</span><span class="idp__stepd">{{ s.detail }}</span></span></li>
+            }
+          </ol>
+        </section>
+      </div>
+    }
+
+    <!-- SCOPE -->
+    @if (tab() === 'scope') {
+      <div class="idp__panel">
+        <section class="idp__sec">
+          <h2 class="idp__h">What Madar can access</h2>
+          <ul class="idp__list idp__list--scope">
+            @for (s of d.scopes; track s) { <li><app-icon name="check" [size]="15" /> {{ s }}</li> }
+          </ul>
+        </section>
+        <div class="idp__note"><app-icon name="shield" [size]="16" /><span>Access is read-only where possible and can be revoked any time from this page. Madar never shares your data with third parties.</span></div>
+      </div>
+    }
+
+    <!-- REVIEWS -->
+    @if (tab() === 'reviews') {
+      <div class="idp__panel">
+        <div class="idp__rsum">
+          <div class="idp__rbig">
+            <span class="idp__rnum">{{ a.rating }}</span>
+            <span class="idp__rstars">@for (i of starArray; track i) { <app-icon name="star" [size]="15" [class.is-on]="filled(i)" /> }</span>
+            <span class="idp__rcount">{{ ratingsCount() }} ratings</span>
+          </div>
+        </div>
+        <ul class="idp__reviews">
+          @for (r of reviews(); track r.author) {
+            <li class="idp__review">
+              <div class="idp__rhead">
+                <span class="idp__ravatar">{{ r.author.charAt(0) }}</span>
+                <span class="idp__rwho"><span class="idp__rname">{{ r.author }}</span><span class="idp__rrole">{{ r.role }} · {{ r.when }}</span></span>
+                <span class="idp__rrate">@for (i of starArray; track i) { <app-icon name="star" [size]="12" [class.is-on]="i <= r.rating" /> }</span>
+              </div>
+              <p class="idp__rtext">{{ r.text }}</p>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  }
+} @else {
+  <div class="idp__missing">
+    <p class="idp__missing-t">Integration not found</p>
+    <a class="idp__btn idp__btn--primary" routerLink="/integrations">Back to integrations</a>
+  </div>
+}

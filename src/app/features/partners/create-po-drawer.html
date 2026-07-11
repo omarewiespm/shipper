@@ -1,0 +1,87 @@
+@if (open()) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd pod" role="dialog" aria-modal="true" aria-label="New purchase order"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+    <header class="sd__head">
+      <span class="sd__tile"><app-icon name="receipt" [size]="18" /></span>
+      <div class="pod__heading">
+        <span class="sd__title">New purchase order</span>
+        <span class="pod__date">PO date · {{ poDate | date: 'dd MMM yyyy' }}</span>
+      </div>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body pod__body">
+      <!-- Supplier -->
+      <section class="pod__sec">
+        <h2 class="pod__h">Supplier</h2>
+        <div class="pod__select">
+          <select class="pod__input" [value]="vendorId()" (change)="vendorId.set($any($event.target).value)">
+            <option value="" disabled>Select a supplier…</option>
+            @for (s of suppliers(); track s.id) { <option [value]="s.id">{{ s.name }}</option> }
+          </select>
+          <app-icon name="chevron-down" [size]="16" class="pod__select-caret" />
+        </div>
+        @if (vendor(); as v) {
+          <p class="pod__vendor">{{ v.address }} · {{ v.contact }}</p>
+        }
+      </section>
+
+      <!-- Items -->
+      <section class="pod__sec">
+        <h2 class="pod__h">Items</h2>
+        <div class="pod__items">
+          @for (li of items(); track $index) {
+            <div class="pod__item">
+              <div class="pod__item-top">
+                <input class="pod__idesc" [value]="li.description" (input)="patchRow($index, { description: $any($event.target).value })" placeholder="Item description" />
+                @if (items().length > 1) {
+                  <button class="pod__idel" type="button" aria-label="Remove item" (click)="removeRow($index)"><app-icon name="x" [size]="15" /></button>
+                }
+              </div>
+              <div class="pod__item-grid">
+                <label class="pod__mini"><span>SKU</span><input class="pod__minin" [value]="li.sku" (input)="patchRow($index, { sku: $any($event.target).value })" placeholder="—" /></label>
+                <label class="pod__mini"><span>Qty</span><input class="pod__minin pod__minin--num" type="number" min="0" [value]="li.qty" (input)="patchRow($index, { qty: +$any($event.target).value })" /></label>
+                <label class="pod__mini"><span>Unit price</span><input class="pod__minin pod__minin--num" type="number" min="0" [value]="li.unitPrice" (input)="patchRow($index, { unitPrice: +$any($event.target).value })" /></label>
+                <div class="pod__mini pod__mini--tot"><span>Line total</span><b class="tabular">SAR {{ fmt(lineTot(li)) }}</b></div>
+              </div>
+            </div>
+          }
+        </div>
+        <button class="pod__add" type="button" (click)="addRow()"><app-icon name="plus" [size]="15" /> Add item</button>
+      </section>
+
+      <!-- Delivery & terms -->
+      <section class="pod__sec">
+        <h2 class="pod__h">Delivery &amp; terms</h2>
+        <label class="pod__field"><span class="pod__label">Ship-to address</span><input class="pod__input" [value]="shipTo()" (input)="shipTo.set($any($event.target).value)" /></label>
+        <div class="pod__row2">
+          <label class="pod__field"><span class="pod__label">Requested delivery</span><input class="pod__input" type="date" [value]="requestedDelivery()" (input)="requestedDelivery.set($any($event.target).value)" /></label>
+          <label class="pod__field"><span class="pod__label">Payment terms</span><input class="pod__input" [value]="paymentTerms()" (input)="paymentTerms.set($any($event.target).value)" placeholder="e.g. Net 30" /></label>
+        </div>
+      </section>
+
+      <!-- Charges & notes -->
+      <section class="pod__sec">
+        <h2 class="pod__h">Charges &amp; notes</h2>
+        <div class="pod__row2">
+          <label class="pod__field"><span class="pod__label">Discount (SAR)</span><input class="pod__input tabular" type="number" min="0" [value]="discount() || ''" (input)="discount.set(+$any($event.target).value)" placeholder="0" /></label>
+          <label class="pod__field"><span class="pod__label">Freight (SAR)</span><input class="pod__input tabular" type="number" min="0" [value]="freight() || ''" (input)="freight.set(+$any($event.target).value)" placeholder="0" /></label>
+        </div>
+        <label class="pod__field"><span class="pod__label">Notes <em>(optional)</em></span><textarea class="pod__input pod__area" rows="2" [value]="notes()" (input)="notes.set($any($event.target).value)" placeholder="Special instructions"></textarea></label>
+      </section>
+    </div>
+
+    <!-- Fixed total + CTA -->
+    <div class="pod__foot">
+      <div class="pod__sum">
+        <div class="pod__sumrow"><span>Subtotal</span><span class="tabular">SAR {{ fmt(subtotal()) }}</span></div>
+        @if (discount() > 0) { <div class="pod__sumrow"><span>Discount</span><span class="tabular">− SAR {{ fmt(discount()) }}</span></div> }
+        <div class="pod__sumrow"><span>VAT ({{ taxPct() }}%)</span><span class="tabular">SAR {{ fmt(tax()) }}</span></div>
+        @if (freight() > 0) { <div class="pod__sumrow"><span>Freight</span><span class="tabular">SAR {{ fmt(freight()) }}</span></div> }
+        <div class="pod__sumrow pod__sumrow--grand"><span>Grand total</span><b class="tabular">SAR {{ fmt(grand()) }}</b></div>
+      </div>
+      <button class="pod__cta" type="button" [disabled]="!canSave()" (click)="save()">Send purchase order <app-icon name="arrow-right" [size]="16" /></button>
+    </div>
+  </aside>
+}

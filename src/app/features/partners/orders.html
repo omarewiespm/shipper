@@ -1,0 +1,93 @@
+<header class="ord__head">
+  <div>
+    <h1 class="ord__title">{{ title() }}</h1>
+    <p class="ord__sub">{{ subtitle() }}</p>
+  </div>
+</header>
+
+<!-- Toolbar -->
+<div class="ord__bar">
+  <div class="ord__search">
+    <app-icon name="search" [size]="18" class="ord__search-icon" />
+    <input type="search" class="ord__search-input" [value]="store.query()" (input)="store.query.set($any($event.target).value)"
+      placeholder="Search order id or partner" aria-label="Search orders" />
+    @if (store.query()) { <button class="ord__search-clear" type="button" aria-label="Clear search" (click)="store.query.set('')"><app-icon name="x" [size]="16" /></button> }
+  </div>
+
+  <app-filter-dropdown #statusDd icon="filter" [label]="statusLabel()" ariaLabel="Filter by status" [menuWidth]="200">
+    @for (f of statusFilters; track f.key) {
+      <button class="ord__opt" role="option" type="button" [attr.aria-selected]="store.statusFilter() === f.key" [class.is-selected]="store.statusFilter() === f.key" (click)="selectStatus(f.key, statusDd)">
+        <span class="ord__opt-label">{{ f.label }}</span>
+      </button>
+    }
+  </app-filter-dropdown>
+
+  <app-button class="ord__export" variant="secondary" icon="download" (click)="exportCsv()">Export CSV</app-button>
+  @if (!isSales()) {
+    <app-button variant="primary" icon="plus" (click)="createPo()">New purchase order</app-button>
+  }
+</div>
+
+<!-- Table -->
+<section class="ord__section">
+  @if (paged().length) {
+    <div class="ord__tcard">
+      <div class="ord__twrap">
+        <table class="ord__table">
+          <thead>
+            <tr>
+              <th scope="col">Order ID</th>
+              <th scope="col">{{ partnerCol() }}</th>
+              @if (isSales()) { <th scope="col">Customer PO ref</th> }
+              <th scope="col">Status</th>
+              <th scope="col">Created</th>
+              <th scope="col">Value</th>
+              <th scope="col">Shipment</th>
+              <th scope="col" class="ord__actions-h">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of paged(); track o.id) {
+              <tr class="ord__trow" tabindex="0" (click)="onAction('view', o)" (keydown.enter)="onAction('view', o)">
+                <td data-label="Order ID"><span class="ord__strong tabular">{{ o.id }}</span></td>
+                <td [attr.data-label]="partnerCol()"><span class="ord__strong">{{ o.partnerName }}</span></td>
+                @if (isSales()) { <td data-label="Customer PO ref"><span class="ord__mut tabular">{{ custRef(o) }}</span></td> }
+                <td data-label="Status"><app-status-chip [label]="chipFor(o).label" [tone]="chipFor(o).tone" /></td>
+                <td data-label="Created"><span class="ord__mut">{{ dt(o.createdAt) }}</span></td>
+                <td data-label="Value"><span class="ord__num tabular">SAR {{ fmt(o.amount) }}</span></td>
+                <td data-label="Shipment">
+                  @if (o.shipmentId) {
+                    <button class="ord__shiplink tabular" type="button" (click)="$event.stopPropagation(); trackShipment(o)"><app-icon name="package" [size]="13" /> {{ o.shipmentId }}</button>
+                  } @else if (o.status === 'created') {
+                    <button class="ord__shipmake" type="button" (click)="$event.stopPropagation(); confirm(o)"><app-icon name="check" [size]="13" /> Confirm to ship</button>
+                  } @else {
+                    <span class="ord__mut">—</span>
+                  }
+                </td>
+                <td data-label="Actions" class="ord__actions-c"><app-order-actions-menu [order]="o" (action)="onAction($event, o)" /></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ord__footer">
+        <span class="ord__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} orders</span>
+        @if (pageCount() > 1) {
+          <div class="ord__pager">
+            <button class="ord__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+            @for (n of pageNumbers(); track n) {
+              <button class="ord__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+            }
+            <button class="ord__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <p class="ord__empty">No orders match your filters.</p>
+  }
+</section>
+
+<!-- Raise a purchase order in a side drawer -->
+<app-create-po-drawer [open]="poDrawer()" (closed)="poDrawer.set(false)" />

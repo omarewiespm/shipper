@@ -1,0 +1,236 @@
+/* =============================================================================
+   Auth form primitives — shared across the /auth screens (global so scoped
+   component styles don't each re-declare them). All navy-primary, calm.
+   ============================================================================= */
+
+.a-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-block-end: var(--sp-4);
+  font-family: var(--font);
+}
+.a-back:hover { color: var(--navy); }
+
+.a-head { font-size: 20px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; }
+.a-sub { font-size: 14px; color: var(--ink-2); line-height: 1.5; margin-block-start: 6px; }
+.a-sub strong { color: var(--ink); font-weight: 600; }
+
+.a-field { display: block; margin-block-start: var(--sp-5); }
+.a-label { display: block; font-size: 13px; font-weight: 500; color: var(--ink-2); margin-block-end: 6px; }
+
+.a-control {
+  inline-size: 100%;
+  block-size: 46px;
+  padding-inline: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.a-control::placeholder { color: var(--ink-3); }
+.a-control:focus { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.a-control--error, .a-control--error:focus { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(192, 73, 46, 0.15); }
+
+/* Password / input with trailing action */
+.a-inputwrap { position: relative; }
+.a-inputwrap .a-control { padding-inline-end: 44px; }
+.a-reveal {
+  position: absolute;
+  inset-inline-end: 6px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inline-size: 34px;
+  block-size: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--ink-3);
+}
+.a-reveal:hover { color: var(--ink-2); background: var(--line-soft); }
+
+.a-error { display: block; font-size: 12.5px; color: var(--danger); margin-block-start: 7px; }
+.a-hint { display: block; font-size: 12px; color: var(--ink-3); margin-block-start: 8px; line-height: 1.5; }
+
+.a-actions { margin-block-start: var(--sp-5); }
+
+/* Quiet alternate text link + legal line */
+.a-alt {
+  display: block;
+  inline-size: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  margin-block-start: var(--sp-4);
+  padding: 6px;
+}
+.a-alt:hover { color: var(--navy-700); }
+.a-legal {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  text-align: center;
+  margin-block-start: var(--sp-5);
+}
+.a-legal a { color: var(--ink-2); text-decoration: underline; }
+
+/* Composite phone control */
+.a-phone {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.a-phone:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.a-phone--error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(192, 73, 46, 0.15); }
+.a-phone__prefix {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 14px;
+  border-inline-end: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink-2);
+  font-size: 15px;
+  font-weight: 500;
+  flex: none;
+}
+.a-phone__input {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: 46px;
+  padding-inline: 14px;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+}
+.a-phone__input::placeholder { color: var(--ink-3); letter-spacing: 1px; }
+
+/* Identity chip (returning email user) */
+.a-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--line-soft);
+  margin-block-start: var(--sp-4);
+}
+.a-chip__tile {
+  inline-size: 36px; block-size: 36px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9px; background: var(--card); color: var(--navy);
+}
+.a-chip__id { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.a-chip__cap { font-size: 11px; color: var(--ink-3); }
+.a-chip__val { font-size: 13.5px; font-weight: 500; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.a-chip__change { background: none; border: none; color: var(--navy); font-family: var(--font); font-size: 12.5px; font-weight: 600; flex: none; }
+
+/* Password row */
+.a-passrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-block-start: var(--sp-4);
+}
+.a-check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); }
+.a-check input { inline-size: 16px; block-size: 16px; accent-color: var(--navy); }
+
+/* OTP group */
+.a-otp {
+  display: flex;
+  gap: 8px;
+  direction: ltr;
+  margin-block-start: var(--sp-5);
+}
+.a-otp__box {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: 58px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.a-otp__box:focus { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.a-otp__box--filled { border-color: var(--navy); background: var(--nav-active); }
+.a-otp--error .a-otp__box { border-color: var(--danger); }
+.a-resend {
+  display: block;
+  text-align: center;
+  margin-block-start: var(--sp-4);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.a-resend button { background: none; border: none; color: var(--navy); font-family: var(--font); font-size: 13px; font-weight: 600; }
+.a-resend button:disabled { color: var(--ink-3); }
+
+/* Signup progress (3 segments) */
+.a-progress { display: flex; gap: 6px; margin-block-end: var(--sp-5); }
+.a-progress__seg { flex: 1; block-size: 3px; border-radius: 999px; background: var(--line); }
+.a-progress__seg--done { background: var(--navy); opacity: 0.4; }
+.a-progress__seg--active { background: var(--navy); }
+
+/* Reassurance panel (Elm) */
+.a-reassure {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin-block: var(--sp-4);
+}
+.a-reassure strong { font-weight: 600; }
+
+/* Done screen */
+.a-done { text-align: center; }
+.a-done__tile {
+  inline-size: 64px; block-size: 64px;
+  margin-inline: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 20px; background: var(--ok-bg); color: var(--ok);
+  margin-block-end: var(--sp-4);
+  animation: a-pop 400ms var(--ease);
+}
+@keyframes a-pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .a-done__tile { animation: none; } }
+
+/* Step fade-in (each screen swaps inside the card) */
+.a-step { display: block; animation: a-fade 280ms var(--ease); }
+@keyframes a-fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .a-step { animation: none; } }

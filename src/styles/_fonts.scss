@@ -1,0 +1,16 @@
+/* =============================================================================
+   Madar Shipper — Self-hosted brand font (Readex Pro, weights 200–700)
+   Bilingual (Latin + Arabic). Place .woff2 files in public/fonts/ then the
+   @font-face rules below resolve. Until then, the system-sans fallback in
+   --font applies. Variable font preferred; static weights also fine.
+   ============================================================================= */
+
+/* Variable font (preferred — single file spans 200–700).
+   Drop `ReadexPro-VariableFont.woff2` into public/fonts/ to activate. */
+@font-face {
+  font-family: "Readex Pro";
+  src: url("/fonts/ReadexPro-VariableFont.woff2") format("woff2-variations");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}

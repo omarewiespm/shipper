@@ -1,0 +1,55 @@
+<div class="fm">
+  <div #map class="fm__map"></div>
+
+  <!-- Search -->
+  <div class="fm__search">
+    <div class="fm__field">
+      <app-icon name="search" [size]="16" class="fm__sico" />
+      <input class="fm__input" [value]="query()" (input)="query.set($any($event.target).value)"
+        placeholder="Search truck, customer, city or driver…" aria-label="Search trucks" />
+      @if (query()) {
+        <button class="fm__clear" type="button" aria-label="Clear" (click)="query.set('')"><app-icon name="x" [size]="15" /></button>
+      }
+    </div>
+    @if (query()) {
+      <div class="fm__results">
+        @for (t of matches(); track t.id) {
+          <button class="fm__res" type="button" (click)="pick(t.id)">
+            <span class="fm__res-id">{{ t.id }}</span>
+            <span class="fm__res-cust">{{ t.receiverName }}</span>
+            <span class="fm__res-route">{{ t.originCity }} → {{ t.destCity }}</span>
+          </button>
+        }
+        @if (!matches().length) { <p class="fm__none">No trucks match “{{ query() }}”.</p> }
+      </div>
+    }
+  </div>
+
+  <div class="fm__legend"><span class="fm__ldot"></span> {{ matches().length }} of {{ trucks().length }} trucks live</div>
+
+  <!-- Selected truck card -->
+  @if (selected(); as s) {
+    <div class="tcard">
+      <button class="tcard__x" type="button" aria-label="Close" (click)="selectedId.set(null)"><app-icon name="x" [size]="16" /></button>
+      <div class="tcard__top">
+        <span class="tcard__id">{{ s.id }}</span>
+        <span class="tcard__eta"><app-icon name="clock" [size]="12" /> {{ metrics(s).timeLeftLabel }}</span>
+      </div>
+      <div class="tcard__cust">{{ s.receiverName }}</div>
+      <div class="tcard__route">
+        <span class="tcard__city">{{ s.originCity }}</span>
+        <app-icon name="arrow-right" [size]="13" class="tcard__arrow" />
+        <span class="tcard__city">{{ s.destCity }}</span>
+      </div>
+      <div class="tcard__bar"><span class="tcard__fill" [style.inline-size.%]="metrics(s).pct"></span></div>
+      <div class="tcard__foot">
+        <span>{{ metrics(s).pct }}% · {{ metrics(s).kmLeft }} km left</span>
+        <span class="tcard__ping"><span class="tcard__pingdot"></span> {{ s.lastPingMins }}m ago</span>
+      </div>
+      <div class="tcard__cta">
+        <button class="tcard__btn tcard__btn--ghost" type="button" (click)="chat.emit(s.id)"><app-icon name="messages" [size]="15" /> Chat</button>
+        <button class="tcard__btn tcard__btn--primary" type="button" (click)="details.emit(s.id)"><app-icon name="eye" [size]="15" /> Details</button>
+      </div>
+    </div>
+  }
+</div>

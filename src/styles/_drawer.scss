@@ -1,0 +1,56 @@
+/* =============================================================================
+   Shared side-drawer base. Right-anchored, full height, rounded on the
+   inline-start corners (upper + lower left in LTR) so it reads as a card.
+   ============================================================================= */
+
+.sd-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 26, 46, 0.45);
+  z-index: 60;
+  animation: sd-fade 200ms var(--ease);
+}
+
+.sd {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(420px, 100vw);
+  background: var(--card);
+  border-inline-start: 1px solid var(--line);
+  border-start-start-radius: 18px;
+  border-end-start-radius: 18px;
+  box-shadow: var(--shadow-lift);
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: sd-slide 300ms var(--ease);
+}
+:host-context([dir='rtl']) .sd { animation: sd-slide-rtl 300ms var(--ease); }
+
+.sd__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-block-end: 1px solid var(--line);
+}
+.sd__title { flex: 1; font-size: 15px; font-weight: 600; color: var(--ink); }
+.sd__tile {
+  inline-size: 34px; block-size: 34px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9px;
+}
+.sd__close {
+  inline-size: 32px; block-size: 32px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: none; border-radius: var(--radius-sm); color: var(--ink-2);
+}
+.sd__close:hover { background: var(--line-soft); color: var(--strong); }
+.sd__body { flex: 1; overflow-y: auto; padding: var(--sp-3); }
+
+@keyframes sd-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sd-slide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes sd-slide-rtl { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .sd-scrim, .sd { animation: none; } }

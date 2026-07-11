@@ -1,0 +1,15 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  flex: none;
+  user-select: none;
+}
+
+:host(.avatar--square) { border-radius: var(--radius); }
+
+:host([data-tone='navy'])    { background: var(--navy);    color: #fff; }
+:host([data-tone='info'])    { background: var(--info-bg); color: var(--info); }
+:host([data-tone='neutral']) { background: #f0f1f4;        color: #5b6478; }

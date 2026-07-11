@@ -1,0 +1,70 @@
+<header class="hd">
+  <!-- Mobile-only: open the sidebar drawer -->
+  <button class="hd__icon-btn hd__hamburger" type="button" (click)="openMobileNav()" aria-label="Open navigation">
+    <app-icon name="menu" [size]="20" />
+  </button>
+
+  <!-- LEFT — global search (large pill, contextual placeholder by route) -->
+  <div class="hd__search">
+    <app-icon name="search" [size]="18" [stroke]="1.8" class="hd__search-icon" />
+    <input
+      type="search"
+      class="hd__search-input"
+      [attr.aria-label]="searchPlaceholder()"
+      [attr.placeholder]="searchPlaceholder()"
+    />
+  </div>
+
+  <!-- RIGHT — cluster (app hub · wallet · avatar) -->
+  <div class="hd__cluster">
+    <app-app-hub />
+
+    <button class="hd__wallet" type="button" (click)="openWallet()" aria-label="Wallet balance, open wallet">
+      <app-icon name="wallet" [size]="16" />
+      <span class="tabular">{{ wallet.balance() | money }}</span>
+    </button>
+
+    <button
+      #accountTrigger
+      type="button"
+      class="hd__account"
+      cdkOverlayOrigin
+      #accountOrigin="cdkOverlayOrigin"
+      [attr.aria-expanded]="isAccountOpen()"
+      aria-haspopup="menu"
+      [attr.aria-label]="'Account: ' + company"
+      (click)="toggleAccount()"
+    >
+      <app-avatar [name]="company" [size]="36" icon="user" />
+    </button>
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="accountOrigin"
+      [cdkConnectedOverlayOpen]="isAccountOpen()"
+      [cdkConnectedOverlayPositions]="accountPositions"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+      (backdropClick)="closeAccount()"
+      (detach)="closeAccount()"
+      (overlayKeydown)="onAccountKeydown($event)"
+    >
+      <div class="hd__menu" role="menu" aria-label="Account">
+        <div class="hd__menu-head">
+          <app-avatar [name]="company" [size]="34" icon="user" />
+          <span class="hd__menu-company">{{ company }}</span>
+        </div>
+        <button class="hd__menu-item" type="button" role="menuitem" (click)="go('/settings/users')">
+          <app-icon name="user" [size]="17" /> Profile
+        </button>
+        <button class="hd__menu-item" type="button" role="menuitem" (click)="go('/settings/company')">
+          <app-icon name="settings" [size]="17" /> Company
+        </button>
+        <div class="hd__menu-divider"></div>
+        <button class="hd__menu-item" type="button" role="menuitem" (click)="signOut()">
+          <app-icon name="logout" [size]="17" /> Sign out
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</header>

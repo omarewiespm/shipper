@@ -1,0 +1,51 @@
+@if (profile(); as p) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd cp" role="dialog" aria-modal="true" [attr.aria-label]="p.name + ' profile'"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <app-avatar [name]="p.name" [size]="40" tone="neutral" [square]="true" />
+      <div class="cp__id">
+        <span class="cp__namerow"><span class="cp__name">{{ p.name }}</span>@if (p.verified) { <app-icon name="shield" [size]="13" class="cp__verified" /> }</span>
+        <span class="cp__type">{{ typeLabel(p) }} · {{ p.city }}</span>
+      </div>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body cp__body">
+      <!-- Performance stats -->
+      <div class="cp__stats">
+        <div class="cp__stat"><span class="cp__snum"><app-icon name="star" [size]="15" /> {{ p.rating }}</span><span class="cp__slabel">Rating</span></div>
+        <div class="cp__stat"><span class="cp__snum tabular">{{ p.shipments }}</span><span class="cp__slabel">Shipments</span></div>
+        <div class="cp__stat"><span class="cp__snum tabular">{{ p.onTimePct }}%</span><span class="cp__slabel">On-time</span></div>
+      </div>
+
+      <section class="cp__sec">
+        <h3 class="cp__h">Fleet &amp; compliance</h3>
+        <dl class="cp__kv">
+          <div class="cp__row"><dt><app-icon name="truck" [size]="14" /> Fleet size</dt><dd>{{ p.trucks }} trucks</dd></div>
+          <div class="cp__row"><dt><app-icon name="package" [size]="14" /> Truck types</dt><dd>{{ p.truckTypes }}</dd></div>
+          <div class="cp__row"><dt><app-icon name="clock" [size]="14" /> Years active</dt><dd>{{ p.yearsActive }} years · since {{ p.memberSince }}</dd></div>
+          <div class="cp__row"><dt><app-icon name="shield" [size]="14" /> Verified on Madar</dt><dd><span class="cp__yes">{{ p.verified ? 'Yes' : 'Pending' }}</span></dd></div>
+          <div class="cp__row"><dt><app-icon name="shield" [size]="14" /> Insured</dt><dd><span class="cp__yes">Yes</span></dd></div>
+          <div class="cp__row"><dt><app-icon name="file-check" [size]="14" /> TGA licensed</dt><dd><span class="cp__yes">Yes</span></dd></div>
+        </dl>
+      </section>
+
+      <section class="cp__sec">
+        <h3 class="cp__h">Lanes &amp; contact</h3>
+        <dl class="cp__kv">
+          <div class="cp__row"><dt><app-icon name="pin" [size]="14" /> Lanes served</dt><dd>{{ p.lanes }}</dd></div>
+          <div class="cp__row"><dt><app-icon name="user" [size]="14" /> Contact</dt><dd>{{ p.contactName }}</dd></div>
+          <div class="cp__row"><dt><app-icon name="phone" [size]="14" /> Phone</dt><dd class="tabular">{{ p.phone }}</dd></div>
+          <div class="cp__row"><dt><app-icon name="messages" [size]="14" /> Email</dt><dd>{{ p.email }}</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <div class="cp__foot">
+      <button class="cp__btn cp__btn--ghost" type="button" (click)="message()"><app-icon name="messages" [size]="15" /> Message</button>
+      <button class="cp__btn cp__btn--primary" type="button" (click)="download()"><app-icon name="download" [size]="15" /> Download PDF</button>
+    </div>
+  </aside>
+}

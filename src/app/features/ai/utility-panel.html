@@ -1,0 +1,63 @@
+@if (panel(); as active) {
+  <div class="sd-scrim" (click)="svc.close()"></div>
+  <aside class="sd" role="dialog" aria-modal="true" [attr.aria-label]="active"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="svc.close()">
+
+    <header class="sd__head">
+      @switch (active) {
+        @case ('notifications') { <span class="sd__tile" style="background:var(--warn-bg);color:var(--warn)"><app-icon name="bell" [size]="18" /></span><h2 class="sd__title">Notifications</h2> }
+        @case ('support') { <span class="sd__tile" style="background:var(--sky-bg);color:var(--sky)"><app-icon name="support" [size]="18" /></span><h2 class="sd__title">Support</h2> }
+      }
+      <button class="sd__close" type="button" aria-label="Close" (click)="svc.close()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body">
+      @switch (active) {
+        @case ('notifications') {
+          <div class="up__tabs" role="tablist">
+            <button class="up__tab" type="button" role="tab" [class.is-on]="notifTab() === 'account'"
+              [attr.aria-selected]="notifTab() === 'account'" (click)="notifTab.set('account')">Account</button>
+            <button class="up__tab" type="button" role="tab" [class.is-on]="notifTab() === 'news'"
+              [attr.aria-selected]="notifTab() === 'news'" (click)="notifTab.set('news')">What's New</button>
+          </div>
+
+          @if (notifTab() === 'account') {
+            <ul class="up__list">
+              @for (n of notifications; track n.text) {
+                <li><button class="up__row" type="button" (click)="go(n.route)">
+                  <span class="up__ic" [attr.data-tone]="n.tone"><app-icon [name]="n.icon" [size]="16" /></span>
+                  <span class="up__body"><span class="up__text">{{ n.text }}</span><span class="up__time">{{ n.time }}</span></span>
+                </button></li>
+              }
+            </ul>
+          } @else {
+            <ul class="up__news">
+              @for (w of whatsNew; track w.title) {
+                <li class="up__new">
+                  <span class="up__ic" data-tone="info"><app-icon [name]="w.icon" [size]="16" /></span>
+                  <span class="up__newbody">
+                    <span class="up__newtop"><span class="up__newtag">{{ w.tag }}</span><span class="up__newdate">{{ w.date }}</span></span>
+                    <span class="up__newtitle">{{ w.title }}</span>
+                    <span class="up__newtext">{{ w.body }}</span>
+                  </span>
+                </li>
+              }
+            </ul>
+          }
+        }
+        @case ('support') {
+          <ul class="up__list">
+            @for (h of help; track h.title) {
+              <li><button class="up__row" type="button">
+                <span class="up__ic" data-tone="neutral"><app-icon [name]="h.icon" [size]="16" /></span>
+                <span class="up__body"><span class="up__name">{{ h.title }}</span><span class="up__last">{{ h.sub }}</span></span>
+                <app-icon name="chevron-right" [size]="15" class="up__go" />
+              </button></li>
+            }
+          </ul>
+          <button class="up__contact" type="button">Contact support</button>
+        }
+      }
+    </div>
+  </aside>
+}

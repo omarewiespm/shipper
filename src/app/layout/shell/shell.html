@@ -1,0 +1,24 @@
+<div class="shell" [class.shell--nav-open]="mobileNavOpen()">
+  <aside class="shell__sidebar">
+    <app-sidebar />
+  </aside>
+
+  @if (mobileNavOpen()) {
+    <div class="shell__scrim" (click)="closeMobileNav()" aria-hidden="true"></div>
+  }
+
+  <div class="shell__main">
+    <app-header />
+    <main class="shell__content" tabindex="-1">
+      <div class="shell__content-inner">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+
+  <app-toast-outlet />
+  <app-ai-chat-drawer />
+  <app-utility-panel />
+  <app-messages-panel />
+  <app-create-drawer />
+</div>

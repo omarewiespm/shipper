@@ -1,0 +1,133 @@
+@if (open()) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd ap" role="dialog" aria-modal="true" aria-label="Add partner"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="building" [size]="18" /></span>
+      <h2 class="sd__title">Add partner</h2>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="ap__tabs" role="tablist">
+      <button class="ap__tab" type="button" role="tab" [class.is-on]="mode() === 'create'" (click)="setMode('create')">Create partner</button>
+      <button class="ap__tab" type="button" role="tab" [class.is-on]="mode() === 'bulk'" (click)="setMode('bulk')">Bulk upload</button>
+    </div>
+
+    @if (mode() === 'create') {
+      <form class="sd__body ap__body" (submit)="$event.preventDefault(); submit()">
+        <div class="ap__field">
+          <label class="ap__label">Company name</label>
+          <input class="ap__input" [value]="name()" (input)="name.set($any($event.target).value)" placeholder="e.g. Al Othaim Markets" aria-label="Company name" />
+        </div>
+
+        <div class="ap__field">
+          <label class="ap__label">Relationship</label>
+          <div class="ap__rels">
+            @for (r of rels; track r.key) {
+              <button class="ap__rel" type="button" [class.is-on]="relationship() === r.key" (click)="relationship.set(r.key)">
+                <span class="ap__rel-l">{{ r.label }}</span>
+                <span class="ap__rel-h">{{ r.hint }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="ap__field">
+          <label class="ap__label">City</label>
+          <input class="ap__input" [value]="city()" (input)="city.set($any($event.target).value)" placeholder="e.g. Riyadh" aria-label="City" />
+        </div>
+
+        <div class="ap__2col">
+          <div class="ap__field">
+            <label class="ap__label">Contact name</label>
+            <input class="ap__input" [value]="contactName()" (input)="contactName.set($any($event.target).value)" placeholder="Full name" aria-label="Contact name" />
+          </div>
+          <div class="ap__field">
+            <label class="ap__label">Phone</label>
+            <input class="ap__input" [value]="contactPhone()" (input)="contactPhone.set($any($event.target).value)" placeholder="+966…" aria-label="Phone" />
+          </div>
+        </div>
+
+        <div class="ap__field">
+          <label class="ap__label">Email</label>
+          <input class="ap__input" [value]="contactEmail()" (input)="contactEmail.set($any($event.target).value)" placeholder="name@company.com" aria-label="Email" />
+        </div>
+
+        <button class="ap__invite" type="button" [class.is-on]="invite()" (click)="invite.set(!invite())">
+          <span class="ap__check">@if (invite()) { <app-icon name="check" [size]="13" /> }</span>
+          <span class="ap__invite-t">
+            <span class="ap__invite-l">Send a Madar invite now</span>
+            <span class="ap__invite-h">They join and link to your account automatically.</span>
+          </span>
+        </button>
+      </form>
+    } @else {
+      <!-- Bulk upload -->
+      <div class="sd__body ap__body">
+        <ol class="ap__steps">
+          <li class="ap__step">
+            <span class="ap__stepn">1</span>
+            <div class="ap__stepbody">
+              <p class="ap__stept">Download the CSV template</p>
+              <p class="ap__steph">Fill one partner per row — company, relationship, city, contact.</p>
+              <button class="ap__dl" type="button" (click)="downloadTemplate()"><app-icon name="download" [size]="15" /> Download template</button>
+            </div>
+          </li>
+          <li class="ap__step">
+            <span class="ap__stepn">2</span>
+            <div class="ap__stepbody">
+              <p class="ap__stept">Upload your file</p>
+              @if (bulk() === 'idle') {
+                <label class="ap__drop">
+                  <input type="file" accept=".csv" hidden (change)="onFile($event)" />
+                  <app-icon name="upload" [size]="22" />
+                  <span class="ap__dropt">Choose a CSV file</span>
+                  <span class="ap__droph">or drag it here</span>
+                </label>
+              } @else {
+                <div class="ap__file">
+                  <app-icon name="file-check" [size]="16" />
+                  <span class="ap__filename">{{ fileName() }}</span>
+                  <span class="ap__filecount">{{ rows().length }} partners</span>
+                  @if (bulk() === 'ready') { <button class="ap__filex" type="button" aria-label="Remove file" (click)="setMode('bulk')"><app-icon name="x" [size]="15" /></button> }
+                </div>
+              }
+            </div>
+          </li>
+          <li class="ap__step">
+            <span class="ap__stepn">3</span>
+            <div class="ap__stepbody">
+              <p class="ap__stept">Send invitations</p>
+              @if (bulk() === 'sending' || bulk() === 'done') {
+                <div class="ap__prog">
+                  <div class="ap__track"><span class="ap__fill" [style.inline-size.%]="progress()"></span></div>
+                  <span class="ap__progtxt">
+                    @if (bulk() === 'done') { <app-icon name="check" [size]="14" /> {{ rows().length }} invitations sent }
+                    @else { Sending… {{ sent() }} / {{ rows().length }} }
+                  </span>
+                </div>
+              } @else {
+                <p class="ap__steph">Each partner gets a Madar invite and links to your account once they join.</p>
+              }
+            </div>
+          </li>
+        </ol>
+      </div>
+    }
+
+    <div class="ap__foot">
+      @if (mode() === 'create') {
+        <button class="ap__cancel" type="button" (click)="closed.emit()">Cancel</button>
+        <button class="ap__save" type="button" [disabled]="!canSave()" (click)="submit()">{{ invite() ? 'Add & invite' : 'Add partner' }}</button>
+      } @else {
+        @if (bulk() === 'done') {
+          <button class="ap__save" type="button" (click)="closed.emit()">Done</button>
+        } @else {
+          <button class="ap__cancel" type="button" (click)="closed.emit()">Cancel</button>
+          <button class="ap__save" type="button" [disabled]="bulk() !== 'ready'" (click)="sendInvites()">Send {{ rows().length || '' }} invitations</button>
+        }
+      }
+    </div>
+  </aside>
+}

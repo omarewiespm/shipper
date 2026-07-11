@@ -1,0 +1,27 @@
+.ac.sd { inline-size: min(440px, 100vw); }
+.ac__body { display: flex; flex-direction: column; gap: 16px; padding: var(--sp-4); }
+.ac__field { display: flex; flex-direction: column; gap: 6px; }
+.ac__label { font-size: 12.5px; font-weight: 500; color: var(--ink-2); }
+.ac__input {
+  block-size: 44px; padding-inline: 13px; border: 1px solid var(--line); border-radius: 11px; background: var(--card);
+  font-family: var(--font); font-size: 14px; color: var(--strong); outline: none;
+}
+.ac__input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.ac__2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.ac__types { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ac__type { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; padding: 11px 13px; border: 1px solid var(--line); border-radius: 11px; background: var(--card); text-align: start; font-family: var(--font); }
+.ac__type.is-on { border-color: var(--navy); background: var(--nav-active); box-shadow: 0 0 0 2px var(--ring); }
+.ac__type-l { font-size: 13px; font-weight: 600; color: var(--strong); }
+.ac__type-h { font-size: 10.5px; color: var(--ink-2); }
+
+.ac__note { display: flex; gap: 9px; padding: 12px; border-radius: 12px; background: var(--info-bg); color: var(--info); font-size: 12px; line-height: 1.5; }
+.ac__note app-icon { flex: none; margin-block-start: 1px; }
+.ac__note strong { font-weight: 700; }
+
+.ac__foot { display: flex; gap: 10px; padding: var(--sp-3) var(--sp-4); border-block-start: 1px solid var(--line); }
+.ac__cancel { flex: none; block-size: 44px; padding-inline: 18px; border: 1px solid var(--line); border-radius: 11px; background: var(--card); font-family: var(--font); font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.ac__cancel:hover { background: var(--line-soft); }
+.ac__save { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; block-size: 44px; border: none; border-radius: 11px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 13.5px; font-weight: 600; }
+.ac__save:hover { background: var(--navy-700); }
+.ac__save:disabled { opacity: 0.5; }

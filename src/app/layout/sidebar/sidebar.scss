@@ -1,0 +1,180 @@
+.sb {
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-block: 0;
+  padding-inline: 0;
+  background: var(--sidebar);
+}
+
+/* Logo block — same height as the header so the mark lines up with the search bar */
+.sb__logo {
+  display: flex;
+  align-items: center;
+  block-size: var(--header-h);
+  padding-inline: 20px;
+  flex: none;
+}
+.sb__logo-full { block-size: 30px; inline-size: auto; max-inline-size: 100%; }
+
+/* ---- Zone 1: navigation (flex-grow, scrolls) --------------------------- */
+.sb__nav {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-block-start: 8px;
+  padding-inline: 12px; /* inset so rows read as rounded blocks */
+  scrollbar-width: none;
+}
+.sb__nav::-webkit-scrollbar { display: none; }
+.sb__group { display: flex; flex-direction: column; gap: 4px; }
+/* Groups separated by whitespace alone — no divider line. */
+.sb__group + .sb__group { margin-block-start: 8px; }
+
+/* Nav item — inset rounded pill */
+.sb__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px; /* tight inline padding so "Payments and Invoices" fits at 220px */
+  border-radius: 12px;
+  color: var(--nav-ink);
+  background: none;
+  border: none;
+  inline-size: 100%;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: start;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.sb__item:hover { background: var(--line-soft); }
+.sb__item:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+.sb__icon { display: inline-flex; flex: none; color: var(--nav-ink); }
+.sb__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sb__badge { margin-inline-start: auto; }
+
+/* Active: soft navy-tinted pill + navy 600. No marker; orange stays reserved. */
+.sb__item.is-active {
+  background: var(--nav-active);
+  color: var(--navy);
+  font-weight: 600;
+}
+.sb__item.is-active .sb__icon { color: var(--navy); }
+
+/* Marker removed — the tinted pill alone communicates selection. */
+.sb__marker { display: none; }
+
+/* Chevron on parent items */
+.sb__chevron {
+  display: inline-flex;
+  margin-inline-start: auto;
+  color: var(--ink-3);
+  transition: transform var(--dur-base) var(--ease);
+}
+.sb__chevron.is-open { transform: rotate(180deg); }
+
+/* Children */
+.sb__children { display: flex; flex-direction: column; gap: 4px; }
+.sb__child {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  padding-inline-start: 44px; /* aligns under the parent label */
+  border-radius: 12px;
+  color: var(--nav-ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.sb__child:hover { background: var(--line-soft); color: var(--navy); }
+.sb__child:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+.sb__child.is-active {
+  background: var(--nav-active);
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ---- Pinned footer (never scrolls) — utility strip + primary action ---- */
+.sb__bottom {
+  flex: none;
+  padding-inline: 12px; /* matches the nav inset so the Create button = active pill width */
+  padding-block-start: 32px; /* whitespace separates it from the nav — no line */
+}
+
+/* Zone 2: utility strip — one row, evenly distributed across the inner width */
+.sb__utils {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sb__util {
+  position: relative;
+  inline-size: 36px;
+  block-size: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  border-radius: 9px;
+  color: var(--nav-ink);
+  transition: background 150ms var(--ease), color 150ms var(--ease);
+}
+.sb__util:hover { background: var(--line-soft); color: var(--navy); }
+.sb__util:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+/* Informational unread dot (not an alert) — light blue, not orange. */
+.sb__util-dot {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 8px;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--lightblue);
+  border: 1.5px solid var(--card);
+}
+.sb__util-badge {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-end: 4px;
+}
+.sb__sr {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Zone 3: create button — the single, unmistakable primary action */
+.sb__create {
+  inline-size: 100%;
+  margin-block-start: 20px;
+  margin-block-end: 20px;
+  block-size: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 12px;
+  background: var(--navy-900);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 150ms var(--ease), transform var(--dur-fast) var(--ease);
+}
+.sb__create:hover { background: var(--navy); }
+.sb__create:active { transform: scale(0.99); }
+.sb__create:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }

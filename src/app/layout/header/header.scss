@@ -1,0 +1,131 @@
+.hd {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  block-size: var(--header-h);
+  padding-inline: 24px;
+  background: var(--card);
+  border-block-end: 1px solid var(--line);
+}
+
+.hd__icon-btn {
+  inline-size: 34px;
+  block-size: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: none;
+  color: var(--ink-2);
+  flex: none;
+}
+.hd__icon-btn:hover { background: var(--line-soft); }
+.hd__hamburger { display: none; }
+
+/* LEFT — large pill search (raised white field) */
+.hd__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-inline-size: 0;
+  block-size: var(--search-h);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--search-radius);
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.hd__search:focus-within {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(34, 50, 103, 0.10);
+}
+.hd__search-icon {
+  position: absolute;
+  inset-inline-start: 14px;
+  inset-block: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-3);
+  pointer-events: none;
+}
+.hd__search-input {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: 100%;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--strong);
+  padding-inline-start: 42px;
+  padding-inline-end: 16px;
+}
+.hd__search-input::placeholder { color: var(--ink-3); font-weight: 400; }
+
+/* RIGHT — cluster pinned to the edge */
+.hd__cluster {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Wallet chip */
+.hd__wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  block-size: 34px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-size: 13px;
+  font-weight: 500;
+  flex: none;
+}
+
+/* Avatar trigger */
+.hd__account { background: none; border: none; padding: 0; flex: none; border-radius: var(--radius-pill); }
+
+/* Account menu */
+.hd__menu {
+  inline-size: 240px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lift);
+  padding: var(--sp-2);
+}
+.hd__menu-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+}
+.hd__menu-company { font-size: 13px; font-weight: 600; color: var(--ink); }
+.hd__menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  inline-size: 100%;
+  padding: 9px 10px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 13px;
+  text-align: start;
+}
+.hd__menu-item app-icon { color: var(--ink-2); }
+.hd__menu-item:hover { background: var(--line-soft); }
+.hd__menu-divider { block-size: 1px; background: var(--line); margin: var(--sp-1) var(--sp-2); }
+
+@media (max-width: 1023px) {
+  .hd__hamburger { display: inline-flex; }
+}

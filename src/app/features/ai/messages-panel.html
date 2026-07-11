@@ -1,0 +1,101 @@
+@if (svc.isOpen('messages')) {
+  <div class="sd-scrim" (click)="svc.close()"></div>
+  <aside class="sd mp" role="dialog" aria-modal="true" aria-label="Messages"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="openChat() ? back() : svc.close()">
+
+    @if (openChat(); as c) {
+      <!-- Conversation view -->
+      <header class="sd__head">
+        <button class="mp__back" type="button" aria-label="Back" (click)="back()"><app-icon name="arrow-left" [size]="18" /></button>
+        <app-avatar [name]="c.party === 'fleet' && recipient() === 'driver' ? c.driver : c.name" [size]="36" tone="neutral" [square]="true" />
+        <div class="mp__cid">
+          <span class="mp__cname">{{ c.party === 'fleet' && recipient() === 'driver' ? c.driver : c.name }}</span>
+          <span class="mp__cmeta">{{ c.shipmentId }} · {{ c.route }}</span>
+        </div>
+        @if (c.active) { <span class="mp__badge mp__badge--live"><span class="mp__dot"></span> Active</span> }
+        @else { <span class="mp__badge mp__badge--closed">Closed</span> }
+        <button class="sd__close" type="button" aria-label="Close" (click)="svc.close()"><app-icon name="x" [size]="18" /></button>
+      </header>
+
+      @if (c.party === 'fleet') {
+        <div class="mp__seg" role="tablist">
+          <button class="mp__segbtn" type="button" [class.is-on]="recipient() === 'driver'" (click)="setRecipient('driver')"><app-icon name="truck" [size]="14" /> Driver</button>
+          <button class="mp__segbtn" type="button" [class.is-on]="recipient() === 'manager'" (click)="setRecipient('manager')"><app-icon name="building" [size]="14" /> Fleet manager</button>
+        </div>
+      }
+
+      <div class="sd__body mp__msgs" #scroller>
+        @for (m of messages(); track $index) {
+          <div class="mp__msg" [class.mp__msg--me]="m.me"><span class="mp__bubble">{{ m.text }}</span></div>
+        }
+      </div>
+
+      @if (c.active) {
+        <form class="mp__composer" (submit)="$event.preventDefault(); send()">
+          <input class="mp__input" [value]="draft()" (input)="draft.set($any($event.target).value)"
+            placeholder="Type a message…" aria-label="Message" />
+          <button class="mp__send" type="submit" aria-label="Send"><app-icon name="send" [size]="18" /></button>
+        </form>
+      } @else {
+        <div class="mp__closed">
+          <app-icon name="check" [size]="15" /> This chat closed when the shipment was delivered.
+          <button class="mp__closedlink" type="button" (click)="openTracking()">View shipment</button>
+        </div>
+      }
+    } @else {
+      <!-- List view -->
+      <header class="sd__head">
+        <span class="sd__tile" style="background:var(--info-bg);color:var(--info)"><app-icon name="messages" [size]="18" /></span>
+        <h2 class="sd__title">Messages</h2>
+        <button class="sd__close" type="button" aria-label="Close" (click)="svc.close()"><app-icon name="x" [size]="18" /></button>
+      </header>
+
+      <div class="mp__search">
+        <app-icon name="search" [size]="16" class="mp__sico" />
+        <input class="mp__sinput" [value]="query()" (input)="query.set($any($event.target).value)"
+          placeholder="Search message, shipment ID, name…" aria-label="Search messages" />
+        @if (query()) { <button class="mp__sclear" type="button" aria-label="Clear" (click)="query.set('')"><app-icon name="x" [size]="15" /></button> }
+      </div>
+
+      <div class="mp__tabs" role="tablist">
+        <button class="mp__tab" type="button" role="tab" [class.is-on]="tab() === 'fleet'" (click)="select('fleet')">Fleet</button>
+        <button class="mp__tab" type="button" role="tab" [class.is-on]="tab() === 'customer'" (click)="select('customer')">Partner</button>
+      </div>
+
+      <div class="sd__body mp__list">
+        @if (activeChats().length) {
+          <p class="mp__group">Active shipments</p>
+          @for (c of activeChats(); track c.id) {
+            <button class="mp__row" type="button" (click)="openConversation(c)">
+              <app-avatar [name]="c.name" [size]="40" tone="neutral" [square]="true" />
+              <span class="mp__rbody">
+                <span class="mp__rtop"><span class="mp__rname">{{ c.name }}</span><span class="mp__rtime">{{ c.time }}</span></span>
+                <span class="mp__rlast" [class.mp__rlast--unread]="c.unread">{{ c.last }}</span>
+                <span class="mp__rship"><app-icon name="package" [size]="11" /> {{ c.shipmentId }} · {{ c.route }}</span>
+              </span>
+              @if (c.unread) { <span class="mp__count">{{ c.unread }}</span> }
+            </button>
+          }
+        }
+
+        @if (pastChats().length) {
+          <p class="mp__group">Past shipments</p>
+          @for (c of pastChats(); track c.id) {
+            <button class="mp__row mp__row--past" type="button" (click)="openConversation(c)">
+              <app-avatar [name]="c.name" [size]="40" tone="neutral" [square]="true" />
+              <span class="mp__rbody">
+                <span class="mp__rtop"><span class="mp__rname">{{ c.name }}</span><span class="mp__rtime">{{ c.time }}</span></span>
+                <span class="mp__rlast">{{ c.last }}</span>
+                <span class="mp__rship"><app-icon name="check" [size]="11" /> {{ c.shipmentId }} · delivered</span>
+              </span>
+            </button>
+          }
+        }
+
+        @if (!activeChats().length && !pastChats().length) {
+          <p class="mp__empty">No {{ tabLabel() }} chats match “{{ query() }}”.</p>
+        }
+      </div>
+    }
+  </aside>
+}

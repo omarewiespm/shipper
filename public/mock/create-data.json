@@ -1,0 +1,30 @@
+{
+  "pickupLocations": [
+    { "id": "LOC-1", "name": "Riyadh Central Warehouse", "address": "Exit 18, Eastern Ring Rd", "city": "Riyadh", "primary": true },
+    { "id": "LOC-2", "name": "Jeddah Distribution Centre", "address": "Al Khumrah Industrial District", "city": "Jeddah" }
+  ],
+  "customers": [
+    { "id": "CUS-1", "name": "Al Othaim Markets", "city": "Riyadh", "address": "Takhassusi St", "recent": true, "contact": { "name": "Faisal Al Harbi", "phone": "+966 55 120 4471" } },
+    { "id": "CUS-2", "name": "Panda Retail", "city": "Jeddah", "address": "Al Khumrah District", "recent": true, "contact": { "name": "Noura Al Qahtani", "phone": "+966 56 887 2310" } },
+    { "id": "CUS-3", "name": "Extra Stores", "city": "Dammam", "address": "2nd Industrial City", "recent": false, "contact": null },
+    { "id": "CUS-4", "name": "Nahdi Medical", "city": "Makkah", "address": "Al Awali District", "recent": false, "contact": { "name": "Huda Al Zahrani", "phone": "+966 53 771 6620" } }
+  ],
+  "vehicleTypes": ["Reefer Trailer", "Curtain-side", "Flatbed", "Box 12m"],
+  "products": ["Ceramic", "Food & beverage", "Electronics", "Construction materials", "Chemicals", "General cargo"],
+  "carriers": [
+    { "id": "CAR-1", "name": "Iron Clad Arabia", "drivers": [
+      { "id": "DRV-1", "name": "Omar Ewies", "truck": "Reefer #4821" },
+      { "id": "DRV-2", "name": "Saeed Al Ghamdi", "truck": "Curtain #7715" }
+    ] },
+    { "id": "CAR-2", "name": "Al Rajhi Transport", "drivers": [
+      { "id": "DRV-3", "name": "Turki Al Anazi", "truck": "Flatbed #1180" }
+    ] }
+  ],
+  "rates": [
+    { "destinationCity": "Riyadh", "vehicleType": "Reefer Trailer", "rate": 1850 },
+    { "destinationCity": "Riyadh", "vehicleType": "Curtain-side", "rate": 1600 },
+    { "destinationCity": "Jeddah", "vehicleType": "Reefer Trailer", "rate": 3200 },
+    { "destinationCity": "Jeddah", "vehicleType": "Curtain-side", "rate": 3000 },
+    { "destinationCity": "Dammam", "vehicleType": "Flatbed", "rate": 2400 }
+  ]
+}

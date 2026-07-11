@@ -1,0 +1,67 @@
+:host { display: contents; }
+
+.pod.sd { inline-size: min(500px, 100vw); }
+
+.pod__heading { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.pod__date { font-size: 11.5px; color: var(--ink-3); }
+
+.pod__body { display: flex; flex-direction: column; gap: 22px; padding: var(--sp-4); }
+
+/* Section */
+.pod__sec { display: flex; flex-direction: column; gap: 10px; }
+.pod__h { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-3); }
+
+/* Fields */
+.pod__field { display: flex; flex-direction: column; gap: 5px; }
+.pod__label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.pod__label em { font-style: normal; font-weight: 500; color: var(--ink-3); }
+.pod__row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pod__input { block-size: 42px; padding-inline: 12px; border: 1px solid var(--line); border-radius: 11px; background: var(--card); font-family: var(--font); font-size: 14px; color: var(--strong); inline-size: 100%; }
+.pod__input:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(34, 50, 103, 0.13); }
+.pod__area { block-size: auto; padding-block: 10px; resize: vertical; }
+
+/* Supplier select with caret */
+.pod__select { position: relative; }
+select.pod__input { appearance: none; padding-inline-end: 38px; cursor: pointer; }
+.pod__select-caret { position: absolute; inset-inline-end: 12px; inset-block-start: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+.pod__vendor { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+
+/* Item cards */
+.pod__items { display: flex; flex-direction: column; gap: 10px; }
+.pod__item { border: 1px solid var(--line); border-radius: 13px; background: var(--card); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.pod__item-top { display: flex; align-items: center; gap: 8px; }
+.pod__idesc { flex: 1; min-inline-size: 0; block-size: 38px; padding-inline: 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); font-family: var(--font); font-size: 13.5px; font-weight: 600; color: var(--strong); }
+.pod__idesc:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(34, 50, 103, 0.13); }
+.pod__idel { flex: none; inline-size: 32px; block-size: 32px; display: inline-flex; align-items: center; justify-content: center; border: none; background: none; border-radius: 8px; color: var(--ink-3); }
+.pod__idel:hover { background: var(--danger-bg); color: var(--danger); }
+
+.pod__item-grid { display: grid; grid-template-columns: 1.2fr 0.7fr 1fr 1fr; gap: 8px; }
+.pod__mini { display: flex; flex-direction: column; gap: 4px; min-inline-size: 0; }
+.pod__mini > span { font-size: 10.5px; font-weight: 600; letter-spacing: 0.2px; text-transform: uppercase; color: var(--ink-3); }
+.pod__minin { block-size: 34px; padding-inline: 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); font-family: var(--font); font-size: 13px; color: var(--strong); inline-size: 100%; }
+.pod__minin:focus-visible { outline: none; border-color: var(--navy); }
+.pod__minin--num { text-align: end; font-variant-numeric: tabular-nums; }
+.pod__mini--tot { align-items: flex-end; justify-content: flex-end; }
+.pod__mini--tot b { font-size: 13.5px; font-weight: 700; color: var(--strong); white-space: nowrap; }
+
+.pod__add { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; border: 1px dashed var(--line); border-radius: 10px; padding: 9px 14px; background: none; font-family: var(--font); font-size: 12.5px; font-weight: 600; color: var(--navy); }
+.pod__add:hover { background: var(--nav-active); border-color: var(--navy); }
+
+/* Fixed footer — summary + CTA */
+.pod__foot { border-block-start: 1px solid var(--line); padding: var(--sp-3) var(--sp-4) var(--sp-4); display: flex; flex-direction: column; gap: 12px; background: var(--card); }
+.pod__sum { display: flex; flex-direction: column; gap: 5px; }
+.pod__sumrow { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); font-size: 13px; color: var(--ink-2); }
+.pod__sumrow--grand { margin-block-start: 5px; padding-block-start: 10px; border-block-start: 1px solid var(--line-soft); }
+.pod__sumrow--grand span { font-size: 14px; font-weight: 700; color: var(--strong); }
+.pod__sumrow--grand b { font-size: 20px; font-weight: 800; color: var(--navy-900); }
+
+.pod__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; inline-size: 100%; block-size: 48px; border: none; border-radius: 12px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 14.5px; font-weight: 600; cursor: pointer; transition: background var(--dur-fast) var(--ease); }
+.pod__cta:hover:not(:disabled) { background: var(--navy-700); }
+.pod__cta:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 440px) {
+  .pod__row2 { grid-template-columns: 1fr; }
+  .pod__item-grid { grid-template-columns: 1fr 1fr; }
+}

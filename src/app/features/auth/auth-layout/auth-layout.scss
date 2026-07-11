@@ -1,0 +1,42 @@
+:host { display: block; }
+
+.al {
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);
+  padding: var(--sp-6);
+  background: var(--bg);
+}
+
+.al__brand { display: flex; justify-content: center; }
+.al__logo { block-size: 34px; inline-size: auto; }
+
+.al__card {
+  inline-size: 100%;
+  max-inline-size: 420px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lift);
+  padding: 36px 34px 32px;
+}
+
+.al__foot {
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* Mobile: form sits directly on the background */
+@media (max-width: 640px) {
+  .al { justify-content: flex-start; padding: var(--sp-8) var(--sp-5); }
+  .al__card {
+    border: none;
+    box-shadow: none;
+    background: none;
+    padding: var(--sp-4) 0 0;
+  }
+}

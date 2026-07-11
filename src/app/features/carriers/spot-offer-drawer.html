@@ -1,0 +1,57 @@
+@if (truck(); as t) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd so" role="dialog" aria-modal="true" [attr.aria-label]="'Offer to ' + t.fleet"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <app-avatar [name]="t.fleet" [size]="38" tone="neutral" [square]="true" />
+      <div class="so__id">
+        <span class="so__name">{{ t.fleet }}</span>
+        <span class="so__sub">{{ t.driver }} · <app-icon name="star" [size]="11" /> {{ t.rating }}</span>
+      </div>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <!-- Truck facts -->
+    <div class="so__facts">
+      <div class="so__route"><span class="so__city">{{ t.atCity }}</span><app-icon name="arrow-right" [size]="14" /><span class="so__city">{{ t.headingCity }}</span></div>
+      <div class="so__tags">
+        <span class="so__tag"><app-icon name="truck" [size]="13" /> {{ t.truckType }}</span>
+        <span class="so__tag"><app-icon name="package" [size]="13" /> {{ t.capacityT }}t</span>
+        <span class="so__tag"><app-icon name="clock" [size]="13" /> {{ t.availableIn }}</span>
+        <span class="so__tag"><app-icon name="pin" [size]="13" /> {{ t.distanceKm }} km away</span>
+      </div>
+    </div>
+
+    <!-- Negotiation chat -->
+    <div class="sd__body so__msgs" #scroller>
+      @for (m of messages(); track $index) {
+        <div class="so__msg" [class.so__msg--me]="m.me"><span class="so__bubble">{{ m.text }}</span></div>
+      }
+    </div>
+
+    <!-- Free chat -->
+    <form class="so__composer" (submit)="$event.preventDefault(); sendMessage()">
+      <input class="so__cinput" [value]="draft()" (input)="draft.set($any($event.target).value)" placeholder="Message the fleet manager…" aria-label="Message" />
+      <button class="so__csend" type="submit" aria-label="Send message"><app-icon name="send" [size]="18" /></button>
+    </form>
+
+    <!-- Your offer -->
+    <div class="so__offer">
+      <span class="so__olabel">Your price</span>
+      <div class="so__stepper">
+        <button type="button" aria-label="Lower" (click)="step(-100)"><app-icon name="minus" [size]="15" /></button>
+        <span class="so__cur">SAR</span>
+        <input class="so__price" type="text" inputmode="numeric" [value]="price()" (change)="setPrice($any($event.target).value)" aria-label="Offer price" />
+        <button type="button" aria-label="Raise" (click)="step(100)"><app-icon name="plus" [size]="15" /></button>
+      </div>
+      <button class="so__send" type="button" (click)="sendOffer()"><app-icon name="send" [size]="15" /> Send offer</button>
+    </div>
+
+    <div class="so__foot">
+      <button class="so__accept" type="button" [class.is-ready]="agreed()" (click)="accept()">
+        <app-icon name="check" [size]="16" /> Accept &amp; book · SAR {{ price().toLocaleString() }}
+      </button>
+    </div>
+  </aside>
+}

@@ -1,0 +1,32 @@
+.cp.sd { inline-size: min(440px, 100vw); }
+.cp__id { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.cp__namerow { display: flex; align-items: center; gap: 6px; }
+.cp__name { font-size: 15px; font-weight: 700; color: var(--strong); }
+.cp__verified { color: var(--ok); flex: none; }
+.cp__type { font-size: 12px; color: var(--ink-2); }
+
+.cp__body { display: flex; flex-direction: column; gap: 18px; padding: var(--sp-4); }
+.cp__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cp__stat { display: flex; flex-direction: column; gap: 3px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.cp__snum { display: inline-flex; align-items: center; gap: 4px; font-size: 20px; font-weight: 700; color: var(--strong); }
+.cp__snum app-icon { color: var(--gold); }
+.cp__slabel { font-size: 11.5px; color: var(--ink-2); }
+
+.cp__sec { }
+.cp__h { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--strong); }
+.cp__kv { margin: 0; }
+.cp__row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding-block: 9px; border-block-end: 1px solid var(--line-soft); }
+.cp__row:last-child { border-block-end: none; }
+.cp__row dt { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); flex: none; }
+.cp__row dt app-icon { color: var(--ink-3); }
+.cp__row dd { margin: 0; font-size: 13px; font-weight: 500; color: var(--strong); text-align: end; }
+.cp__yes { color: var(--ok); font-weight: 600; }
+
+.cp__foot { display: flex; gap: 10px; padding: var(--sp-3) var(--sp-4); border-block-start: 1px solid var(--line); }
+.cp__btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; block-size: 44px; border-radius: 11px; border: 1px solid transparent; font-family: var(--font); font-size: 13.5px; font-weight: 600; }
+.cp__btn--ghost { flex: none; padding-inline: 16px; background: var(--card); border-color: var(--line); color: var(--ink); }
+.cp__btn--ghost:hover { background: var(--line-soft); }
+.cp__btn--primary { background: var(--navy); color: #fff; }
+.cp__btn--primary:hover { background: var(--navy-700); }
+
+.tabular { font-variant-numeric: tabular-nums; }

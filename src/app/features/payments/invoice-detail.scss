@@ -1,0 +1,49 @@
+:host { display: block; }
+
+/* Header */
+.ivd__head { display: flex; align-items: center; gap: 12px; margin-block-end: 20px; flex-wrap: wrap; }
+.ivd__back { inline-size: 34px; block-size: 34px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+.ivd__back:hover { background: var(--line-soft); border-color: var(--navy); color: var(--navy); }
+.ivd__id { margin: 0; font-size: 20px; font-weight: 700; color: var(--strong); }
+.ivd__spacer { flex: 1; }
+.ivd__pay { display: inline-flex; align-items: center; gap: 7px; block-size: 40px; padding-inline: 18px; border: none; border-radius: 11px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 13.5px; font-weight: 600; }
+.ivd__pay:hover { background: var(--navy-700); }
+.ivd__ghost { display: inline-flex; align-items: center; gap: 7px; block-size: 40px; padding-inline: 16px; border: 1px solid var(--line); border-radius: 11px; background: var(--card); color: var(--ink); font-family: var(--font); font-size: 13px; font-weight: 600; }
+.ivd__ghost:hover { background: var(--line-soft); }
+
+/* Layout */
+.ivd__grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+.ivd__main { display: flex; flex-direction: column; gap: 16px; min-inline-size: 0; }
+.ivd__side { display: flex; flex-direction: column; gap: 16px; }
+.ivd__card { border: 1px solid var(--line); border-radius: 16px; background: var(--card); padding: 18px; }
+.ivd__ck { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-3); margin-block-end: 12px; }
+
+/* Key-value list (charges + details) */
+.ivd__kv { list-style: none; margin: 0; padding: 0; }
+.ivd__kv li { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding-block: 9px; border-block-end: 1px solid var(--line-soft); }
+.ivd__kv li:last-child { border-block-end: none; }
+.ivd__kv span { font-size: 13px; color: var(--ink-2); }
+.ivd__kv b { font-size: 13px; font-weight: 600; color: var(--strong); text-align: end; }
+.ivd__kv-total { margin-block-start: 4px; padding-block-start: 12px; border-block-start: 1px solid var(--line) !important; }
+.ivd__kv-total span { font-size: 14px; font-weight: 700; color: var(--strong); }
+.ivd__kv-total b { font-size: 18px; font-weight: 800; color: var(--navy-900); }
+.ivd__link { border: none; background: none; padding: 0; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--navy); cursor: pointer; }
+.ivd__link:hover { text-decoration: underline; }
+
+/* Documents */
+.ivd__docs { list-style: none; margin: 0; padding: 0; }
+.ivd__doc { display: flex; align-items: center; gap: var(--sp-3); padding: 9px 6px; border-radius: 10px; }
+.ivd__doc:hover { background: var(--line-soft); }
+.ivd__docic { inline-size: 32px; block-size: 32px; flex: none; display: grid; place-items: center; border-radius: 9px; background: var(--nav-active); color: var(--navy); }
+.ivd__docbody { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.ivd__docname { font-size: 13px; font-weight: 500; color: var(--strong); }
+.ivd__docsub { font-size: 11px; color: var(--ink-3); }
+.ivd__docdl { inline-size: 30px; block-size: 30px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: none; background: none; border-radius: 8px; color: var(--ink-3); }
+.ivd__docdl:hover { background: var(--card); color: var(--navy); box-shadow: var(--shadow); }
+
+.ivd__missing { text-align: center; padding: 48px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ivd__missing-t { margin: 0; font-size: 16px; font-weight: 700; color: var(--strong); }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) { .ivd__grid { grid-template-columns: 1fr; } }

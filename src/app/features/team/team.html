@@ -1,0 +1,94 @@
+<header class="tm__head">
+  <div class="tm__head-main">
+    <h1 class="tm__title">Team</h1>
+    <p class="tm__sub">Give your colleagues access to Madar and control what each of them can do.</p>
+  </div>
+  <button class="tm__add" type="button" (click)="openInvite()"><app-icon name="plus" [size]="16" /> Invite member</button>
+</header>
+
+<!-- Active members -->
+<section class="tm__section">
+  <div class="tm__tcard">
+    <div class="tm__twrap">
+      <table class="tm__table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile number</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last active</th>
+            <th scope="col" class="tm__ah">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of paged(); track m.id) {
+            <tr class="tm__row" tabindex="0" (click)="view(m)" (keydown.enter)="view(m)">
+              <td data-label="ID"><span class="tm__code tabular">{{ m.code }}</span></td>
+              <td data-label="Name"><span class="tm__member"><app-avatar [name]="m.name" [size]="32" tone="neutral" [square]="true" /><span class="tm__mname">{{ m.name }}</span></span></td>
+              <td data-label="Email"><span class="tm__muted">{{ m.email }}</span></td>
+              <td data-label="Mobile number"><span class="tm__muted tabular">{{ m.mobile }}</span></td>
+              <td data-label="Role"><span class="tm__role" [attr.data-tone]="store.roleMeta(m.role).tone">{{ store.roleMeta(m.role).label }}</span></td>
+              <td data-label="Status">
+                @if (m.status === 'pending') { <span class="tm__st tm__st--pending"><span class="tm__stdot"></span> Pending</span> }
+                @else { <span class="tm__st"><span class="tm__stdot"></span> Active</span> }
+              </td>
+              <td data-label="Last active"><span class="tm__muted">{{ m.lastActive }}</span></td>
+              <td data-label="Actions" class="tm__ac"><app-team-actions-menu [member]="m" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tm__footer">
+      <span class="tm__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} members</span>
+      @if (pageCount() > 1) {
+        <div class="tm__pager">
+          <button class="tm__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+          @for (n of pageNumbers(); track n) {
+            <button class="tm__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+          }
+          <button class="tm__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Invite drawer -->
+@if (inviteOpen()) {
+  <div class="sd-scrim" (click)="inviteOpen.set(false)"></div>
+  <aside class="sd iv" role="dialog" aria-modal="true" aria-label="Invite member"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="inviteOpen.set(false)">
+    <header class="sd__head">
+      <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="users" [size]="18" /></span>
+      <h2 class="sd__title">Invite member</h2>
+      <button class="sd__close" type="button" aria-label="Close" (click)="inviteOpen.set(false)"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <form class="sd__body iv__body" (submit)="$event.preventDefault(); sendInvite()">
+      <div class="iv__field"><label class="iv__label">Full name</label><input class="iv__input" [value]="iName()" (input)="iName.set($any($event.target).value)" placeholder="e.g. Huda Al Salem" aria-label="Name" /></div>
+      <div class="iv__field"><label class="iv__label">Work email</label><input class="iv__input" type="email" [value]="iEmail()" (input)="iEmail.set($any($event.target).value)" placeholder="name@company.com" aria-label="Email" /></div>
+      <div class="iv__field"><label class="iv__label">Mobile number</label><input class="iv__input" [value]="iMobile()" (input)="iMobile.set($any($event.target).value)" placeholder="+966…" aria-label="Mobile number" /></div>
+      <div class="iv__field">
+        <label class="iv__label">Role</label>
+        <div class="md__roles">
+          @for (r of assignableRoles; track r.key) {
+            <button class="md__role" type="button" [class.is-on]="iRole() === r.key" (click)="iRole.set(r.key)">
+              <span class="md__radio"></span>
+              <span class="md__rbody"><span class="md__rl">{{ r.label }}</span><span class="md__rd">{{ r.desc }}</span></span>
+            </button>
+          }
+        </div>
+      </div>
+    </form>
+
+    <div class="iv__foot">
+      <button class="tm__pbtn tm__pbtn--ghost" type="button" (click)="inviteOpen.set(false)">Cancel</button>
+      <button class="md__save iv__send" type="button" [disabled]="!canInvite()" (click)="sendInvite()"><app-icon name="send" [size]="15" /> Send invitation</button>
+    </div>
+  </aside>
+}

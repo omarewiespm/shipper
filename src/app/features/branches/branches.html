@@ -1,0 +1,91 @@
+<header class="br__head">
+  <div class="br__head-main">
+    <h1 class="br__title">Branches</h1>
+    <p class="br__sub">Your company's locations — managers, contacts and status.</p>
+  </div>
+  <button class="br__add" type="button" (click)="openAdd()"><app-icon name="plus" [size]="16" /> Add branch</button>
+</header>
+
+<section class="br__section">
+  <div class="br__tcard">
+    <div class="br__twrap">
+      <table class="br__table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Branch</th>
+            <th scope="col">City</th>
+            <th scope="col">Manager</th>
+            <th scope="col">Mobile number</th>
+            <th scope="col">Team</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="br__ah">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (b of paged(); track b.id) {
+            <tr class="br__row" tabindex="0" (click)="view(b)" (keydown.enter)="view(b)">
+              <td data-label="ID"><span class="br__code tabular">{{ b.code }}</span></td>
+              <td data-label="Branch">
+                <span class="br__name-cell">
+                  <app-avatar [name]="b.name" [size]="32" tone="neutral" [square]="true" />
+                  <span class="br__namerow"><span class="br__name">{{ b.name }}</span>@if (b.primary) { <span class="br__primary">Primary</span> }</span>
+                </span>
+              </td>
+              <td data-label="City"><span class="br__muted">{{ b.city }}</span></td>
+              <td data-label="Manager"><span class="br__muted">{{ b.manager }}</span></td>
+              <td data-label="Mobile number"><span class="br__muted tabular">{{ b.mobile }}</span></td>
+              <td data-label="Team"><span class="br__num tabular">{{ b.members }}</span></td>
+              <td data-label="Status">
+                @if (b.status === 'active') { <span class="br__st"><span class="br__stdot"></span> Active</span> }
+                @else { <span class="br__st br__st--off"><span class="br__stdot"></span> Inactive</span> }
+              </td>
+              <td data-label="Actions" class="br__ac"><app-branch-actions-menu [branch]="b" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="br__footer">
+      <span class="br__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} branches</span>
+      @if (pageCount() > 1) {
+        <div class="br__pager">
+          <button class="br__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+          @for (n of pageNumbers(); track n) {
+            <button class="br__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+          }
+          <button class="br__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Add branch drawer -->
+@if (addOpen()) {
+  <div class="sd-scrim" (click)="addOpen.set(false)"></div>
+  <aside class="sd bd" role="dialog" aria-modal="true" aria-label="Add branch"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="addOpen.set(false)">
+    <header class="sd__head">
+      <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="building" [size]="18" /></span>
+      <h2 class="sd__title">Add branch</h2>
+      <button class="sd__close" type="button" aria-label="Close" (click)="addOpen.set(false)"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <form class="sd__body bd__body" (submit)="$event.preventDefault(); save()">
+      <div class="bd__field"><label class="bd__label">Branch name</label><input class="bd__input" [value]="bName()" (input)="bName.set($any($event.target).value)" placeholder="e.g. Riyadh HQ" aria-label="Branch name" /></div>
+      <div class="bd__field"><label class="bd__label">City</label><input class="bd__input" [value]="bCity()" (input)="bCity.set($any($event.target).value)" placeholder="e.g. Riyadh" aria-label="City" /></div>
+      <div class="bd__field"><label class="bd__label">Address</label><input class="bd__input" [value]="bAddress()" (input)="bAddress.set($any($event.target).value)" placeholder="Street / district" aria-label="Address" /></div>
+      <div class="bd__2col">
+        <div class="bd__field"><label class="bd__label">Branch manager</label><input class="bd__input" [value]="bManager()" (input)="bManager.set($any($event.target).value)" placeholder="Full name" aria-label="Manager" /></div>
+        <div class="bd__field"><label class="bd__label">Mobile number</label><input class="bd__input" [value]="bMobile()" (input)="bMobile.set($any($event.target).value)" placeholder="+966…" aria-label="Mobile" /></div>
+      </div>
+    </form>
+
+    <div class="bd__foot">
+      <button class="br__pbtn br__pbtn--ghost" type="button" (click)="addOpen.set(false)">Cancel</button>
+      <button class="bd__save" type="button" [disabled]="!canAdd()" (click)="save()"><app-icon name="plus" [size]="15" /> Add branch</button>
+    </div>
+  </aside>
+}

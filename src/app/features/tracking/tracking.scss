@@ -1,0 +1,10 @@
+/* Fill the shell content area so the map never forces the page to scroll. */
+:host { display: flex; flex-direction: column; flex: 1; min-block-size: 0; max-inline-size: 1180px; margin-inline: auto; inline-size: 100%; }
+
+.tk__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); margin-block-end: var(--sp-4); flex: none; }
+.tk__title { font-size: 22px; font-weight: 700; color: var(--strong); margin: 0; }
+.tk__sub { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); margin: 4px 0 0; }
+.tk__livedot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(46, 168, 118, 0.18); }
+
+/* The map grows to fill the remaining height under the header. */
+app-fleet-map { flex: 1; min-block-size: 0; display: block; }

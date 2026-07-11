@@ -1,0 +1,67 @@
+<button
+  #trigger
+  type="button"
+  class="hub__btn"
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  [class.is-open]="isOpen()"
+  [attr.aria-expanded]="isOpen()"
+  aria-haspopup="menu"
+  aria-label="Switch app"
+  title="Apps"
+  (click)="toggle()"
+>
+  <app-icon name="grid" [size]="18" />
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="close()"
+  (detach)="close()"
+  (overlayKeydown)="onKeydown($event)"
+>
+  <div class="hub" role="menu" aria-label="Apps">
+    <p class="hub__label-sm">Madar apps</p>
+    <div class="hub__grid">
+      @for (app of madarApps; track app.id) {
+        <button
+          class="hub__tile"
+          type="button"
+          role="menuitem"
+          [class.is-active]="app.active"
+          [attr.aria-current]="app.active ? 'true' : null"
+          (click)="openApp(app)"
+        >
+          <span class="hub__ic" [attr.data-tone]="app.tone">
+            <app-icon [name]="app.icon" [size]="17" />
+          </span>
+          <span class="hub__name">{{ app.label }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="hub__divider"></div>
+
+    <p class="hub__label-sm">Connected apps</p>
+    <div class="hub__grid">
+      @for (app of connected(); track app.id) {
+        <button class="hub__tile" type="button" role="menuitem" (click)="close()">
+          <span class="hub__ic" [attr.data-tone]="app.tone">
+            <app-icon [name]="app.icon" [size]="17" />
+          </span>
+          <span class="hub__name">{{ app.label }}</span>
+        </button>
+      }
+    </div>
+
+    <button class="hub__footer" type="button" role="menuitem" (click)="manageIntegrations()">
+      Manage integrations
+      <app-icon name="arrow-right" [size]="15" />
+    </button>
+  </div>
+</ng-template>

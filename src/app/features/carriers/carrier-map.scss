@@ -1,0 +1,85 @@
+.cm {
+  position: relative;
+  inline-size: 100%;
+  block-size: min(560px, calc(100dvh - 240px));
+  min-block-size: 380px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--line-soft);
+}
+.cm__map { position: absolute; inset: 0; z-index: 1; }
+.cm .leaflet-container { font-family: var(--font); background: #eef1f6; }
+.cm .leaflet-control-zoom { border: none !important; box-shadow: var(--shadow-lift); border-radius: 10px; overflow: hidden; }
+.cm .leaflet-control-zoom a { color: var(--ink); border: none; }
+.cm .leaflet-control-zoom a:hover { background: var(--line-soft); color: var(--navy); }
+.cm .leaflet-control-attribution { background: rgba(255, 255, 255, 0.8); font-size: 10px; color: var(--ink-3); }
+
+/* Truck markers */
+.cmk { position: relative; display: block; inline-size: 34px; block-size: 34px; cursor: pointer; }
+.cmk__badge {
+  position: absolute; inset: 3px; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--ok); color: #fff; border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(34, 50, 103, 0.35);
+  transition: background 150ms var(--ease), transform 150ms var(--ease);
+}
+.cmk__ring { position: absolute; inset: 3px; z-index: 1; border-radius: 50%; border: 2px solid var(--ok); animation: cmk-ring 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
+.cmk__flag {
+  position: absolute; inset-block-start: 100%; inset-inline-start: 50%; transform: translate(-50%, 5px);
+  padding: 2px 7px; border-radius: 999px; background: rgba(255, 255, 255, 0.96); border: 1px solid var(--line);
+  font-family: var(--font); font-size: 10px; font-weight: 700; color: var(--strong); white-space: nowrap; box-shadow: var(--shadow);
+}
+.cmk-wrap:hover .cmk__badge { transform: scale(1.1); }
+.cmk--active .cmk__badge { background: var(--navy); transform: scale(1.12); }
+.cmk--active .cmk__ring { border-color: var(--navy); }
+.cmk--active .cmk__flag { color: var(--navy); border-color: var(--navy); }
+
+@keyframes cmk-ring { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(2.2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cmk__ring { animation: none; } }
+
+.cm__legend {
+  position: absolute; inset-block-end: 14px; inset-inline-start: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 600; color: var(--ink-2); box-shadow: var(--shadow);
+}
+.cm__ldot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--ok); }
+
+/* Selected-truck card (bottom-centre, like Live tracking) */
+.cmc {
+  position: absolute; inset-block-end: 16px; inset-inline-start: 50%; transform: translateX(-50%); z-index: 4;
+  inline-size: min(340px, calc(100% - 28px));
+  padding: 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line);
+  box-shadow: var(--shadow-lift); animation: cmc-in 200ms var(--ease);
+}
+.cmc__x { position: absolute; inset-block-start: 10px; inset-inline-end: 10px; inline-size: 26px; block-size: 26px; display: inline-flex; align-items: center; justify-content: center; border: none; background: none; border-radius: 7px; color: var(--ink-3); }
+.cmc__x:hover { background: var(--line-soft); color: var(--strong); }
+.cmc__top { display: flex; align-items: center; gap: 11px; }
+.cmc__id { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 1px; }
+.cmc__namerow { display: flex; align-items: center; gap: 5px; }
+.cmc__name { font-size: 14px; font-weight: 700; color: var(--strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cmc__vf { color: var(--ok); }
+.cmc__meta { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-2); }
+.cmc__stars { display: inline-flex; align-items: center; gap: 3px; font-weight: 600; color: var(--strong); }
+.cmc__stars app-icon { color: var(--gold); }
+.cmc__dot { color: var(--mut); }
+.cmc__avail { flex: none; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--line-soft); color: var(--ink-2); }
+.cmc__avail.is-now { background: var(--ok-bg); color: var(--ok); }
+.cmc__route { display: flex; align-items: center; gap: 8px; margin-block: 10px 8px; padding-block: 8px; border-block: 1px solid var(--line-soft); }
+.cmc__route app-icon { color: var(--mut); }
+.cmc__city { font-size: 13.5px; font-weight: 600; color: var(--strong); }
+.cmc__dist { margin-inline-start: auto; font-size: 11px; color: var(--ink-3); }
+.cmc__tags { display: flex; gap: 7px; flex-wrap: wrap; margin-block-end: 12px; }
+.cmc__tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--line-soft); font-size: 11.5px; color: var(--ink); font-weight: 500; }
+.cmc__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.cmc__price { display: flex; flex-direction: column; }
+.cmc__pfrom { font-size: 10.5px; color: var(--ink-3); }
+.cmc__pval { font-size: 15px; font-weight: 700; color: var(--strong); font-variant-numeric: tabular-nums; }
+.cmc__ctas { display: flex; gap: 8px; }
+.cmc__profile { block-size: 36px; padding-inline: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); font-family: var(--font); font-size: 12.5px; font-weight: 600; color: var(--navy); }
+.cmc__profile:hover { background: var(--nav-active); border-color: var(--navy); }
+.cmc__cta { display: inline-flex; align-items: center; gap: 6px; block-size: 36px; padding-inline: 13px; border: none; border-radius: 10px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 12.5px; font-weight: 600; }
+.cmc__cta:hover { background: var(--navy-700); }
+
+@keyframes cmc-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }

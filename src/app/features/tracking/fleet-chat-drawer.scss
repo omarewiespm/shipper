@@ -1,0 +1,64 @@
+.fc__id { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.fc__name { font-size: 14px; font-weight: 600; color: var(--strong); }
+.fc__presence { font-size: 12px; color: var(--ok); display: inline-flex; align-items: center; gap: 5px; }
+.fc__dot { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--ok); }
+
+.fc__seg {
+  display: flex; gap: 4px;
+  margin: var(--sp-3) var(--sp-4) 0;
+  padding: 4px;
+  background: var(--line-soft);
+  border-radius: 11px;
+}
+.fc__segbtn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  block-size: 34px; border: none; border-radius: 8px; background: none;
+  font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--ink-2);
+}
+.fc__segbtn.is-on { background: var(--card); color: var(--navy); box-shadow: var(--shadow); }
+
+.fc__body { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4); }
+.fc__msg { display: flex; }
+.fc__msg--me { justify-content: flex-end; }
+.fc__bubble {
+  max-inline-size: 80%;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  background: var(--line-soft);
+  color: var(--strong);
+}
+.fc__msg--me .fc__bubble { background: var(--navy); color: #fff; }
+
+.fc__quick { display: flex; gap: 6px; flex-wrap: wrap; padding: var(--sp-3); padding-block-end: 0; }
+.fc__chip {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--ink);
+}
+.fc__chip:hover { border-color: var(--navy); color: var(--navy); background: var(--nav-active); }
+
+.fc__composer {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-block-start: 1px solid var(--line);
+}
+.fc__input {
+  flex: 1; min-inline-size: 0; block-size: 42px;
+  padding-inline: 14px;
+  border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg); font-family: var(--font); font-size: 14px; color: var(--strong);
+  outline: none;
+}
+.fc__input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.fc__send {
+  inline-size: 42px; block-size: 42px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: 12px; background: var(--navy); color: #fff;
+}
+.fc__send:hover { background: var(--navy-700); }

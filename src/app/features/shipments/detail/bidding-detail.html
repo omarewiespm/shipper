@@ -1,0 +1,97 @@
+<!-- Title -->
+<header class="bd__ttl">
+  <div class="bd__ttl-main">
+    <h1 class="bd__id">{{ shipment().id }} <span class="bd__badge">Bidding</span></h1>
+    <p class="bd__sub">{{ receiver() }}</p>
+  </div>
+  <app-status-chip label="Collecting bids" tone="sky" [pulse]="true" />
+</header>
+
+<!-- Route summary -->
+<section class="bd__card bd__route">
+  <div class="bd__end">
+    <span class="bd__elbl bd__elbl--from"><app-icon name="pin" [size]="12" /> PICKUP</span>
+    <span class="bd__ecity">{{ shipment().origin.city }}</span>
+    <span class="bd__eaddr">{{ shipment().origin.line }}</span>
+  </div>
+  <div class="bd__mid"><span class="bd__truck"><app-icon name="truck" [size]="18" /></span><app-icon name="arrow-right" [size]="16" class="bd__arrow" /></div>
+  <div class="bd__end bd__end--to">
+    <span class="bd__elbl bd__elbl--to"><app-icon name="flag" [size]="12" /> DROP-OFF</span>
+    <span class="bd__ecity">{{ shipment().destination.city }}</span>
+    <span class="bd__eaddr">{{ shipment().destination.line }}</span>
+  </div>
+</section>
+
+<div class="bd__tags">
+  <span class="bd__tag"><app-icon name="truck" [size]="14" /> {{ shipment().truckType }}</span>
+  <span class="bd__tag"><app-icon name="package" [size]="14" /> {{ shipment().cargo.type }}</span>
+  <span class="bd__tag"><app-icon name="gauge" [size]="14" /> {{ weight() }}</span>
+</div>
+
+<!-- Bidding stats -->
+<section class="bd__stats">
+  <div class="bd__cell"><span class="bd__k">Total bids</span><span class="bd__v bd__v--sky tabular">{{ total() }}</span></div>
+  <div class="bd__cell"><span class="bd__k">Lowest bid</span><span class="bd__v tabular">SAR {{ fmt(lowest()) }}</span></div>
+  <div class="bd__cell"><span class="bd__k">Highest bid</span><span class="bd__v tabular">SAR {{ fmt(highest()) }}</span></div>
+  <div class="bd__cell"><span class="bd__k">Closes in</span><span class="bd__v tabular">5h 40m</span></div>
+</section>
+<p class="bd__note">You can accept a bid any time — the window is a soft deadline and nothing auto-accepts.</p>
+
+<!-- Bids header + sort -->
+<div class="bd__bidsh">
+  <h2 class="bd__bidst">Bids · {{ total() }}</h2>
+  <div class="bd__sorts" role="group" aria-label="Sort bids">
+    @for (s of sorts; track s.key) {
+      <button class="bd__sort" type="button" [class.is-active]="sort() === s.key" [attr.aria-pressed]="sort() === s.key" (click)="setSort(s.key)">{{ s.label }}</button>
+    }
+  </div>
+</div>
+
+<!-- Bids -->
+@if (!bids().length) {
+  <div class="bd__card bd__empty">
+    <app-icon name="truck" [size]="26" />
+    <p class="bd__emptytitle">No bids yet — carriers are being notified</p>
+    <p class="bd__emptybody">Bids appear here as carriers respond. The window stays open until you decide.</p>
+  </div>
+} @else {
+  <div class="bd__list">
+    @for (b of bids(); track b.id) {
+      <article class="bd__bid" [class.is-best]="b.id === bestId()">
+        @if (b.id === bestId()) { <span class="bd__besttag">Best value</span> }
+        <div class="bd__bidtop">
+          <app-avatar [name]="b.carrier" [size]="42" tone="neutral" [square]="true" />
+          <div class="bd__bidid">
+            <span class="bd__bidname">{{ b.carrier }}</span>
+            <span class="bd__bidmeta">
+              @if (b.verified) { <span class="bd__verified"><app-icon name="shield" [size]="13" /> Verified</span><span class="bd__dot">·</span> }
+              <strong>{{ b.withMadar }}</strong> shipments with MADAR <span class="bd__dot">·</span> {{ b.ago }}
+            </span>
+          </div>
+          <div class="bd__bidprice">
+            <span class="bd__amount tabular">SAR {{ fmt(b.price) }}</span>
+            <span class="bd__pricecap">Bid price</span>
+          </div>
+        </div>
+        <div class="bd__bidact">
+          <button class="bd__file" type="button" (click)="viewCarrier(b)">View carrier file →</button>
+          <div class="bd__btns">
+            <button class="bd__btn bd__btn--ghost" type="button" (click)="askReject(b)">Reject</button>
+            <button class="bd__btn bd__btn--ghost" type="button" (click)="chat(b)"><app-icon name="messages" [size]="15" /> Chat</button>
+            <button class="bd__btn bd__btn--primary" type="button" (click)="askAccept(b)">Accept bid</button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+}
+
+<app-confirm-dialog
+  [open]="!!pending()"
+  [title]="pending()?.kind === 'accept' ? 'Accept this bid?' : 'Reject this bid?'"
+  [message]="pending()?.kind === 'accept' ? acceptMsg() : rejectMsg()"
+  [confirmLabel]="pending()?.kind === 'accept' ? 'Accept bid' : 'Reject'"
+  [danger]="pending()?.kind === 'reject'"
+  (confirm)="confirm()"
+  (cancel)="cancel()"
+/>

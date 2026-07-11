@@ -1,0 +1,72 @@
+.aid__scrim { position: fixed; inset: 0; background: rgba(20, 26, 46, 0.45); z-index: 60; animation: aid-fade 200ms var(--ease); }
+.aid {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(420px, 100vw);
+  background: var(--card);
+  border-inline-start: 1px solid var(--line);
+  border-start-start-radius: 18px;
+  border-end-start-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lift);
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  animation: aid-slide 300ms var(--ease);
+}
+:host-context([dir='rtl']) .aid { animation: aid-slide-rtl 300ms var(--ease); }
+
+.aid__head { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-4); border-block-end: 1px solid var(--line); }
+.aid__spark {
+  inline-size: 36px; block-size: 36px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px; color: var(--navy);
+  background: linear-gradient(135deg, rgba(34,50,103,.12), rgba(236,109,76,.12));
+  border: 1px solid rgba(34, 50, 103, 0.08);
+}
+.aid__id { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; }
+.aid__name { font-size: 14px; font-weight: 600; color: var(--strong); }
+.aid__sub { font-size: 11.5px; color: var(--ink-2); }
+.aid__close { inline-size: 32px; block-size: 32px; display: inline-flex; align-items: center; justify-content: center; border: none; background: none; border-radius: var(--radius-sm); color: var(--ink-2); }
+.aid__close:hover { background: var(--line-soft); color: var(--strong); }
+
+.aid__body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.amsg { display: flex; align-items: flex-end; gap: 8px; max-inline-size: 88%; }
+.amsg--me { margin-inline-start: auto; flex-direction: row-reverse; }
+.amsg__av {
+  inline-size: 24px; block-size: 24px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 7px; color: var(--navy);
+  background: linear-gradient(135deg, rgba(34,50,103,.1), rgba(236,109,76,.1));
+}
+.amsg__col { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-inline-size: 0; }
+.amsg__bubble { padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; background: var(--line-soft); color: var(--strong); }
+.amsg--me .amsg__bubble { background: var(--navy); color: #fff; }
+.amsg__action {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 13px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--card);
+  font-family: var(--font); font-size: 12.5px; font-weight: 600; color: var(--navy);
+}
+.amsg__action:hover { background: var(--nav-active); border-color: var(--navy); }
+
+.amsg__typing { display: inline-flex; gap: 4px; align-items: center; }
+.amsg__typing span { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--ink-3); animation: aid-blink 1.2s infinite; }
+.amsg__typing span:nth-child(2) { animation-delay: 0.2s; }
+.amsg__typing span:nth-child(3) { animation-delay: 0.4s; }
+
+.aid__composer { display: flex; align-items: center; gap: 8px; padding: 12px; border-block-start: 1px solid var(--line); }
+.aid__input { flex: 1; min-inline-size: 0; block-size: 42px; padding-inline: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); font-family: var(--font); font-size: 14px; color: var(--strong); outline: none; }
+.aid__input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring); }
+.aid__mic, .aid__send { inline-size: 42px; block-size: 42px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: none; border-radius: 12px; }
+.aid__mic { background: var(--line-soft); color: var(--ink-2); }
+.aid__mic:hover { background: #e9ecf2; }
+.aid__send { background: var(--navy); color: #fff; }
+.aid__send:hover { background: var(--navy-700); }
+
+@keyframes aid-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes aid-slide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes aid-slide-rtl { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes aid-blink { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .aid__scrim, .aid, .amsg__typing span { animation: none; } }

@@ -1,0 +1,44 @@
+{
+  "attention": {
+    "pendingDeliveryNotes": 4,
+    "priceChanges": 1,
+    "invoicesDue": 2
+  },
+  "status": {
+    "total": 128,
+    "totalThisMonth": 128,
+    "onTimePct": 94,
+    "rows": [
+      { "label": "Goods delivered", "count": 51, "color": "var(--ok)" },
+      { "label": "In transit", "count": 44, "color": "var(--info)" },
+      { "label": "Order placed", "count": 18, "color": "var(--sky)" },
+      { "label": "Accepted", "count": 5, "color": "#8FB0C4" },
+      { "label": "Delayed", "count": 10, "color": "var(--warn)" }
+    ]
+  },
+  "volume": {
+    "labels": ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "values": [78, 92, 85, 104, 98, 121, 115, 128]
+  },
+  "spend": {
+    "labels": ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "values": [12.4, 14.1, 13.2, 15.8, 15.1, 17.9, 16.8, 18.4]
+  },
+  "onTime": {
+    "labels": ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "values": [88, 90, 89, 92, 91, 93, 92, 94]
+  },
+  "lanes": [
+    { "label": "Riyadh → Jeddah", "value": 6800 },
+    { "label": "Riyadh → Dammam", "value": 4200 },
+    { "label": "Riyadh → Makkah", "value": 3100 },
+    { "label": "Riyadh → Al Kharj", "value": 2400 },
+    { "label": "Riyadh → Buraydah", "value": 1900 }
+  ],
+  "receivers": [
+    { "id": "RCV-101", "name": "Jeddah Retail Group", "count": 8, "lane": "Riyadh → Jeddah" },
+    { "id": "RCV-102", "name": "Dammam Foods Ltd.", "count": 6, "lane": "Riyadh → Dammam" },
+    { "id": "RCV-103", "name": "Riyadh Steel Co.", "count": 5, "lane": "Riyadh → Riyadh" },
+    { "id": "RCV-104", "name": "Makkah Traders", "count": 4, "lane": "Riyadh → Makkah" }
+  ]
+}

@@ -1,0 +1,98 @@
+<header class="w__head">
+  <h1 class="w__title">Wallet</h1>
+  <p class="w__sub">Your Madar balance — top up, pay for shipments, and track every movement.</p>
+</header>
+
+<div class="w__grid">
+  <!-- Balance -->
+  <section class="w__balance">
+    <span class="w__blabel">Available balance</span>
+    <span class="w__bnum tabular">{{ store.balance() | money }}</span>
+    <div class="w__bactions">
+      <button class="w__btn w__btn--primary" type="button" (click)="topupOpen.set(true)"><app-icon name="plus" [size]="16" /> Top up</button>
+      <button class="w__btn w__btn--ghost" type="button" (click)="withdraw()"><app-icon name="arrow-right" [size]="16" /> Withdraw</button>
+    </div>
+  </section>
+
+  <!-- Quick facts -->
+  <div class="w__facts">
+    <div class="w__fact">
+      <span class="w__fic w__fic--in"><app-icon name="arrow-left" [size]="16" /></span>
+      <span class="w__fbody"><span class="w__fnum tabular">{{ moneyIn() | money }}</span><span class="w__flabel">Money in</span></span>
+    </div>
+    <div class="w__fact">
+      <span class="w__fic w__fic--out"><app-icon name="arrow-right" [size]="16" /></span>
+      <span class="w__fbody"><span class="w__fnum tabular">{{ moneyOut() | money }}</span><span class="w__flabel">Money out</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- Transactions -->
+<section class="w__tx">
+  <div class="w__txh">
+    <h2 class="w__txtitle">Transactions</h2>
+    <div class="w__seg" role="group" aria-label="Filter transactions">
+      @for (f of filters; track f.key) {
+        <button class="w__segbtn" type="button" [class.is-on]="filter() === f.key" (click)="filter.set(f.key)">{{ f.label }}</button>
+      }
+    </div>
+  </div>
+
+  <div class="w__list">
+    @if (store.loading() && !store.transactions().length) {
+      <p class="w__loading">Loading…</p>
+    } @else if (!transactions().length) {
+      <p class="w__empty">No transactions yet.</p>
+    } @else {
+      @for (t of transactions(); track t.id) {
+        <div class="w__row">
+          <span class="w__row-ic" [attr.data-type]="t.type"><app-icon [name]="t.type === 'credit' ? 'arrow-left' : 'arrow-right'" [size]="16" /></span>
+          <span class="w__row-body">
+            <span class="w__row-ref">{{ t.ref }}</span>
+            <span class="w__row-when">{{ dt(t.at) }} · {{ t.id }}</span>
+          </span>
+          <span class="w__row-amt tabular" [attr.data-type]="t.type">{{ t.type === 'credit' ? '+' : '−' }}{{ t.amount | money }}</span>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<!-- Top-up sheet -->
+@if (topupOpen()) {
+  <div class="sd-scrim" (click)="topupOpen.set(false)"></div>
+  <aside class="sd tu" role="dialog" aria-modal="true" aria-label="Top up wallet"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="topupOpen.set(false)">
+    <header class="sd__head">
+      <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="wallet" [size]="18" /></span>
+      <h2 class="sd__title">Top up wallet</h2>
+      <button class="sd__close" type="button" aria-label="Close" (click)="topupOpen.set(false)"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body tu__body">
+      <div class="tu__field">
+        <label class="tu__label">Amount</label>
+        <div class="tu__amount"><span class="tu__cur">SAR</span><input class="tu__input" type="text" inputmode="numeric" [value]="topupAmount()" (change)="setAmount($any($event.target).value)" aria-label="Amount" /></div>
+        <div class="tu__presets">
+          @for (p of presets; track p) { <button class="tu__preset" type="button" [class.is-on]="topupAmount() === p" (click)="topupAmount.set(p)">{{ p.toLocaleString() }}</button> }
+        </div>
+      </div>
+
+      <div class="tu__field">
+        <label class="tu__label">Pay with</label>
+        <div class="tu__methods">
+          @for (m of methods; track m) {
+            <button class="tu__method" type="button" [class.is-on]="method() === m" (click)="method.set(m)">
+              <span class="tu__radio"></span> {{ m }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="tu__foot">
+      <button class="w__btn w__btn--ghost" type="button" (click)="topupOpen.set(false)">Cancel</button>
+      <button class="w__btn w__btn--primary tu__confirm" type="button" (click)="confirmTopup()">Add SAR {{ topupAmount().toLocaleString() }}</button>
+    </div>
+  </aside>
+}

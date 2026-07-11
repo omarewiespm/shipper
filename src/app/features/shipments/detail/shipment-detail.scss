@@ -1,0 +1,8 @@
+:host { display: block; max-inline-size: 1180px; margin-inline: auto; }
+
+.sd-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ink-2); font-size: 13px; font-weight: 500;
+  margin-block-end: var(--sp-4);
+}
+.sd-back:hover { color: var(--navy); }

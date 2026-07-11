@@ -1,0 +1,196 @@
+<header class="cr__head">
+  <div class="cr__head-main">
+    <h1 class="cr__title">
+      {{ tab() === 'map' ? 'Available carriers' : tab() === 'notes' ? 'Delivery notes' : 'Carriers' }}
+    </h1>
+    <p class="cr__sub">
+      {{ tab() === 'map'
+        ? 'Trucks posted as available now — find one near your pickup, agree a price, and book on the spot.'
+        : tab() === 'notes'
+        ? 'Shipments delivered and waiting for the hard-copy delivery note from the fleet.'
+        : 'Carriers you\'ve shipped with before — performance, lanes and contacts.' }}
+    </p>
+  </div>
+</header>
+
+@switch (tab()) {
+  <!-- ============ DIRECTORY ============ -->
+  @case ('directory') {
+    <div class="cr__bar">
+      <div class="cr__search">
+        <app-icon name="search" [size]="18" class="cr__search-icon" />
+        <input type="search" class="cr__search-input" [value]="store.query()" (input)="store.query.set($any($event.target).value)" placeholder="Search carriers" aria-label="Search carriers" />
+        @if (store.query()) { <button class="cr__search-clear" type="button" aria-label="Clear" (click)="store.query.set('')"><app-icon name="x" [size]="16" /></button> }
+      </div>
+      <app-filter-dropdown #typeDd icon="filter" [label]="typeLabel()" ariaLabel="Filter by type" [menuWidth]="200">
+        @for (f of typeFilters; track f.key) {
+          <button class="cr__opt" role="option" type="button" [attr.aria-selected]="store.typeFilter() === f.key" [class.is-selected]="store.typeFilter() === f.key" (click)="selectType(f.key, typeDd)">
+            <span class="cr__opt-label">{{ f.label }}</span><span class="cr__opt-count tabular">{{ typeCount(f.key) }}</span>
+          </button>
+        }
+      </app-filter-dropdown>
+      <app-button class="cr__add" variant="primary" icon="plus" (click)="addOpen.set(true)">Add carrier</app-button>
+    </div>
+
+    <div class="cr__tcard">
+      <div class="cr__twrap">
+        <table class="cr__table">
+          <thead>
+            <tr>
+              <th scope="col">Carrier</th><th scope="col">Type</th><th scope="col">Rating</th>
+              <th scope="col">Shipments</th><th scope="col">On-time</th><th scope="col">Lanes</th><th scope="col">Last</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of pagedCarriers(); track c.id) {
+              <tr class="cr__trow" tabindex="0" (click)="viewCarrier(c)" (keydown.enter)="viewCarrier(c)">
+                <td data-label="Carrier"><span class="cr__cname"><app-avatar [name]="c.name" [size]="30" tone="neutral" [square]="true" /><span class="cr__strong">{{ c.name }}</span></span></td>
+                <td data-label="Type"><span class="cr__tag" [attr.data-tone]="carrierType(c).tone">{{ carrierType(c).label }}</span></td>
+                <td data-label="Rating"><span class="cr__rating"><app-icon name="star" [size]="13" /> {{ c.rating }}</span></td>
+                <td data-label="Shipments"><span class="cr__num tabular">{{ c.shipments }}</span></td>
+                <td data-label="On-time"><span class="cr__num tabular">{{ c.onTimePct }}%</span></td>
+                <td data-label="Lanes"><span class="cr__lanes">{{ c.lanes }}</span></td>
+                <td data-label="Last"><span class="cr__muted">{{ c.lastShipment }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cr__footer">
+        <span class="cr__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} carriers</span>
+        @if (pageCount() > 1) {
+          <div class="cr__pager">
+            <button class="cr__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+            @for (n of pageNumbers(); track n) {
+              <button class="cr__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+            }
+            <button class="cr__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (store.pendingCarriers().length) {
+      <section class="cr__pending">
+        <div class="cr__psh"><h2 class="cr__pstitle">Pending invitations</h2><span class="cr__pscount">{{ store.pendingCarriers().length }}</span><span class="cr__psnote">They accept via email / WhatsApp, then link to your account.</span></div>
+        <div class="cr__plist">
+          @for (c of store.pendingCarriers(); track c.id) {
+            <article class="cr__prow">
+              <app-avatar [name]="c.name" [size]="40" tone="neutral" [square]="true" />
+              <div class="cr__pid">
+                <div class="cr__pnamerow"><span class="cr__pname">{{ c.name }}</span><span class="cr__tag" [attr.data-tone]="carrierType(c).tone">{{ carrierType(c).label }}</span></div>
+                <span class="cr__pmeta"><app-icon name="pin" [size]="12" /> {{ c.city || '—' }} · {{ c.contactName || 'Fleet contact' }} · {{ c.lastShipment }}</span>
+              </div>
+              <span class="cr__pchip" [attr.data-tone]="pendingLabel(c).tone">{{ pendingLabel(c).label }}</span>
+              <button class="cr__presend" type="button" (click)="resend(c)"><app-icon name="send" [size]="14" /> Resend</button>
+            </article>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <!-- ============ AVAILABLE CARRIERS (map / list) ============ -->
+  @case ('map') {
+    <div class="cr__bar">
+      <div class="cr__search">
+        <app-icon name="search" [size]="18" class="cr__search-icon" />
+        <input type="search" class="cr__search-input" [value]="store.truckQuery()" (input)="store.truckQuery.set($any($event.target).value)" placeholder="Search fleet, truck type, city…" aria-label="Search available trucks" />
+        @if (store.truckQuery()) { <button class="cr__search-clear" type="button" aria-label="Clear" (click)="store.truckQuery.set('')"><app-icon name="x" [size]="16" /></button> }
+      </div>
+      <app-filter-dropdown #origDd icon="pin" [label]="originLabel()" ariaLabel="Filter by origin" [menuWidth]="200">
+        <button class="cr__opt" role="option" type="button" [attr.aria-selected]="store.originFilter() === 'all'" [class.is-selected]="store.originFilter() === 'all'" (click)="selectOrigin('all', origDd)"><span class="cr__opt-label">Any origin</span></button>
+        @for (o of store.origins(); track o) {
+          <button class="cr__opt" role="option" type="button" [attr.aria-selected]="store.originFilter() === o" [class.is-selected]="store.originFilter() === o" (click)="selectOrigin(o, origDd)"><span class="cr__opt-label">From {{ o }}</span></button>
+        }
+      </app-filter-dropdown>
+      <app-filter-dropdown #destDd icon="flag" [label]="destLabel()" ariaLabel="Filter by destination" [menuWidth]="200">
+        <button class="cr__opt" role="option" type="button" [attr.aria-selected]="store.destFilter() === 'all'" [class.is-selected]="store.destFilter() === 'all'" (click)="selectDest('all', destDd)"><span class="cr__opt-label">Any destination</span></button>
+        @for (d of store.destinations(); track d) {
+          <button class="cr__opt" role="option" type="button" [attr.aria-selected]="store.destFilter() === d" [class.is-selected]="store.destFilter() === d" (click)="selectDest(d, destDd)"><span class="cr__opt-label">To {{ d }}</span></button>
+        }
+      </app-filter-dropdown>
+
+      <div class="cr__view" role="group" aria-label="View">
+        <button class="cr__viewbtn" type="button" [class.is-on]="carriersView() === 'map'" (click)="carriersView.set('map')"><app-icon name="map-pin" [size]="15" /> Map</button>
+        <button class="cr__viewbtn" type="button" [class.is-on]="carriersView() === 'list'" (click)="carriersView.set('list')"><app-icon name="grid" [size]="15" /> List</button>
+      </div>
+    </div>
+
+    @if (carriersView() === 'map') {
+      <app-carrier-map [trucks]="store.trucks()" [visibleIds]="visibleTruckIds()" (offer)="openOffer($event)" (profile)="openProfile($event)" />
+      <div class="cr__maphint"><app-icon name="info" [size]="15" /> Tap a truck to see its details, make an offer and negotiate — accepting books it and assigns the shipment to the fleet.</div>
+    } @else {
+      @if (store.filteredTrucks().length) {
+        <div class="cr__tgrid">
+          @for (t of store.filteredTrucks(); track t.id) {
+            <article class="tcard" (click)="openOffer(t.id)">
+              <div class="tcard__top">
+                <app-avatar [name]="t.fleet" [size]="42" tone="neutral" [square]="true" />
+                <div class="tcard__id">
+                  <span class="tcard__namerow"><span class="tcard__name">{{ t.fleet }}</span>@if (t.verified) { <app-icon name="shield" [size]="13" class="tcard__verified" /> }</span>
+                  <span class="tcard__meta"><span class="tcard__stars"><app-icon name="star" [size]="12" /> {{ t.rating }}</span><span class="tcard__dot">·</span>{{ t.fleetShipments }} shipments · {{ t.driver }}</span>
+                </div>
+                <span class="tcard__avail" [class.is-now]="t.availableIn === 'Now'">{{ t.availableIn }}</span>
+              </div>
+
+              <div class="tcard__route">
+                <span class="tcard__city">{{ t.atCity }}</span><app-icon name="arrow-right" [size]="14" class="tcard__arrow" /><span class="tcard__city">{{ t.headingCity }}</span>
+                <span class="tcard__dist">{{ t.distanceKm }} km from you</span>
+              </div>
+
+              <div class="tcard__tags">
+                <span class="tcard__tag"><app-icon name="truck" [size]="13" /> {{ t.truckType }}</span>
+                <span class="tcard__tag"><app-icon name="package" [size]="13" /> {{ t.capacityT }}t</span>
+              </div>
+
+              <div class="tcard__foot">
+                <span class="tcard__price"><span class="tcard__pfrom">Fleet asks</span><span class="tcard__pval tabular">SAR {{ t.suggestedPrice.toLocaleString() }}</span></span>
+                <div class="tcard__ctas">
+                  <button class="tcard__profile" type="button" (click)="openProfile(t.fleet); $event.stopPropagation()"><app-icon name="user" [size]="14" /> Profile</button>
+                  <button class="tcard__cta" type="button" (click)="openOffer(t.id); $event.stopPropagation()"><app-icon name="messages" [size]="14" /> Make offer</button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="cr__empty"><app-icon name="truck" [size]="26" /><p class="cr__empty-t">No trucks match your search</p><p class="cr__empty-b">Try a different destination or clear the filters.</p></div>
+      }
+    }
+  }
+
+  <!-- ============ DELIVERY NOTES ============ -->
+  @case ('notes') {
+    <div class="cr__notes">
+      @for (n of store.notes(); track n.shipmentId) {
+        <article class="cr__note">
+          <span class="cr__note-ic" [attr.data-status]="n.status"><app-icon name="file-check" [size]="18" /></span>
+          <div class="cr__note-body">
+            <div class="cr__note-top">
+              <span class="cr__note-id">{{ n.shipmentId }}</span>
+              <span class="cr__note-route">{{ n.route }} · {{ n.receiver }}</span>
+            </div>
+            <span class="cr__note-meta">Delivered {{ n.deliveredAt }} · {{ n.driver }} · {{ n.fleet }}</span>
+          </div>
+          <span class="cr__note-chip" [attr.data-tone]="noteChip(n).tone">{{ noteChip(n).label }}</span>
+          <div class="cr__note-cta">
+            @if (n.status === 'pending') {
+              <button class="cr__note-btn cr__note-btn--primary" type="button" (click)="requestNote(n)"><app-icon name="messages" [size]="14" /> Request from fleet</button>
+            } @else if (n.status === 'requested') {
+              <button class="cr__note-btn cr__note-btn--ghost" type="button" (click)="markSubmitted(n)"><app-icon name="check" [size]="14" /> Mark received</button>
+            } @else {
+              <span class="cr__note-done"><app-icon name="check" [size]="14" /> On file</span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+    <div class="cr__maphint"><app-icon name="info" [size]="15" /> This is for the hard-copy note — the driver photographs and uploads it. Fully-digital delivery notes are a separate flow.</div>
+  }
+}
+
+<app-spot-offer-drawer [truck]="offerTruck()" (closed)="closeOffer()" />
+<app-add-carrier-drawer [open]="addOpen()" (closed)="addOpen.set(false)" (saved)="onCarrierSaved($event)" />
+<app-carrier-profile-drawer [profile]="profile()" (closed)="closeProfile()" />

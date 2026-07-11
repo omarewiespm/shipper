@@ -1,0 +1,52 @@
+[
+  {
+    "id": "RCV-001",
+    "name": "Al Othaim Markets",
+    "addresses": [
+      { "id": "AD-001", "label": "Central DC", "line": "Exit 18, Eastern Ring Rd", "city": "Riyadh", "region": "Riyadh", "lat": 24.7136, "lng": 46.6753 }
+    ],
+    "contacts": [{ "name": "Faisal Al Harbi", "phone": "+966 55 120 4471", "email": "faisal@othaim.example" }],
+    "defaultLane": { "originCity": "Jeddah", "destinationCity": "Riyadh" },
+    "shipmentCount": 42
+  },
+  {
+    "id": "RCV-002",
+    "name": "Panda Retail",
+    "addresses": [
+      { "id": "AD-002", "label": "Jeddah Hub", "line": "Al Khumrah Industrial", "city": "Jeddah", "region": "Makkah", "lat": 21.4225, "lng": 39.2176 }
+    ],
+    "contacts": [{ "name": "Noura Al Qahtani", "phone": "+966 56 887 2310", "email": "noura@panda.example" }],
+    "defaultLane": { "originCity": "Dammam", "destinationCity": "Jeddah" },
+    "shipmentCount": 28
+  },
+  {
+    "id": "RCV-003",
+    "name": "Extra Stores",
+    "addresses": [
+      { "id": "AD-003", "label": "Dammam Warehouse", "line": "2nd Industrial City", "city": "Dammam", "region": "Eastern", "lat": 26.4207, "lng": 50.0888 }
+    ],
+    "contacts": [{ "name": "Yousef Bin Salem", "phone": "+966 50 442 9987" }],
+    "defaultLane": { "originCity": "Riyadh", "destinationCity": "Dammam" },
+    "shipmentCount": 15
+  },
+  {
+    "id": "RCV-004",
+    "name": "Nahdi Medical",
+    "addresses": [
+      { "id": "AD-004", "label": "Makkah Branch DC", "line": "Al Awali District", "city": "Makkah", "region": "Makkah", "lat": 21.3891, "lng": 39.8579 }
+    ],
+    "contacts": [{ "name": "Huda Al Zahrani", "phone": "+966 53 771 6620", "email": "huda@nahdi.example" }],
+    "defaultLane": { "originCity": "Jeddah", "destinationCity": "Makkah" },
+    "shipmentCount": 9
+  },
+  {
+    "id": "RCV-005",
+    "name": "SACO Hardware",
+    "addresses": [
+      { "id": "AD-005", "label": "Riyadh Store", "line": "Takhassusi St", "city": "Riyadh", "region": "Riyadh", "lat": 24.6908, "lng": 46.6853 }
+    ],
+    "contacts": [{ "name": "Abdullah Al Mutairi", "phone": "+966 54 209 1183" }],
+    "defaultLane": { "originCity": "Dammam", "destinationCity": "Riyadh" },
+    "shipmentCount": 6
+  }
+]

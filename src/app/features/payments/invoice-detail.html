@@ -1,0 +1,62 @@
+@if (invoice(); as inv) {
+  <header class="ivd__head">
+    <button class="ivd__back" type="button" (click)="back()" aria-label="Back to invoices"><app-icon name="arrow-left" [size]="18" /></button>
+    <h1 class="ivd__id tabular">{{ inv.id }}</h1>
+    @if (chip(); as c) { <app-status-chip [label]="c.label" [tone]="c.tone" /> }
+    <div class="ivd__spacer"></div>
+    <button class="ivd__ghost" type="button" (click)="download(inv)"><app-icon name="download" [size]="15" /> Download</button>
+    @if (inv.status !== 'paid') {
+      <button class="ivd__pay" type="button" (click)="pay(inv)"><app-icon name="wallet" [size]="16" /> Pay SAR {{ fmt(inv.amount.amount) }}</button>
+    }
+  </header>
+
+  <div class="ivd__grid">
+    <div class="ivd__main">
+      <!-- Charges -->
+      <section class="ivd__card">
+        <span class="ivd__ck">Charges</span>
+        <ul class="ivd__kv">
+          @for (it of items(); track it.desc) {
+            <li><span>{{ it.desc }}</span><b class="tabular">SAR {{ fmt(it.total) }}</b></li>
+          }
+          <li><span>VAT (15%)</span><b class="tabular">SAR {{ fmt(bill()?.vat ?? 0) }}</b></li>
+          <li class="ivd__kv-total"><span>Total</span><b class="tabular">SAR {{ fmt(inv.amount.amount) }}</b></li>
+        </ul>
+      </section>
+
+      <!-- Documents -->
+      <section class="ivd__card">
+        <span class="ivd__ck">Documents</span>
+        <ul class="ivd__docs">
+          @for (d of docs(); track d.label) {
+            <li class="ivd__doc">
+              <span class="ivd__docic"><app-icon [name]="d.icon" [size]="16" /></span>
+              <span class="ivd__docbody"><span class="ivd__docname">{{ d.label }}</span><span class="ivd__docsub tabular">{{ d.ref }}</span></span>
+              <button class="ivd__docdl" type="button" aria-label="Download"><app-icon name="download" [size]="15" /></button>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <!-- Details -->
+    <aside class="ivd__side">
+      <section class="ivd__card">
+        <span class="ivd__ck">Details</span>
+        <ul class="ivd__kv">
+          <li><span>Shipment</span><b><button class="ivd__link tabular" type="button" (click)="openShipment(inv.shipmentId)">{{ inv.shipmentId }}</button></b></li>
+          <li><span>Issued</span><b>{{ issued(inv.dueDate) }}</b></li>
+          <li><span>Due date</span><b>{{ dt(inv.dueDate) }}</b></li>
+          <li><span>Billed to</span><b>{{ to.company }}</b></li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+} @else {
+  <div class="ivd__missing">
+    <p class="ivd__missing-t">Invoice not found</p>
+    <button class="ivd__pay" type="button" (click)="back()">Back to Invoices</button>
+  </div>
+}
+
+<app-pay-invoice-drawer [invoice]="payOpen()" (closed)="payOpen.set(null)" (paid)="onPaid($event)" />

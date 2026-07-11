@@ -1,0 +1,41 @@
+@if (svc.isOpen()) {
+  <div class="aid__scrim" (click)="svc.close()"></div>
+  <aside class="aid" role="dialog" aria-modal="true" aria-label="Madar AI"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="svc.close()">
+    <header class="aid__head">
+      <span class="aid__spark"><app-icon name="sparkles" [size]="18" /></span>
+      <div class="aid__id">
+        <span class="aid__name">Madar AI</span>
+        <span class="aid__sub">Your logistics assistant</span>
+      </div>
+      <button class="aid__close" type="button" aria-label="Close" (click)="svc.close()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="aid__body" #scroller>
+      @for (m of messages(); track m.id) {
+        <div class="amsg" [class.amsg--me]="m.from === 'user'">
+          @if (m.from === 'ai') { <span class="amsg__av"><app-icon name="sparkles" [size]="13" /></span> }
+          <div class="amsg__col">
+            <span class="amsg__bubble">{{ m.text }}</span>
+            @if (m.action) {
+              <button class="amsg__action" type="button" (click)="go(m.action)">{{ m.action.label }} <app-icon name="arrow-right" [size]="14" /></button>
+            }
+          </div>
+        </div>
+      }
+      @if (thinking()) {
+        <div class="amsg">
+          <span class="amsg__av"><app-icon name="sparkles" [size]="13" /></span>
+          <span class="amsg__bubble amsg__typing"><span></span><span></span><span></span></span>
+        </div>
+      }
+    </div>
+
+    <form class="aid__composer" (submit)="$event.preventDefault(); send()">
+      <input class="aid__input" aria-label="Message Madar AI" placeholder="Ask Madar AI…"
+        [value]="draft()" (input)="draft.set($any($event.target).value)" />
+      <button class="aid__mic" type="button" aria-label="Voice (coming soon)" (click)="voice()"><app-icon name="mic" [size]="18" /></button>
+      <button class="aid__send" type="submit" aria-label="Send"><app-icon name="send" [size]="18" /></button>
+    </form>
+  </aside>
+}

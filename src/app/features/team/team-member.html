@@ -1,0 +1,75 @@
+<a class="tmp__back" routerLink="/settings/users"><app-icon name="arrow-left" [size]="16" /> Team</a>
+
+@if (member(); as m) {
+  <!-- Header -->
+  <header class="tmp__hero">
+    <app-avatar [name]="m.name" [size]="64" tone="neutral" [square]="true" />
+    <div class="tmp__id">
+      <h1 class="tmp__name">{{ m.name }}</h1>
+      <p class="tmp__email">{{ m.email }}</p>
+      <div class="tmp__badges">
+        <span class="tmp__role" [attr.data-tone]="roleMeta(m.role).tone">{{ roleMeta(m.role).label }}</span>
+        @if (m.status === 'pending') { <span class="tmp__status tmp__status--pending">Pending invitation</span> }
+        @else { <span class="tmp__status tmp__status--active"><span class="tmp__dot"></span> Active · {{ m.lastActive }}</span> }
+      </div>
+    </div>
+    <div class="tmp__heroactions">
+      @if (m.status === 'pending') {
+        <button class="tmp__btn tmp__btn--ghost" type="button" (click)="resend()"><app-icon name="send" [size]="15" /> Resend</button>
+        <button class="tmp__btn tmp__btn--primary" type="button" (click)="approve()"><app-icon name="check" [size]="15" /> Approve access</button>
+      }
+    </div>
+  </header>
+
+  <div class="tmp__grid">
+    <!-- Role & access -->
+    <section class="tmp__card">
+      <h2 class="tmp__h">Role &amp; access</h2>
+      @if (m.role === 'owner') {
+        <div class="tmp__owner"><app-icon name="shield" [size]="18" /><div><p class="tmp__ownt">Account owner</p><p class="tmp__ownd">Has full access to everything, including billing and the team. The owner role can't be changed here.</p></div></div>
+      } @else {
+        <p class="tmp__note">Pick what this member can do. Changes apply immediately.</p>
+        <div class="tmp__roles">
+          @for (r of assignableRoles; track r.key) {
+            <button class="tmp__rrow" type="button" [class.is-on]="editRole() === r.key" (click)="editRole.set(r.key)">
+              <span class="tmp__radio"></span>
+              <span class="tmp__rbody"><span class="tmp__rl">{{ r.label }}</span><span class="tmp__rd">{{ r.desc }}</span></span>
+            </button>
+          }
+        </div>
+        <div class="tmp__save">
+          <button class="tmp__btn tmp__btn--primary" type="button" [disabled]="!dirty()" (click)="saveRole()">Save role</button>
+          @if (dirty()) { <span class="tmp__unsaved">Unsaved changes</span> }
+        </div>
+      }
+    </section>
+
+    <!-- Details -->
+    <aside class="tmp__side">
+      <section class="tmp__card">
+        <h2 class="tmp__h">Member</h2>
+        <dl class="tmp__kv">
+          <div class="tmp__row"><dt><app-icon name="user" [size]="14" /> ID</dt><dd class="tabular">{{ m.code }}</dd></div>
+          <div class="tmp__row"><dt><app-icon name="user" [size]="14" /> Name</dt><dd>{{ m.name }}</dd></div>
+          <div class="tmp__row"><dt><app-icon name="messages" [size]="14" /> Email</dt><dd>{{ m.email }}</dd></div>
+          <div class="tmp__row"><dt><app-icon name="phone" [size]="14" /> Mobile</dt><dd class="tabular">{{ m.mobile }}</dd></div>
+          <div class="tmp__row"><dt><app-icon name="shield" [size]="14" /> Role</dt><dd>{{ roleMeta(m.role).label }}</dd></div>
+          <div class="tmp__row"><dt><app-icon name="clock" [size]="14" /> Last active</dt><dd>{{ m.lastActive }}</dd></div>
+        </dl>
+      </section>
+
+      @if (m.role !== 'owner') {
+        <section class="tmp__card tmp__danger">
+          <h2 class="tmp__h">Remove access</h2>
+          <p class="tmp__note">Revoke this member's access to your Madar account. This can't be undone.</p>
+          <button class="tmp__btn tmp__btn--danger" type="button" (click)="remove()"><app-icon name="x" [size]="15" /> Remove member</button>
+        </section>
+      }
+    </aside>
+  </div>
+} @else {
+  <div class="tmp__missing">
+    <p class="tmp__missing-t">Member not found</p>
+    <a class="tmp__btn tmp__btn--primary" routerLink="/settings/users">Back to Team</a>
+  </div>
+}

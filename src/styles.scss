@@ -1,0 +1,21 @@
+/* =============================================================================
+   Madar Shipper — Global stylesheet entry
+   Order matters: tokens first (define vars), then fonts, base reset, helpers.
+   Component styles are scoped; they consume the tokens defined here.
+   ============================================================================= */
+
+@use "styles/tokens";
+@use "styles/fonts";
+@use "styles/base";
+@use "styles/typography";
+@use "styles/auth";
+@use "styles/create";
+@use "styles/drawer";
+
+/* Live-tracking page fills the content area (map fits without page scroll). */
+.shell__content-inner:has(app-tracking) {
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}

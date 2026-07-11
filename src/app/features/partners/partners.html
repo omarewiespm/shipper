@@ -1,0 +1,110 @@
+<header class="pt__head">
+  <div class="pt__head-main">
+    <h1 class="pt__title">{{ tab() === 'po' ? 'Purchase orders' : 'Partners' }}</h1>
+    <p class="pt__sub">
+      {{ tab() === 'po'
+        ? 'POs from your partners, linked to shipments and tracked to on-time fulfillment.'
+        : 'Companies you trade with — customers you ship to and suppliers you collect from.' }}
+    </p>
+  </div>
+</header>
+
+@if (tab() === 'directory') {
+  <!-- Filter & action bar (matches the Shipments toolbar) -->
+  <div class="pt__bar">
+    <div class="pt__search">
+      <app-icon name="search" [size]="18" class="pt__search-icon" />
+      <input type="search" class="pt__search-input" [value]="store.query()" (input)="store.query.set($any($event.target).value)"
+        placeholder="Search partners" aria-label="Search partners" />
+      @if (store.query()) { <button class="pt__search-clear" type="button" aria-label="Clear search" (click)="store.query.set('')"><app-icon name="x" [size]="16" /></button> }
+    </div>
+
+    <app-filter-dropdown #relDd icon="filter" [label]="relLabel()" ariaLabel="Filter by relationship" [menuWidth]="220">
+      @for (f of relFilters; track f.key) {
+        <button class="pt__opt" role="option" type="button"
+          [attr.aria-selected]="store.rel() === f.key" [class.is-selected]="store.rel() === f.key"
+          (click)="selectRel(f.key, relDd)">
+          <span class="pt__opt-label">{{ f.label }}</span>
+          <span class="pt__opt-count tabular">{{ relCount(f.key) }}</span>
+        </button>
+      }
+    </app-filter-dropdown>
+
+    <app-button class="pt__export" variant="secondary" icon="download" (click)="exportCsv()">Export CSV</app-button>
+    <app-button variant="primary" icon="plus" (click)="addOpen.set(true)">Add partner</app-button>
+  </div>
+
+  @if (store.loading() && !store.all().length) {
+    <p class="pt__loading">Loading partners…</p>
+  } @else {
+    <!-- Partners directory (table) -->
+    <section class="pt__section">
+      @if (store.directory().length) {
+        <div class="pt__tcard">
+          <div class="pt__twrap">
+            <table class="pt__table">
+              <thead>
+                <tr>
+                  <th scope="col">Partner</th>
+                  <th scope="col">Relationship</th>
+                  <th scope="col">City &amp; contact</th>
+                  <th scope="col">Shipments</th>
+                  <th scope="col">On-time</th>
+                  <th scope="col">Open POs</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="pt__actions-h">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of pagedOnMadar(); track p.id) {
+                  <tr class="pt__trow" tabindex="0" (click)="view(p)" (keydown.enter)="view(p)">
+                    <td data-label="Partner">
+                      <span class="pt__tname">
+                        <app-avatar [name]="p.name" [size]="30" tone="neutral" [square]="true" />
+                        <span class="pt__strong">{{ p.name }}</span>
+                      </span>
+                    </td>
+                    <td data-label="Relationship">
+                      <span class="pt__rel-tag" [attr.data-tone]="relTag(p.relationship).tone">{{ relTag(p.relationship).label }}</span>
+                    </td>
+                    <td data-label="City & contact">
+                      <span class="pt__strong">{{ p.city }}</span>
+                      <span class="pt__sub">{{ p.contactName }}</span>
+                    </td>
+                    <td data-label="Shipments"><span class="pt__num tabular">{{ p.shipments }}</span></td>
+                    <td data-label="On-time"><span class="pt__num tabular">{{ p.onTimePct }}%</span></td>
+                    <td data-label="Open POs"><span class="pt__num tabular">{{ p.openPos }}</span></td>
+                    <td data-label="Status"><app-status-chip [label]="madarChip(p).label" [tone]="madarChip(p).tone" /></td>
+                    <td data-label="Actions" class="pt__actions-c"><app-partner-actions-menu [partner]="p" (view)="view($event)" /></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pt__footer">
+            <span class="pt__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} partners</span>
+            @if (pageCount() > 1) {
+              <div class="pt__pager">
+                <button class="pt__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+                @for (n of pageNumbers(); track n) {
+                  <button class="pt__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+                }
+                <button class="pt__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+              </div>
+            }
+          </div>
+        </div>
+      } @else { <p class="pt__empty">No partners match your search.</p> }
+    </section>
+  }
+} @else {
+  <!-- Purchase orders — next build -->
+  <div class="pt__po-soon">
+    <span class="pt__po-ic"><app-icon name="receipt" [size]="26" /></span>
+    <h2 class="pt__po-t">Purchase orders</h2>
+    <p class="pt__po-b">See POs from your partners linked to shipments — with direction (outbound to a customer, inbound from a supplier) and on-time fulfillment status. This tab is next.</p>
+  </div>
+}
+
+<app-add-partner-drawer [open]="addOpen()" (closed)="addOpen.set(false)" (saved)="onSaved($event)" (bulkSaved)="onBulkSaved($event)" />

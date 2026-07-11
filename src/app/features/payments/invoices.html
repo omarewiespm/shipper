@@ -1,0 +1,99 @@
+<header class="inv__head">
+  <div>
+    <h1 class="inv__title">Invoices</h1>
+    <p class="inv__sub">Freight invoices for your shipments — track what's due, overdue and paid.</p>
+  </div>
+</header>
+
+<!-- Summary -->
+<div class="inv__summary">
+  <div class="inv__stat">
+    <span class="inv__stat-l">Outstanding</span>
+    <span class="inv__stat-v tabular">SAR {{ fmt(store.totals().outstanding) }}</span>
+  </div>
+  <div class="inv__stat inv__stat--danger">
+    <span class="inv__stat-l">Overdue</span>
+    <span class="inv__stat-v tabular">SAR {{ fmt(store.totals().overdue) }}</span>
+    <span class="inv__stat-s">{{ store.totals().overdueCount }} invoice{{ store.totals().overdueCount === 1 ? '' : 's' }}</span>
+  </div>
+  <div class="inv__stat">
+    <span class="inv__stat-l">Paid</span>
+    <span class="inv__stat-v tabular">SAR {{ fmt(store.totals().paid) }}</span>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="inv__bar">
+  <div class="inv__search">
+    <app-icon name="search" [size]="18" class="inv__search-icon" />
+    <input type="search" class="inv__search-input" [value]="store.query()" (input)="store.query.set($any($event.target).value)"
+      placeholder="Search invoice or shipment" aria-label="Search invoices" />
+    @if (store.query()) { <button class="inv__search-clear" type="button" aria-label="Clear search" (click)="store.query.set('')"><app-icon name="x" [size]="16" /></button> }
+  </div>
+
+  <app-filter-dropdown #statusDd icon="filter" [label]="statusLabel()" ariaLabel="Filter by status" [menuWidth]="200">
+    @for (f of statusFilters; track f.key) {
+      <button class="inv__opt" role="option" type="button" [attr.aria-selected]="store.statusFilter() === f.key" [class.is-selected]="store.statusFilter() === f.key" (click)="selectStatus(f.key, statusDd)">
+        <span class="inv__opt-label">{{ f.label }}</span>
+        <span class="inv__opt-count tabular">{{ statusCount(f.key) }}</span>
+      </button>
+    }
+  </app-filter-dropdown>
+
+  <app-button class="inv__export" variant="secondary" icon="download" (click)="exportCsv()">Export CSV</app-button>
+</div>
+
+<!-- Table -->
+<section class="inv__section">
+  @if (store.loading() && !store.all().length) {
+    <p class="inv__loading">Loading invoices…</p>
+  } @else if (paged().length) {
+    <div class="inv__tcard">
+      <div class="inv__twrap">
+        <table class="inv__table">
+          <thead>
+            <tr>
+              <th scope="col">Invoice</th>
+              <th scope="col">Shipment</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Created at</th>
+              <th scope="col">Due date</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="inv__actions-h">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of paged(); track i.id) {
+              <tr class="inv__trow" tabindex="0" (click)="openShipment(i)" (keydown.enter)="openShipment(i)">
+                <td data-label="Invoice"><span class="inv__strong tabular">{{ i.id }}</span></td>
+                <td data-label="Shipment"><span class="inv__mut tabular">{{ i.shipmentId }}</span></td>
+                <td data-label="Amount"><span class="inv__num tabular">SAR {{ fmt(i.amount.amount) }}</span></td>
+                <td data-label="Created at"><span class="inv__mut">{{ created(i.dueDate) }}</span></td>
+                <td data-label="Due date"><span class="inv__mut">{{ dt(i.dueDate) }}</span></td>
+                <td data-label="Status"><app-status-chip [label]="chip(i).label" [tone]="chip(i).tone" /></td>
+                <td data-label="Actions" class="inv__actions-c"><app-invoice-actions-menu [invoice]="i" (action)="onAction($event, i)" /></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inv__footer">
+        <span class="inv__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} invoices</span>
+        @if (pageCount() > 1) {
+          <div class="inv__pager">
+            <button class="inv__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
+            @for (n of pageNumbers(); track n) {
+              <button class="inv__page-btn" type="button" [class.is-current]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="goToPage(n)">{{ n }}</button>
+            }
+            <button class="inv__page-btn" type="button" [disabled]="page() === pageCount()" aria-label="Next page" (click)="goToPage(page() + 1)"><app-icon name="chevron-right" [size]="16" /></button>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <p class="inv__empty">No invoices match your filters.</p>
+  }
+</section>
+
+<app-pay-invoice-drawer [invoice]="payInvoice()" (closed)="payInvoice.set(null)" (paid)="onPaid($event)" />

@@ -1,0 +1,104 @@
+<header class="cpo__head">
+  <button class="cpo__back" type="button" (click)="back()" aria-label="Back to orders"><app-icon name="arrow-left" [size]="18" /></button>
+  <div>
+    <h1 class="cpo__title">New purchase order</h1>
+    <p class="cpo__sub">Raise a PO to a supplier. Once sent, they're notified to confirm it with a Sales Order.</p>
+  </div>
+</header>
+
+<div class="cpo__doc">
+  <!-- Header -->
+  <section class="cpo__band">
+    <div class="cpo__fact"><span class="cpo__flabel">PO number</span><span class="cpo__fval">Assigned on send</span></div>
+    <div class="cpo__fact"><span class="cpo__flabel">PO date</span><span class="cpo__fval">{{ poDate | date: 'dd MMM yyyy' }}</span></div>
+  </section>
+
+  <!-- Parties -->
+  <div class="cpo__parties">
+    <section class="cpo__party">
+      <h2 class="cpo__h">Buyer</h2>
+      <p class="cpo__co">{{ buyer.company }}</p>
+      <p class="cpo__line">{{ buyer.address }}</p>
+      <p class="cpo__line">{{ buyer.contact }}</p>
+      <p class="cpo__line">{{ buyer.phone }} · {{ buyer.email }}</p>
+    </section>
+
+    <section class="cpo__party">
+      <h2 class="cpo__h">Vendor / supplier</h2>
+      <label class="cpo__field">
+        <select class="cpo__input" [value]="vendorId()" (change)="vendorId.set($any($event.target).value)">
+          <option value="" disabled>Select a supplier…</option>
+          @for (s of suppliers(); track s.id) { <option [value]="s.id">{{ s.name }}</option> }
+        </select>
+      </label>
+      @if (vendor(); as v) {
+        <p class="cpo__line">{{ v.address }}</p>
+        <p class="cpo__line">{{ v.contact }}</p>
+        <p class="cpo__line">{{ v.phone }} · {{ v.email }}</p>
+      } @else {
+        <p class="cpo__muted">Pick a supplier to fill their details.</p>
+      }
+    </section>
+  </div>
+
+  <!-- Shipping + terms -->
+  <div class="cpo__grid2">
+    <section class="cpo__block">
+      <h2 class="cpo__h">Shipping</h2>
+      <label class="cpo__field"><span class="cpo__flabel">Ship-to address</span><input class="cpo__input" [value]="shipTo()" (input)="shipTo.set($any($event.target).value)" /></label>
+      <label class="cpo__field"><span class="cpo__flabel">Requested delivery date</span><input class="cpo__input" type="date" [value]="requestedDelivery()" (input)="requestedDelivery.set($any($event.target).value)" /></label>
+      <label class="cpo__field"><span class="cpo__flabel">Shipping method</span><input class="cpo__input" [value]="shippingMethod()" (input)="shippingMethod.set($any($event.target).value)" /></label>
+    </section>
+    <section class="cpo__block">
+      <h2 class="cpo__h">Terms</h2>
+      <label class="cpo__field"><span class="cpo__flabel">Payment terms</span><input class="cpo__input" [value]="paymentTerms()" (input)="paymentTerms.set($any($event.target).value)" placeholder="e.g. Net 30" /></label>
+    </section>
+  </div>
+
+  <!-- Line items -->
+  <section class="cpo__block">
+    <h2 class="cpo__h">Line items</h2>
+    <div class="cpo__lwrap">
+      <table class="cpo__ltable">
+        <thead>
+          <tr><th>Item / SKU</th><th>Description</th><th class="cpo__num-h">Qty</th><th class="cpo__num-h">Unit price</th><th class="cpo__num-h">Line total</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (li of items(); track $index) {
+            <tr>
+              <td><input class="cpo__cell" [value]="li.sku" (input)="patchRow($index, { sku: $any($event.target).value })" placeholder="SKU" /></td>
+              <td><input class="cpo__cell" [value]="li.description" (input)="patchRow($index, { description: $any($event.target).value })" placeholder="Description" /></td>
+              <td><input class="cpo__cell cpo__cell--num" type="number" min="0" [value]="li.qty" (input)="patchRow($index, { qty: +$any($event.target).value })" /></td>
+              <td><input class="cpo__cell cpo__cell--num" type="number" min="0" [value]="li.unitPrice" (input)="patchRow($index, { unitPrice: +$any($event.target).value })" /></td>
+              <td class="cpo__linetot tabular">{{ fmt(lineTot(li)) }}</td>
+              <td><button class="cpo__rowdel" type="button" aria-label="Remove row" (click)="removeRow($index)"><app-icon name="x" [size]="15" /></button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <button class="cpo__addrow" type="button" (click)="addRow()"><app-icon name="plus" [size]="15" /> Add line</button>
+  </section>
+
+  <!-- Totals + footer -->
+  <div class="cpo__grid2">
+    <section class="cpo__block">
+      <h2 class="cpo__h">Notes</h2>
+      <textarea class="cpo__input cpo__area" rows="3" [value]="notes()" (input)="notes.set($any($event.target).value)" placeholder="Notes / special instructions"></textarea>
+      <label class="cpo__field"><span class="cpo__flabel">Authorized by</span><input class="cpo__input" [value]="authorizedBy()" (input)="authorizedBy.set($any($event.target).value)" /></label>
+    </section>
+
+    <section class="cpo__block cpo__totals">
+      <div class="cpo__trow"><span>Subtotal</span><b class="tabular">SAR {{ fmt(subtotal()) }}</b></div>
+      <div class="cpo__trow"><span>Discount</span><input class="cpo__tin tabular" type="number" min="0" [value]="discount()" (input)="discount.set(+$any($event.target).value)" /></div>
+      <div class="cpo__trow"><span>Tax ({{ taxPct() }}%)</span><b class="tabular">SAR {{ fmt(tax()) }}</b></div>
+      <div class="cpo__trow"><span>Shipping / freight</span><input class="cpo__tin tabular" type="number" min="0" [value]="freight()" (input)="freight.set(+$any($event.target).value)" /></div>
+      <div class="cpo__trow cpo__trow--grand"><span>Grand total</span><b class="tabular">SAR {{ fmt(grand()) }}</b></div>
+    </section>
+  </div>
+</div>
+
+<div class="cpo__foot">
+  <button class="cpo__btn cpo__btn--ghost" type="button" (click)="back()">Cancel</button>
+  <button class="cpo__btn cpo__btn--primary" type="button" [disabled]="!canSave()" (click)="save()">Send purchase order <app-icon name="arrow-right" [size]="15" /></button>
+</div>

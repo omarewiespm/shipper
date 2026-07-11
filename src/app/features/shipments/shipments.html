@@ -1,0 +1,252 @@
+<h1 class="t-h1 sh__title">Shipments</h1>
+
+<!-- Filter & action bar -->
+<div class="sh__bar">
+  <!-- Search by ID -->
+  <div class="sh__search">
+    <app-icon name="search" [size]="18" class="sh__search-icon" />
+    <input
+      type="search"
+      class="sh__search-input"
+      placeholder="Search by shipment ID"
+      aria-label="Search by shipment ID"
+      [value]="searchRaw()"
+      (input)="onSearchInput($any($event.target).value)"
+    />
+    @if (searchRaw()) {
+      <button class="sh__search-clear" type="button" aria-label="Clear search" (click)="clearSearch()">
+        <app-icon name="x" [size]="16" />
+      </button>
+    }
+  </div>
+
+  <!-- Combined filter — drill-down (categories → options) -->
+  <app-filter-dropdown #filterDd icon="filter" label="Filter" [count]="activeFilterCount() || null" ariaLabel="Filters" [menuWidth]="300" (opened)="onFilterOpen()">
+    @if (view() === null) {
+      <!-- Level 1: category list -->
+      <div class="sh__fcats">
+        <div class="sh__fcat" (click)="openCat('status')">
+          <span class="sh__fcat-l">Shipment status</span>
+          <span class="sh__fcat-v">{{ statusLabel() }}</span>
+          @if (statusKey() !== 'all') {
+            <button class="sh__fcat-x" type="button" aria-label="Clear status filter" (click)="$event.stopPropagation(); clearCat('status')"><app-icon name="x" [size]="13" /></button>
+          }
+          <app-icon name="chevron-right" [size]="16" class="sh__fcat-go" />
+        </div>
+
+        <div class="sh__fcat" (click)="openCat('dir')">
+          <span class="sh__fcat-l">Type</span>
+          <span class="sh__fcat-v">{{ dirLabel() }}</span>
+          @if (dirKey() !== 'all') {
+            <button class="sh__fcat-x" type="button" aria-label="Clear type filter" (click)="$event.stopPropagation(); clearCat('dir')"><app-icon name="x" [size]="13" /></button>
+          }
+          <app-icon name="chevron-right" [size]="16" class="sh__fcat-go" />
+        </div>
+
+        <div class="sh__fcat" (click)="openCat('origin')">
+          <span class="sh__fcat-l">Origin</span>
+          <span class="sh__fcat-v">{{ originLabel() }}</span>
+          @if (originKey() !== 'all') {
+            <button class="sh__fcat-x" type="button" aria-label="Clear origin filter" (click)="$event.stopPropagation(); clearCat('origin')"><app-icon name="x" [size]="13" /></button>
+          }
+          <app-icon name="chevron-right" [size]="16" class="sh__fcat-go" />
+        </div>
+
+        <div class="sh__fcat" (click)="openCat('dest')">
+          <span class="sh__fcat-l">Destination</span>
+          <span class="sh__fcat-v">{{ destLabel() }}</span>
+          @if (destKey() !== 'all') {
+            <button class="sh__fcat-x" type="button" aria-label="Clear destination filter" (click)="$event.stopPropagation(); clearCat('dest')"><app-icon name="x" [size]="13" /></button>
+          }
+          <app-icon name="chevron-right" [size]="16" class="sh__fcat-go" />
+        </div>
+
+        @if (activeFilterCount()) {
+          <button class="sh__fclear" type="button" (click)="clearAllFilters()"><app-icon name="x" [size]="14" /> Clear all filters</button>
+        }
+      </div>
+    } @else {
+      <!-- Level 2: category detail -->
+      <div class="sh__fdetail">
+        <button class="sh__fback" type="button" (click)="filterBack()">
+          <app-icon name="chevron-left" [size]="16" />
+          <span>{{ catTitle() }}</span>
+        </button>
+
+        @if (view() !== 'dir') {
+          <div class="sh__fsearch">
+            <app-icon name="search" [size]="15" class="sh__fsearch-icon" />
+            <input class="sh__fsearch-input" type="search" [placeholder]="'Search ' + catTitle().toLowerCase()" [value]="catQuery()" (input)="catQuery.set($any($event.target).value)" />
+          </div>
+        }
+
+        <div class="sh__fopts sh__fopts--scroll">
+          @switch (view()) {
+            @case ('status') {
+              <button class="sh__opt" role="option" type="button" [class.is-selected]="statusKey() === 'all'" (click)="selectStatus('all')"><span class="sh__opt-label">All</span><span class="sh__opt-count tabular">{{ statusCounts()['all'] }}</span></button>
+              @for (f of filteredStatus(); track f.key) {
+                <button class="sh__opt" role="option" type="button" [class.is-selected]="statusKey() === f.key" (click)="selectStatus(f.key)"><span class="sh__swatch" [attr.data-tone]="f.tone"></span><span class="sh__opt-label">{{ f.label }}</span><span class="sh__opt-count tabular">{{ statusCounts()[f.key] }}</span></button>
+              }
+            }
+            @case ('dir') {
+              @for (o of dirOptions; track o.key) {
+                <button class="sh__opt" role="option" type="button" [class.is-selected]="dirKey() === o.key" (click)="selectDir(o.key)"><span class="sh__opt-label">{{ o.label }}</span></button>
+              }
+            }
+            @case ('origin') {
+              <button class="sh__opt" role="option" type="button" [class.is-selected]="originKey() === 'all'" (click)="selectOrigin('all')"><span class="sh__opt-label">All</span></button>
+              @for (c of filteredOrigins(); track c) {
+                <button class="sh__opt" role="option" type="button" [class.is-selected]="originKey() === c" (click)="selectOrigin(c)"><span class="sh__opt-label">{{ c }}</span></button>
+              }
+              @if (!filteredOrigins().length) { <p class="sh__fempty">No cities match “{{ catQuery() }}”</p> }
+            }
+            @case ('dest') {
+              <button class="sh__opt" role="option" type="button" [class.is-selected]="destKey() === 'all'" (click)="selectDest('all')"><span class="sh__opt-label">All</span></button>
+              @for (c of filteredDests(); track c) {
+                <button class="sh__opt" role="option" type="button" [class.is-selected]="destKey() === c" (click)="selectDest(c)"><span class="sh__opt-label">{{ c }}</span></button>
+              }
+              @if (!filteredDests().length) { <p class="sh__fempty">No cities match “{{ catQuery() }}”</p> }
+            }
+          }
+        </div>
+      </div>
+    }
+  </app-filter-dropdown>
+
+  <!-- Date filter -->
+  <app-filter-dropdown
+    #dateDd
+    icon="calendar"
+    [label]="dateLabel()"
+    ariaLabel="Filter by date"
+    [menuWidth]="220"
+  >
+    @for (p of datePresets; track p.key) {
+      <button
+        class="sh__opt" role="option" type="button"
+        [attr.aria-selected]="dateKey() === p.key"
+        [class.is-selected]="dateKey() === p.key"
+        (click)="selectDate(p.key, dateDd)"
+      >
+        <span class="sh__opt-label">{{ p.label }}</span>
+      </button>
+    }
+  </app-filter-dropdown>
+
+  <!-- Actions (pushed to inline-end) -->
+  <app-button class="sh__export" variant="secondary" icon="download" (click)="exportCsv()">
+    Export CSV
+  </app-button>
+  <app-button variant="primary" icon="plus" (click)="openCreate()">Create shipment</app-button>
+</div>
+
+<!-- Table card -->
+<div class="sh__card">
+  @if (store.loading() && !store.all().length) {
+    <div class="sh__skeleton">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="sh__sk-row">
+          <app-skeleton width="72px" />
+          <app-skeleton width="150px" />
+          <app-skeleton width="110px" />
+          <app-skeleton width="110px" />
+          <app-skeleton width="130px" />
+          <app-skeleton width="90px" height="24px" radius="999px" />
+          <app-skeleton width="32px" height="32px" radius="8px" />
+        </div>
+      }
+    </div>
+  } @else if (store.error()) {
+    <app-empty-state icon="package" title="Couldn't load shipments" [body]="store.error()">
+      <app-button variant="secondary" (click)="store.load(true)">Retry</app-button>
+    </app-empty-state>
+  } @else if (!rows().length && !hasActiveFilters()) {
+    <app-empty-state
+      icon="package"
+      title="No shipments yet"
+      body="Shipments you create will appear here."
+    >
+      <app-button variant="primary" icon="plus" (click)="openCreate()">Create shipment</app-button>
+    </app-empty-state>
+  } @else if (!rows().length) {
+    <app-empty-state
+      icon="package"
+      title="No shipments match these filters"
+      body="Try a different status or date range."
+    >
+      <app-button variant="secondary" (click)="clearFilters()">Clear filters</app-button>
+    </app-empty-state>
+  } @else {
+    <div class="sh__table-wrap">
+      <table class="sh__table">
+        <thead>
+          <tr>
+            <th scope="col">Shipment ID</th>
+            <th scope="col">Direction</th>
+            <th scope="col">Origin</th>
+            <th scope="col">Destination</th>
+            <th scope="col" [attr.aria-sort]="sortDir() === 'asc' ? 'ascending' : 'descending'">
+              <button class="sh__sort" type="button" (click)="toggleSort()">
+                Created
+                <app-icon
+                  name="chevron-down" [size]="15"
+                  class="sh__sort-caret" [class.is-asc]="sortDir() === 'asc'"
+                />
+              </button>
+            </th>
+            <th scope="col">Status</th>
+            <th scope="col" class="sh__actions-h">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr class="sh__row" tabindex="0" (click)="openShipment(row.id)" (keydown.enter)="openShipment(row.id)">
+              <td data-label="Shipment ID"><span class="sh__id tabular">{{ row.id }}</span></td>
+              <td data-label="Direction">
+                <span class="sh__dir" [attr.data-tone]="dirView(row.dir).tone"><app-icon [name]="dirView(row.dir).icon" [size]="13" /> {{ dirView(row.dir).label }}</span>
+              </td>
+              <td data-label="Origin">
+                <span class="sh__strong">{{ row.fromCity }}</span>
+                <span class="sh__sub">{{ row.fromAddr }}</span>
+              </td>
+              <td data-label="Destination">
+                <span class="sh__strong">{{ row.toCity }}</span>
+                <span class="sh__sub">{{ row.receiverName }}</span>
+              </td>
+              <td data-label="Created"><span class="sh__muted tabular">{{ row.created }}</span></td>
+              <td data-label="Status">
+                <app-status-chip [label]="row.chip.label" [tone]="row.chip.tone" [pulse]="row.chip.pulse" />
+              </td>
+              <td data-label="Actions" class="sh__actions-c">
+                <app-shipment-actions-menu [shipment]="row.shipment" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="sh__footer">
+      <span class="sh__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} shipments</span>
+      @if (pageCount() > 1) {
+        <div class="sh__pager">
+          <button class="sh__page-btn" type="button" [disabled]="currentPage() === 1" aria-label="Previous page" (click)="goToPage(currentPage() - 1)">
+            <app-icon name="chevron-left" [size]="16" />
+          </button>
+          @for (n of pageNumbers(); track n) {
+            <button
+              class="sh__page-btn" type="button"
+              [class.is-current]="n === currentPage()"
+              [attr.aria-current]="n === currentPage() ? 'page' : null"
+              (click)="goToPage(n)"
+            >{{ n }}</button>
+          }
+          <button class="sh__page-btn" type="button" [disabled]="currentPage() === pageCount()" aria-label="Next page" (click)="goToPage(currentPage() + 1)">
+            <app-icon name="chevron-right" [size]="16" />
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

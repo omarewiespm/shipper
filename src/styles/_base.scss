@@ -1,0 +1,84 @@
+/* =============================================================================
+   Madar Shipper — Global base / reset
+   Minimal, logical-property-first (RTL-ready). No physical left/right.
+   ============================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings/paragraphs reset — type comes from tokens/helpers, not defaults. */
+h1, h2, h3, h4, h5, h6, p, figure {
+  margin: 0;
+}
+
+a {
+  color: var(--navy);
+  text-decoration: none;
+}
+a:hover { color: var(--navy-700); }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img, svg { display: block; max-inline-size: 100%; }
+
+/* Visible keyboard focus everywhere (quality floor). Navy-alpha ring, offset 2. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: var(--radius-sm);
+}
+
+/* Respect reduced motion globally (UI spec §1.8). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Live-status pulse dot keyframes (in transit / delayed). */
+@keyframes pulse-dot {
+  0%   { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  70%  { box-shadow: 0 0 0 5px transparent; opacity: .85; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 1; }
+}
+
+/* Skeleton shimmer (first-load loading). */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+/* Rotating word fade (appRotatingWord). Global so the directive is
+   self-contained wherever it's used. */
+.rotating-word { transition: opacity 220ms var(--ease); }
+.rotating-word.is-fading { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .rotating-word { transition: none; }
+}

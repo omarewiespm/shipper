@@ -1,0 +1,102 @@
+/* =============================================================================
+   Madar Shipper — Typography helpers (redesign v2)
+   Readex Pro. Weight & size carry hierarchy — headings are near-black
+   (var(--strong)), never tinted navy. Optical letter-spacing tightens as size
+   grows. Utility classes below map to the type-scale tokens in _tokens.scss.
+   ============================================================================= */
+
+/* --- Page header pattern: muted eyebrow above a large bold title ---------- */
+.t-eyebrow {
+  font-size: var(--t-eyebrow);
+  font-weight: 400;
+  color: var(--ink-2);
+  margin-block-end: 4px;
+}
+.t-page-title,
+.t-h1 {
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: var(--t-title-lh);
+  letter-spacing: var(--t-title-ls);
+  color: var(--strong);
+  margin: 0;
+}
+
+/* --- Section heading + right-aligned action ------------------------------ */
+.t-section,
+.t-h2 {
+  font-size: var(--t-section);
+  font-weight: 700;
+  letter-spacing: var(--t-section-ls);
+  line-height: 1.25;
+  color: var(--strong);
+  margin: 0 0 20px;
+}
+.t-section-action {
+  font-size: var(--t-section-action);
+  font-weight: 600;
+  color: var(--strong);
+}
+
+/* --- Stats --------------------------------------------------------------- */
+.t-stat {
+  font-size: var(--t-stat);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--t-stat-ls);
+  font-variant-numeric: tabular-nums;
+  color: var(--strong);
+}
+.t-stat-label {
+  font-size: var(--t-stat-label);
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-block-start: 4px;
+}
+
+/* --- Cards --------------------------------------------------------------- */
+.t-card-title,
+.t-h3 {
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--strong);
+}
+.t-card-body,
+.t-body-lg {
+  font-size: var(--t-card-body);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* --- Data rows ----------------------------------------------------------- */
+.t-row-label { font-size: var(--t-row-label); font-weight: 600; color: var(--strong); }
+.t-row-value { font-size: var(--t-row-value); font-weight: 700; color: var(--strong); font-variant-numeric: tabular-nums; }
+.t-row-pct   { font-size: var(--t-row-pct);   font-weight: 500; color: var(--ink-3);  font-variant-numeric: tabular-nums; }
+
+/* --- Tables & forms ------------------------------------------------------ */
+.t-table-body { font-size: var(--t-table-body); font-weight: 400; color: var(--strong); }
+.t-table-head { font-size: var(--t-table-head); font-weight: 600; color: var(--ink-2); letter-spacing: 0.3px; text-transform: uppercase; }
+.t-body       { font-size: var(--t-table-body); font-weight: 400; line-height: 1.5; }
+.t-label,
+.t-form-label { font-size: var(--t-form-label); font-weight: 500; color: var(--ink-2); }
+.t-button     { font-size: var(--t-button); font-weight: 600; }
+.t-caption,
+.t-meta       { font-size: var(--t-meta); font-weight: 500; color: var(--ink-3); }
+.t-micro      { font-size: 11.5px; font-weight: 600; line-height: 1.2; letter-spacing: .1px; }
+.t-metric     { font-size: var(--t-stat); font-weight: 700; line-height: 1; letter-spacing: var(--t-stat-ls); }
+
+/* Finance / table numerics */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Text color helpers */
+.ink   { color: var(--ink); }
+.ink-2 { color: var(--ink-2); }
+.ink-3 { color: var(--ink-3); }
+
+/* Responsive: title & section step down below 900px; everything else holds. */
+@media (max-width: 900px) {
+  .t-page-title, .t-h1 { font-size: var(--t-title-sm); }
+  .t-section, .t-h2 { font-size: var(--t-section-sm); }
+}

@@ -1,0 +1,17 @@
+<header class="tk__head">
+  <div class="tk__head-main">
+    <h1 class="tk__title">Live tracking</h1>
+    <p class="tk__sub"><span class="tk__livedot"></span> {{ store.live().length }} trucks on the road — tap a truck to see its shipment</p>
+  </div>
+</header>
+
+<app-fleet-map [trucks]="store.live()" (chat)="openChat($event)" (details)="openDetail($event)" />
+
+<app-tracking-detail-drawer
+  [shipment]="detailShipment()"
+  (closed)="closeDetail()"
+  (call)="call()"
+  (share)="share()"
+  (view)="viewShipment()" />
+
+<app-fleet-chat-drawer [shipment]="chatShipment()" (closed)="closeChat()" />

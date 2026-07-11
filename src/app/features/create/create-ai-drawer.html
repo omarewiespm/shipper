@@ -1,0 +1,64 @@
+@if (open()) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd caid" role="dialog" aria-modal="true" aria-label="Create with Madar AI"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <span class="caid__spark"><app-icon name="sparkles" [size]="18" /></span>
+      <div class="caid__id">
+        <span class="caid__name">Madar AI</span>
+        <span class="caid__sub">Describe your shipment — I'll build it</span>
+      </div>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body caid__msgs" #scroller>
+      @for (m of messages(); track m.id) {
+        <div class="cmsg" [class.cmsg--me]="m.from === 'user'">
+          @if (m.from === 'ai') { <span class="cmsg__av"><app-icon name="sparkles" [size]="14" /></span> }
+          <span class="cmsg__bubble">{{ m.text }}</span>
+        </div>
+      }
+      @if (thinking()) {
+        <div class="cmsg">
+          <span class="cmsg__av"><app-icon name="sparkles" [size]="14" /></span>
+          <span class="cmsg__bubble cmsg__typing"><span></span><span></span><span></span></span>
+        </div>
+      }
+    </div>
+
+    @if (store.canSubmit()) {
+      @if (reviewing()) {
+        <div class="caid__review">
+          <p class="caid__revh">Review &amp; create</p>
+          <dl class="caid__revlist">
+            <div class="caid__revrow"><dt>From</dt><dd>{{ store.pickup()?.city ?? '—' }}</dd></div>
+            <div class="caid__revrow"><dt>To</dt><dd>{{ store.destinationCity() ?? '—' }}</dd></div>
+            <div class="caid__revrow"><dt>Vehicle</dt><dd>{{ vehicleLabel() }}</dd></div>
+            <div class="caid__revrow"><dt>Creating</dt><dd>{{ creatingLabel() }}</dd></div>
+            <div class="caid__revrow caid__revrow--price"><dt>Price</dt><dd>{{ priceChip() }}</dd></div>
+          </dl>
+          <div class="caid__revact">
+            <button class="caid__back" type="button" (click)="reviewing.set(false)">Back</button>
+            <button class="caid__confirm" type="button" [disabled]="submitting()" (click)="create()">{{ primaryLabel() }}</button>
+          </div>
+        </div>
+      } @else {
+        <button class="caid__ready" type="button" (click)="reviewing.set(true)">
+          <span class="caid__readytxt">
+            <span class="caid__readyprice">{{ priceChip() }}</span>
+            <span class="caid__readyroute">{{ routeLabel() }} · {{ vehicleLabel() }}</span>
+          </span>
+          <span class="caid__cta">Review &amp; create <app-icon name="arrow-right" [size]="15" /></span>
+        </button>
+      }
+    }
+
+    <form class="caid__composer" (submit)="$event.preventDefault(); send()">
+      <input class="caid__input" aria-label="Message Madar AI" placeholder="Describe or refine your shipment…"
+        [value]="draft()" (input)="draft.set($any($event.target).value)" />
+      <button class="caid__mic" type="button" aria-label="Voice (coming soon)" (click)="voice()"><app-icon name="mic" [size]="18" /></button>
+      <button class="caid__send" type="submit" aria-label="Send"><app-icon name="send" [size]="18" /></button>
+    </form>
+  </aside>
+}

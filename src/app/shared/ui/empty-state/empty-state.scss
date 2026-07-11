@@ -1,0 +1,13 @@
+.empty {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--sp-2);
+  padding: var(--sp-10) var(--sp-6);
+}
+
+.empty__icon { color: var(--ink-3); margin-block-end: var(--sp-1); }
+.empty__title { color: var(--ink-2); }
+.empty__body { color: var(--ink-3); max-inline-size: 320px; }
+.empty__action:empty { display: none; }
+.empty__action { margin-block-start: var(--sp-3); }

@@ -1,0 +1,176 @@
+<a class="cs__back" routerLink="/shipments/create"><app-icon name="arrow-left" [size]="15" /> Create shipment</a>
+
+<div class="cs">
+  <div class="cs__form">
+    <!-- Pickup -->
+    <section class="c-section">
+      <div class="c-section__h">
+        <span class="c-tile c-tile--sky"><app-icon name="building" [size]="16" /></span>
+        <span class="c-section__t">Pickup</span>
+      </div>
+      @if (!pickupEditing() && store.pickup()) {
+        <div class="c-loc">
+          <span class="c-loc__tile c-loc__tile--sky"><app-icon name="building" [size]="18" /></span>
+          <span class="c-loc__body">
+            <span class="c-loc__name">{{ store.pickup()!.name }}</span>
+            <span class="c-loc__addr">{{ store.pickup()!.city }} · {{ store.pickup()!.address }}</span>
+          </span>
+          <button class="c-loc__clear" type="button" aria-label="Clear pickup" (click)="clearPickup()"><app-icon name="x" [size]="16" /></button>
+        </div>
+      } @else {
+        <app-location-picker mode="pickup" placeholder="Search your warehouses or an address"
+          (picked)="onPickupPicked($event)" (mapRequested)="openMap('pickup')" />
+      }
+    </section>
+
+    <!-- Drop-off & receiver -->
+    <section class="c-section">
+      <div class="c-section__h">
+        <span class="c-tile c-tile--orange"><app-icon name="pin" [size]="16" /></span>
+        <span class="c-section__t">Drop-off &amp; receiver</span>
+      </div>
+
+      @for (stop of store.stops(); track $index; let i = $index; let last = $last) {
+        <div class="c-stop">
+          @if (store.stops().length > 1) {
+            <div class="c-stop__label">
+              <span class="c-pill">Stop {{ i + 1 }}</span>
+              <button class="c-remove" type="button" (click)="store.removeStop(i)">Remove</button>
+            </div>
+          }
+
+          @if (stop.location) {
+            <div class="c-loc">
+              <span class="c-loc__tile c-loc__tile--orange"><app-icon name="pin" [size]="18" /></span>
+              <span class="c-loc__body">
+                <span class="c-loc__name">{{ stop.location.name }} @if (stop.isNew) { <span class="c-newtag">New</span> }</span>
+                <span class="c-loc__addr">{{ stop.location.city }} · {{ stop.location.address }}</span>
+              </span>
+              <button class="c-loc__clear" type="button" aria-label="Clear drop-off" (click)="changeStop(i)"><app-icon name="x" [size]="16" /></button>
+            </div>
+
+            @if (stop.isNew && !dismissed().has(i)) {
+              <div class="c-save">
+                <span class="c-save__q">Save this location?</span>
+                <button class="c-save__opt" type="button" (click)="saveAddress(i, 'customer')">Under a customer</button>
+                <button class="c-save__opt" type="button" (click)="saveAddress(i, 'mine')">As my location</button>
+                <button class="c-save__opt" type="button" (click)="saveAddress(i, 'once')">Just once</button>
+              </div>
+            }
+
+            <div class="c-disc">
+              <button class="c-disc__toggle" type="button" [attr.aria-expanded]="expanded().has(i)" (click)="toggleReceiver(i)">
+                <app-icon name="chevron-down" [size]="15" /> Who can confirm delivery?
+                <span class="c-disc__opt">· {{ stop.receiverContact ? 'prefilled' : 'optional' }}</span>
+              </button>
+              @if (expanded().has(i)) {
+                <div class="c-field">
+                  <input class="c-input" placeholder="Receiver name & phone" aria-label="Receiver contact"
+                    [value]="stop.receiverContact" (input)="store.setReceiverContact(i, $any($event.target).value)" />
+                  <p class="c-hint">This person can mark the shipment delivered and sign the delivery note. Optional.</p>
+                </div>
+              }
+            </div>
+          } @else {
+            <app-location-picker mode="customer" placeholder="Search customers or an address"
+              (picked)="onStopPicked(i, $event)" (mapRequested)="openMap(i)" />
+          }
+
+          @if (store.stops().length > 1 && !last) { <div class="c-stop__div"></div> }
+        </div>
+      }
+
+      <button class="c-addstop" type="button" (click)="store.addStop()"><app-icon name="plus" [size]="15" /> Add another drop-off</button>
+    </section>
+
+    <!-- Load -->
+    <section class="c-section">
+      <div class="c-section__h">
+        <span class="c-tile c-tile--navy"><app-icon name="truck" [size]="16" /></span>
+        <span class="c-section__t">Load</span>
+      </div>
+      <div class="c-field">
+        <label class="c-flabel">Vehicle type</label>
+        <app-vehicle-multiselect />
+      </div>
+      <div class="c-field">
+        <label class="c-flabel">Product type</label>
+        <app-product-select />
+      </div>
+      <div class="c-field">
+        <label class="c-flabel">Weight · optional</label>
+        <input class="c-input" placeholder="e.g. 14 tonnes" [value]="store.weight()" (input)="store.weight.set($any($event.target).value)" />
+      </div>
+    </section>
+
+    <!-- Schedule -->
+    <section class="c-section">
+      <div class="c-section__h">
+        <span class="c-tile c-tile--info"><app-icon name="calendar" [size]="16" /></span>
+        <span class="c-section__t">Schedule</span>
+        <span class="c-optional">Optional</span>
+      </div>
+      <div class="cs__2col">
+        <div class="c-field">
+          <label class="c-flabel">Scheduled pickup</label>
+          <app-datetime-field placeholder="ASAP — pick a date & time"
+            [value]="store.scheduledPickup()" (changed)="store.scheduledPickup.set($event)" />
+        </div>
+        <div class="c-field">
+          <label class="c-flabel">Scheduled delivery</label>
+          <app-datetime-field placeholder="Any time — pick a date & time"
+            [value]="store.scheduledDelivery()" (changed)="store.scheduledDelivery.set($event)" />
+        </div>
+      </div>
+      <div class="c-field">
+        <label class="c-flabel">Number of shipments</label>
+        <div class="c-count">
+          <div class="c-stepper">
+            <button type="button" aria-label="Decrease" [disabled]="store.numberOfShipments() <= 1" (click)="store.stepShipments(-1)"><app-icon name="minus" [size]="16" /></button>
+            <input class="c-stepper__in" type="text" inputmode="numeric" aria-label="Number of shipments"
+              [value]="store.numberOfShipments()" (change)="store.setShipments(+$any($event.target).value)" />
+            <button type="button" aria-label="Increase" [disabled]="store.numberOfShipments() >= 99" (click)="store.stepShipments(1)"><app-icon name="plus" [size]="16" /></button>
+          </div>
+          <span class="c-count__hint">Create several identical shipments at once.</span>
+        </div>
+      </div>
+      <p class="c-hint">Leave schedule empty for ASAP pickup.</p>
+    </section>
+
+    <!-- Advanced -->
+    <button class="c-adv" type="button" [attr.aria-expanded]="advancedOpen()" (click)="toggleAdvanced()">
+      <span class="c-tile c-tile--navy"><app-icon name="settings" [size]="16" /></span>
+      <span class="c-adv__body">
+        <span class="c-adv__t">Advanced options</span>
+        <span class="c-adv__s">Assign to a specific carrier or driver</span>
+      </span>
+      <app-icon name="chevron-down" [size]="18" class="c-adv__caret" [class.is-open]="advancedOpen()" />
+    </button>
+    @if (advancedOpen()) {
+      <section class="c-section">
+        <div class="c-field">
+          <label class="c-flabel">Assign to a carrier</label>
+          <select class="c-select" aria-label="Assign to a carrier" [value]="store.assignedCarrier() ?? ''" (change)="onCarrier($any($event.target).value)">
+            <option value="">Any carrier (open to your carriers)</option>
+            @for (c of store.carriers(); track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+          </select>
+        </div>
+        @if (store.assignedCarrier()) {
+          <div class="c-field">
+            <label class="c-flabel">Assign a specific driver / truck</label>
+            <select class="c-select" aria-label="Assign a driver" [value]="store.assignedDriver() ?? ''" (change)="store.assignedDriver.set($any($event.target).value || null)">
+              <option value="">Let the carrier assign</option>
+              @for (d of store.carrierDrivers(); track d.id) { <option [value]="d.id">{{ d.name }} · {{ d.truck }}</option> }
+            </select>
+          </div>
+        }
+      </section>
+    }
+  </div>
+
+  <div class="cs__panel">
+    <app-price-panel [submitting]="submitting()" (submit)="submit()" (saveDraft)="saveDraft()" />
+  </div>
+</div>
+
+<app-map-drawer [open]="mapOpen()" [title]="mapTitle()" (closed)="mapOpen.set(false)" (used)="onMapUsed($event)" />

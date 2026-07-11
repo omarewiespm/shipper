@@ -1,0 +1,13 @@
+@if (shipments.loading() && !shipment()) {
+  <app-skeleton width="260px" height="30px" radius="10px" />
+  <app-skeleton width="100%" height="120px" radius="16px" />
+  <app-skeleton width="100%" height="200px" radius="16px" />
+} @else if (!shipment()) {
+  <app-empty-state icon="package" title="Shipment not found" body="We couldn't find this shipment.">
+    <app-button variant="secondary" routerLink="/shipments">Back to shipments</app-button>
+  </app-empty-state>
+} @else if (isBidding()) {
+  <app-bidding-detail [shipment]="shipment()!" [receiver]="receiverName()" />
+} @else {
+  <app-fixed-detail [shipment]="shipment()!" [receiver]="receiverName()" />
+}

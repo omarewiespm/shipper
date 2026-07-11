@@ -1,0 +1,299 @@
+<div class="wrap">
+  @if (onboarding.isFirstRun() && !onboarding.failed()) {
+    <!-- ===== FIRST-RUN HOME ===== -->
+    <header class="greet">
+      <p class="greet__cap">Welcome to Madar,</p>
+      <h1 class="greet__name">{{ onboarding.firstName() }}</h1>
+      <p class="greet__lede">You're all set up. Here's everything you need to get your first shipment moving.</p>
+    </header>
+
+    <ng-container [ngTemplateOutlet]="aiHero" />
+
+    @if (onboarding.showVerifyBanner()) { <app-verify-banner /> }
+
+    <app-first-shipment-paths />
+
+    <!-- Delivery notes entry point -->
+    <a class="dncta" routerLink="/carriers/delivery-notes">
+      <span class="dncta__ic"><app-icon name="file-check" [size]="22" /></span>
+      <span class="dncta__body">
+        <span class="dncta__t">Delivery notes</span>
+        <span class="dncta__s">View and manage the delivery notes issued for your shipments.</span>
+      </span>
+      <app-icon name="arrow-right" [size]="18" class="dncta__go" />
+    </a>
+
+    @if (!onboarding.gettingStartedDone()) {
+      <section class="block"><app-getting-started /></section>
+    }
+
+    <ng-container [ngTemplateOutlet]="emptyModules" />
+  } @else {
+    <!-- ===== STEADY / TRANSITIONAL HOME ===== -->
+    @if (onboarding.showVerifyBanner()) { <app-verify-banner /> }
+
+    <header class="greet">
+      <p class="greet__cap">{{ greeting }}</p>
+      <h1 class="greet__name">{{ company }}</h1>
+    </header>
+
+    <!-- Ask Madar AI comes right after the greeting -->
+    <ng-container [ngTemplateOutlet]="aiHero" />
+
+    <!-- Get started sits directly under Madar AI (hidden once all 5 are done) -->
+    @if (!onboarding.gettingStartedDone()) {
+      <section class="block"><app-getting-started [demoted]="true" /></section>
+    }
+
+    <!-- Create your first shipment -->
+    <app-first-shipment-paths />
+
+    <!-- Delivery notes entry point -->
+    <a class="dncta" routerLink="/carriers/delivery-notes">
+      <span class="dncta__ic"><app-icon name="file-check" [size]="22" /></span>
+      <span class="dncta__body">
+        <span class="dncta__t">Delivery notes</span>
+        <span class="dncta__s">View and manage the delivery notes issued for your shipments.</span>
+      </span>
+      <app-icon name="arrow-right" [size]="18" class="dncta__go" />
+    </a>
+
+    <!-- Ship again -->
+    <section class="block">
+      <div class="sec-h sec-h--sm"><h3>Ship again</h3><button class="sec-h__btn" type="button" (click)="openLanes()">View all</button></div>
+      <div class="again-row">
+        @if (store.loading()) {
+          @for (i of [1,2,3,4]; track i) { <div class="again again--sk"><app-skeleton width="40px" height="40px" radius="11px" /><app-skeleton width="80%" /><app-skeleton width="60%" /></div> }
+        } @else {
+          @for (r of store.receivers(); track r.id) {
+            <button class="again" type="button" [attr.aria-label]="'Ship again to ' + r.name" (click)="shipAgain(r.id)">
+              <div class="again__head">
+                <app-avatar [name]="r.name" [size]="40" [square]="true" tone="neutral" />
+                <div class="again__id"><span class="again__name">{{ r.name }}</span><span class="again__meta">{{ r.count }} shipments</span></div>
+              </div>
+              <span class="again__lane"><app-icon name="route" [size]="13" /> {{ r.lane }}</span>
+              <span class="again__cta">Ship again <app-icon name="arrow-right" [size]="14" /></span>
+            </button>
+          }
+        }
+      </div>
+    </section>
+
+    <ng-container [ngTemplateOutlet]="dataModules" />
+  }
+</div>
+
+<!-- ===== Ask Madar AI (shared) ===== -->
+<ng-template #aiHero>
+  <section class="block">
+    <div class="ai" [class.is-open]="aiOpen()">
+      <span class="ai__aura" aria-hidden="true"></span>
+      <div class="ai__lead">
+        <span class="ai__spark"><app-icon name="sparkles" [size]="18" /></span>
+        <div>
+          <p class="ai__title">Ask Madar AI</p>
+          <p class="ai__sub">Answers about your shipments, invoices &amp; deliveries</p>
+        </div>
+      </div>
+
+      <div class="ai__bar" role="button" tabindex="0" [attr.aria-expanded]="aiOpen()" aria-haspopup="menu"
+        (click)="aiOpen.set(!aiOpen())" (keydown.enter)="aiOpen.set(!aiOpen())" (keydown.escape)="aiOpen.set(false)">
+        <span class="ai__ph">Ask Madar AI…</span>
+        <button class="ai__mic" type="button" aria-label="Voice (coming soon)" (click)="voice($event)"><app-icon name="mic" [size]="18" /></button>
+        <span class="ai__send"><app-icon name="send" [size]="18" /></span>
+      </div>
+
+      @if (aiOpen()) {
+        <div class="ai__backdrop" (click)="aiOpen.set(false)"></div>
+        <div class="ai__menu" role="menu">
+          @for (o of aiActions; track o.label; let i = $index) {
+            <button class="ai__opt" type="button" role="menuitem" [style.animation-delay.ms]="i * 40" (click)="selectAi(o)">
+              <span class="ai__opticon"><app-icon [name]="o.icon" [size]="16" /></span>
+              <span class="ai__optlabel">{{ o.label }}</span>
+              <app-icon name="arrow-right" [size]="15" class="ai__optgo" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </section>
+</ng-template>
+
+<!-- ===== Data modules (steady-state only) ===== -->
+<ng-template #dataModules>
+
+  <h2 class="dash-h">Dashboard</h2>
+
+  <!-- KPI row — what a shipper checks first -->
+  <section class="block">
+    <div class="kpis">
+      @if (store.loading()) {
+        @for (i of [1,2,3,4]; track i) { <div class="kpi"><app-skeleton width="55%" /><app-skeleton width="45%" height="26px" /><app-skeleton width="35%" /></div> }
+      } @else {
+        @for (k of kpis(); track k.label) {
+          <div class="kpi">
+            <div class="kpi__top"><span class="kpi__label">{{ k.label }}</span><span class="kpi__ic"><app-icon [name]="k.icon" [size]="16" /></span></div>
+            <div class="kpi__value tabular">{{ k.value }}</div>
+            <div class="kpi__foot">
+              @if (k.delta; as d) {
+                <span class="kpi__delta" [class.is-good]="d.good" [class.is-bad]="!d.good">{{ d.text }}</span>
+                <span class="kpi__vs">vs last month</span>
+              } @else if (k.sub) {
+                <span class="kpi__sub" [attr.data-tone]="k.subTone">{{ k.sub }}</span>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- Status mix + on-time performance -->
+  <section class="block">
+    <div class="grid2">
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">Shipments by status</p><p class="chart-card__s">This month</p></div>
+        <div class="chart-card__b">
+          @if (store.loading()) { <div class="empty-chart">Loading…</div> } @else {
+            <div class="donutwrap">
+              <div class="donut" role="img" aria-label="Shipments by status breakdown">
+                <canvas baseChart type="doughnut" [data]="statusDonut()" [options]="donutOptions"></canvas>
+                <div class="donut__c"><span class="donut__n tabular">{{ statusTotal() }}</span><span class="donut__l">shipments</span></div>
+              </div>
+              <ul class="legend">
+                @for (r of statusLegend(); track r.label) {
+                  <li class="legend__r"><span class="legend__sw" [style.background]="r.color"></span><span class="legend__lb">{{ r.label }}</span><span class="legend__v tabular">{{ r.count }} <span class="legend__p">{{ r.pct }}%</span></span></li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">On-time delivery</p><p class="chart-card__s">Last 8 months · %</p></div>
+        <div class="chart-card__b">
+          <div class="chartbox" role="img" [attr.aria-label]="onTimeSummary()">
+            <canvas baseChart type="line" [data]="onTimeData()" [options]="onTimeOptions"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Volume + spend trends -->
+  <section class="block">
+    <div class="grid2">
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">Shipment volume</p><p class="chart-card__s">Last 8 months</p></div>
+        <div class="chart-card__b">
+          <div class="chartbox" role="img" [attr.aria-label]="volumeSummary()">
+            <canvas baseChart type="line" [data]="volumeData()" [options]="volumeOptions"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">Monthly spend</p><p class="chart-card__s">Last 8 months · SAR '000</p></div>
+        <div class="chart-card__b">
+          <div class="chartbox" role="img" [attr.aria-label]="spendSummary()">
+            <canvas baseChart type="bar" [data]="spendData()" [options]="spendOptions"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top routes -->
+  <section class="block">
+    <div class="chart-card">
+      <div class="chart-card__h"><p class="chart-card__t">Top routes this month</p><p class="chart-card__s">By spend · SAR</p></div>
+      <div class="chart-card__b">
+        <div class="chartbox chartbox--tall" role="img" [attr.aria-label]="laneSummary()">
+          <canvas baseChart type="bar" [data]="laneData()" [options]="laneOptions"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overdue invoices alert -->
+  @if (overdue().count) {
+    <a class="odue" routerLink="/payments/invoices" [queryParams]="{ status: 'overdue' }">
+      <span class="odue__ic"><app-icon name="receipt" [size]="20" /></span>
+      <span class="odue__body">
+        <span class="odue__t">{{ overdue().count }} overdue invoice{{ overdue().count === 1 ? '' : 's' }}</span>
+        <span class="odue__s">SAR {{ overdue().amount.toLocaleString('en-US') }} past due — pay now to avoid late fees.</span>
+      </span>
+      <app-icon name="arrow-right" [size]="18" class="odue__go" />
+    </a>
+  }
+
+</ng-template>
+
+<!-- ===== Familiar modules in empty state (first-run only) ===== -->
+<ng-template #emptyModules>
+  <section class="block">
+    <div class="sec-h"><h3>Shipments by status</h3></div>
+    <div class="empty-mod">
+      <app-empty-state icon="package" title="No shipments yet"
+        body="Create your first shipment and your status breakdown appears here." />
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="grid2">
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">Shipment volume</p><p class="chart-card__s">Last 8 months</p></div>
+        <div class="chart-card__b"><div class="empty-chart">No data yet</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card__h"><p class="chart-card__t">Spend</p><p class="chart-card__s">Last 8 months · SAR</p></div>
+        <div class="chart-card__b"><div class="empty-chart">No data yet</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="chart-card">
+      <div class="chart-card__h"><p class="chart-card__t">Top routes this month</p><p class="chart-card__s">SAR · ranked</p></div>
+      <div class="chart-card__b"><div class="empty-chart empty-chart--tall">No data yet</div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-h"><h3>Ship again</h3></div>
+    <div class="empty-mod">
+      <app-empty-state icon="users" title="No receivers yet"
+        body="Add a receiver to ship to them again in two taps." />
+    </div>
+  </section>
+</ng-template>
+
+<!-- ===== Lanes drawer (Ship again → View all) ===== -->
+@if (lanesOpen()) {
+  <div class="sd-scrim" (click)="lanesOpen.set(false)"></div>
+  <aside class="sd" role="dialog" aria-modal="true" aria-label="Your lanes"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="lanesOpen.set(false)">
+    <header class="sd__head">
+      <span class="sd__tile"><app-icon name="route" [size]="18" /></span>
+      <span class="sd__title">Your lanes</span>
+      <button class="sd__close" type="button" aria-label="Close" (click)="lanesOpen.set(false)"><app-icon name="x" [size]="18" /></button>
+    </header>
+    <div class="sd__body lanesd">
+      <div class="lanesd__search">
+        <app-icon name="search" [size]="16" />
+        <input type="search" placeholder="Search lanes" aria-label="Search lanes" [value]="laneQuery()" (input)="laneQuery.set($any($event.target).value)" />
+      </div>
+      <ul class="lanesd__list">
+        @for (l of filteredLanes(); track l.label) {
+          <li>
+            <button class="lanesd__row" type="button" (click)="shipLane()">
+              <span class="lanesd__lane"><app-icon name="route" [size]="14" /> {{ l.label }}@if (l.count) { <span class="lanesd__cnt">{{ l.count }} shipments</span> }</span>
+              <app-icon name="arrow-right" [size]="15" />
+            </button>
+          </li>
+        } @empty {
+          <li class="lanesd__empty">No lanes match “{{ laneQuery() }}”.</li>
+        }
+      </ul>
+    </div>
+  </aside>
+}

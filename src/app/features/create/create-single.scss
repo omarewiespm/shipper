@@ -1,0 +1,33 @@
+:host { display: block; max-inline-size: 1180px; margin-inline: auto; }
+
+.cs__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  margin-block-end: var(--sp-4);
+}
+.cs__back:hover { color: var(--navy); }
+
+.cs {
+  display: grid;
+  grid-template-columns: 1fr 344px;
+  gap: 20px;
+  align-items: start;
+}
+.cs__form { min-inline-size: 0; }
+.cs__2col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+
+/* Summary stays pinned while the form scrolls. */
+.cs__panel {
+  position: sticky;
+  inset-block-start: var(--sp-4);
+}
+
+@media (max-width: 900px) {
+  .cs { grid-template-columns: 1fr; }
+  .cs__panel { position: static; }
+  .cs__2col { grid-template-columns: 1fr; }
+}

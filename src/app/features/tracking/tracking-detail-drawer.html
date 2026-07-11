@@ -1,0 +1,77 @@
+@if (shipment(); as d) {
+  <div class="sd-scrim" (click)="closed.emit()"></div>
+  <aside class="sd td" role="dialog" aria-modal="true" [attr.aria-label]="'Tracking ' + d.id"
+    cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closed.emit()">
+
+    <header class="sd__head">
+      <span class="td__tile"><app-icon name="truck" [size]="18" /></span>
+      <div class="td__id">
+        <span class="td__idn">{{ d.id }} · {{ d.receiverName }}</span>
+        <span class="td__route">{{ d.originCity }} → {{ d.destCity }}</span>
+      </div>
+      <button class="sd__close" type="button" aria-label="Close" (click)="closed.emit()"><app-icon name="x" [size]="18" /></button>
+    </header>
+
+    <div class="sd__body td__body">
+      <app-route-map [progressPct]="d.progressPct" [originCity]="d.originCity" [destCity]="d.destCity" />
+
+      @if (metrics(); as m) {
+        <div class="td__mx">
+          <div class="td__cell"><span class="td__k"><app-icon name="gauge" [size]="13" /> Completed</span><span class="td__v tabular">{{ m.pct }}%</span><span class="td__s">{{ m.kmDone }} km</span></div>
+          <div class="td__cell"><span class="td__k"><app-icon name="route" [size]="13" /> Remaining</span><span class="td__v tabular">{{ m.pctLeft }}%</span><span class="td__s">{{ m.kmLeft }} km</span></div>
+          <div class="td__cell"><span class="td__k"><app-icon name="clock" [size]="13" /> Time left</span><span class="td__v tabular">{{ m.timeLeftLabel }}</span><span class="td__s">ETA {{ d.etaAt }}</span></div>
+          <div class="td__cell"><span class="td__k"><app-icon name="navigation" [size]="13" /> Distance</span><span class="td__v tabular">{{ d.distanceKm }} km</span><span class="td__s">{{ d.speedKmh }} km/h</span></div>
+        </div>
+
+        <div class="td__pbar">
+          <div class="td__track"><span class="td__fill" [style.inline-size.%]="m.pct"></span></div>
+          <div class="td__ends">
+            <span><app-icon name="pin" [size]="11" /> {{ d.pickedUpAt }}</span>
+            <span class="td__next">{{ d.nextStop }}</span>
+            <span><app-icon name="flag" [size]="11" /> {{ d.etaAt }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- Driver / fleet -->
+      <div class="td__card">
+        <div class="td__driver">
+          <app-avatar [name]="d.driver.name" [size]="44" tone="neutral" [square]="true" />
+          <div class="td__dinfo">
+            <span class="td__dname">{{ d.driver.name }}</span>
+            <span class="td__dmeta">{{ d.driver.truck }} · {{ d.driver.plate }}</span>
+            <span class="td__dfleet"><app-icon name="building" [size]="12" /> {{ d.fleet.name }}</span>
+          </div>
+        </div>
+        <div class="td__actions">
+          <button class="td__btn td__btn--ghost" type="button" (click)="call.emit()"><app-icon name="phone" [size]="16" /> Call driver</button>
+        </div>
+        <div class="td__tags">
+          <span class="td__tag"><app-icon name="truck" [size]="12" /> {{ d.vehicle }}</span>
+          <span class="td__tag"><app-icon name="package" [size]="12" /> {{ d.product }}</span>
+        </div>
+      </div>
+
+      <!-- Journey -->
+      <div class="td__card">
+        <div class="td__jh">
+          <span class="td__jtitle">Journey</span>
+          <span class="td__jping"><app-icon name="refresh-cw" [size]="12" /> {{ d.lastPingMins }} min ago</span>
+        </div>
+        <ol class="td__tl">
+          @for (ms of d.milestones; track ms.label) {
+            <li class="td__ti" [class.is-done]="ms.done" [class.is-active]="ms.active">
+              <span class="td__dot"></span>
+              <span class="td__tlbody"><span class="td__tllabel">{{ ms.label }}</span><span class="td__tltime">{{ ms.time }}</span></span>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+
+    <div class="td__foot">
+      <button class="td__btn td__btn--ghost" type="button" (click)="share.emit()"><app-icon name="share" [size]="15" /> Share</button>
+      <button class="td__btn td__btn--primary" type="button" (click)="view.emit()">Open shipment <app-icon name="arrow-right" [size]="15" /></button>
+    </div>
+  </aside>
+}

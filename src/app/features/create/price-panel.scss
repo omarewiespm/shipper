@@ -1,0 +1,38 @@
+.pp {
+  position: sticky;
+  inset-block-start: var(--sp-4);
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.pp__label { font-size: 11px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-3); }
+.pp__summary { margin: var(--sp-3) 0 0; }
+.pp__row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding-block: 7px; border-block-end: 1px solid var(--line-soft); }
+.pp__row:last-child { border-block-end: none; }
+.pp__row dt { font-size: 13px; color: var(--ink-2); }
+.pp__row dd { font-size: 13px; font-weight: 600; color: var(--strong); text-align: end; }
+
+.pp__price {
+  margin-block-start: var(--sp-4);
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line);
+}
+.pp__badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px;
+}
+.pp__badge--ok { background: var(--ok-bg); color: var(--ok); }
+.pp__badge--sky { background: var(--sky-bg); color: var(--sky); }
+.pp__badge--muted { background: var(--line-soft); color: var(--ink-2); }
+
+.pp__figure { font-size: 30px; font-weight: 600; letter-spacing: -0.5px; color: var(--strong); margin-block-start: var(--sp-3); }
+.pp__figure-sfx { font-size: 13px; font-weight: 400; color: var(--ink-3); letter-spacing: 0; }
+.pp__title { font-size: 15px; font-weight: 600; color: var(--strong); margin-block-start: var(--sp-3); }
+.pp__sub { font-size: 12px; color: var(--ink-2); line-height: 1.5; margin-block-start: 6px; }
+
+.pp__actions { margin-block-start: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-2); }

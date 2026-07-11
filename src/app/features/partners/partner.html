@@ -1,0 +1,127 @@
+@if (partner(); as p) {
+  <!-- Header: back + name + tags on one line -->
+  <header class="pp__head">
+    <button class="pp__back" type="button" (click)="back()" aria-label="Back to partners"><app-icon name="arrow-left" [size]="18" /></button>
+    <app-avatar [name]="p.name" [size]="38" tone="neutral" [square]="true" />
+    <h1 class="pp__name">{{ p.name }}</h1>
+    <span class="pp__rel" [attr.data-tone]="rel().tone">{{ rel().label }}</span>
+    <app-status-chip [label]="chip().label" [tone]="chip().tone" />
+    <div class="pp__spacer"></div>
+    <div class="pp__heroactions">
+      @if (p.madarStatus !== 'active') {
+        <button class="pp__btn pp__btn--ghost" type="button" (click)="invite()"><app-icon name="send" [size]="15" /> {{ p.madarStatus === 'invited' ? 'Resend invite' : 'Invite' }}</button>
+      }
+      <button class="pp__btn pp__btn--ghost" type="button" (click)="message()"><app-icon name="messages" [size]="15" /> Message</button>
+      <button class="pp__btn pp__btn--primary" type="button" (click)="goShipments()">View shipments <app-icon name="arrow-right" [size]="15" /></button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="pp__stats">
+    <div class="pp__stat"><span class="pp__snum tabular">{{ p.shipments }}</span><span class="pp__slabel">Shipments</span></div>
+    <div class="pp__stat"><span class="pp__snum tabular">{{ p.onTimePct }}%</span><span class="pp__slabel">On-time</span></div>
+    <div class="pp__stat"><span class="pp__snum tabular">{{ p.openPos }}</span><span class="pp__slabel">Open POs</span></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="pp__tabs" role="tablist">
+    @for (t of tabs; track t.key) {
+      <button class="pp__tab" type="button" role="tab" [class.is-on]="tab() === t.key" (click)="tab.set(t.key)">{{ t.label }}</button>
+    }
+  </div>
+
+  <!-- Details -->
+  @if (tab() === 'details') {
+    <div class="pp__grid">
+      <section class="pp__card">
+        <h2 class="pp__h">Contact</h2>
+        <dl class="pp__kv">
+          <div class="pp__row"><dt><app-icon name="user" [size]="14" /> Contact person</dt><dd>{{ p.contactName }}</dd></div>
+          <div class="pp__row"><dt><app-icon name="phone" [size]="14" /> Phone</dt><dd class="tabular">{{ p.contactPhone }}</dd></div>
+          <div class="pp__row"><dt><app-icon name="messages" [size]="14" /> Email</dt><dd>{{ p.contactEmail }}</dd></div>
+          <div class="pp__row"><dt><app-icon name="pin" [size]="14" /> City</dt><dd>{{ p.city }}</dd></div>
+        </dl>
+      </section>
+      <aside class="pp__side">
+        <section class="pp__card">
+          <h2 class="pp__h">Relationship</h2>
+          <dl class="pp__kv">
+            <div class="pp__row"><dt><app-icon name="network" [size]="14" /> Type</dt><dd>{{ rel().label }}</dd></div>
+            <div class="pp__row"><dt><app-icon name="shield" [size]="14" /> Madar status</dt><dd>{{ chip().label }}</dd></div>
+            <div class="pp__row"><dt><app-icon name="receipt" [size]="14" /> Partner ID</dt><dd class="tabular">{{ p.id }}</dd></div>
+            @if (p.joinedAt) { <div class="pp__row"><dt><app-icon name="clock" [size]="14" /> On Madar since</dt><dd>{{ p.joinedAt }}</dd></div> }
+            <div class="pp__row"><dt><app-icon name="refresh-cw" [size]="14" /> Last activity</dt><dd>{{ p.lastActivity }}</dd></div>
+          </dl>
+        </section>
+      </aside>
+    </div>
+  }
+
+  <!-- Locations -->
+  @if (tab() === 'locations') {
+    <div class="pp__list">
+      @for (l of locations(); track l.name) {
+        <section class="pp__loc">
+          <span class="pp__loc-ic"><app-icon name="building" [size]="18" /></span>
+          <div class="pp__loc-body">
+            <div class="pp__loc-h"><span class="pp__loc-name">{{ l.name }}</span>@if (l.primary) { <span class="pp__badge">Primary</span> }</div>
+            <span class="pp__loc-addr"><app-icon name="map-pin" [size]="13" /> {{ l.address }} · {{ l.city }}</span>
+            <span class="pp__loc-contact"><app-icon name="user" [size]="13" /> {{ l.contact }} · <span class="tabular">{{ l.phone }}</span></span>
+          </div>
+        </section>
+      }
+    </div>
+  }
+
+  <!-- Orders — grouped by Selling / Buying depending on the partner's role -->
+  @if (tab() === 'orders') {
+    @for (g of orderGroups(); track g.key) {
+      <section class="pp__orders">
+        <div class="pp__orders-h">
+          <h2 class="pp__oh"><span class="pp__odot" [attr.data-kind]="g.key"></span> {{ g.title }} <span class="pp__ocount">{{ g.deals.length }}</span></h2>
+          <p class="pp__osub">{{ g.sub }}</p>
+        </div>
+        <div class="pp__list">
+          @for (d of g.deals; track d.id) {
+            <article class="pp__deal">
+              <header class="pp__deal-h">
+                <span class="pp__deal-id tabular">{{ d.id }}</span>
+                <span class="pp__deal-date">{{ d.date }}</span>
+                <span class="pp__deal-amt tabular">SAR {{ fmt(d.amount) }}</span>
+              </header>
+              <div class="pp__pipe">
+                @for (s of d.steps; track s.label) {
+                  <div class="pp__step" [attr.data-state]="s.state">
+                    <span class="pp__step-dot"></span>
+                    <span class="pp__step-l">{{ s.label }}</span>
+                    <span class="pp__step-sub">{{ s.sub }}</span>
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <!-- Documents -->
+  @if (tab() === 'documents') {
+    <section class="pp__card">
+      <ul class="pp__docs">
+        @for (d of documents(); track $index) {
+          <li class="pp__doc">
+            <span class="pp__doc-ic"><app-icon [name]="d.icon" [size]="16" /></span>
+            <span class="pp__doc-body"><span class="pp__doc-name">{{ d.type }}</span><span class="pp__doc-sub"><span class="tabular">{{ d.ref }}</span> · {{ d.date }}</span></span>
+            <app-icon name="eye" [size]="15" class="pp__doc-go" />
+          </li>
+        }
+      </ul>
+    </section>
+  }
+} @else {
+  <div class="pp__missing">
+    <p class="pp__missing-t">Partner not found</p>
+    <button class="pp__btn pp__btn--primary" type="button" (click)="back()">Back to Partners</button>
+  </div>
+}

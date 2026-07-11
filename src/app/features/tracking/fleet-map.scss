@@ -1,0 +1,163 @@
+/* The map host + inner fill the space the page flex-layout gives them. */
+app-fleet-map { display: block; block-size: 100%; min-block-size: 0; }
+.fm {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--line-soft);
+}
+.fm__map { position: absolute; inset: 0; z-index: 1; }
+
+/* Leaflet theming */
+.fm .leaflet-container { font-family: var(--font); background: #eef1f6; }
+.fm .leaflet-control-zoom { border: none !important; box-shadow: var(--shadow-lift); border-radius: 10px; overflow: hidden; }
+.fm .leaflet-control-zoom a { color: var(--ink); border: none; }
+.fm .leaflet-control-zoom a:hover { background: var(--line-soft); color: var(--navy); }
+.fm .leaflet-control-attribution { background: rgba(255, 255, 255, 0.8); font-size: 10px; color: var(--ink-3); }
+
+/* Animated truck markers: truck glyph in a circle badge with a pulsing ring
+   and an ID · % label beneath. */
+.tkm-wrap { overflow: visible !important; cursor: pointer; }
+.tkm { position: relative; display: block; inline-size: 34px; block-size: 34px; }
+.tkm__badge {
+  position: absolute; inset: 3px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--navy); color: #fff; border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(34, 50, 103, 0.4);
+  transition: background 150ms var(--ease), transform 150ms var(--ease);
+  z-index: 2;
+}
+.tkm__ring {
+  position: absolute; inset: 3px; border-radius: 50%;
+  border: 2px solid var(--navy);
+  animation: tkm-ring 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  z-index: 1;
+}
+.tkm__flag {
+  position: absolute; inset-block-start: 100%; inset-inline-start: 50%;
+  transform: translate(-50%, 5px);
+  padding: 2px 7px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96); border: 1px solid var(--line);
+  font-family: var(--font); font-size: 10.5px; font-weight: 700; color: var(--strong);
+  white-space: nowrap; box-shadow: var(--shadow); font-variant-numeric: tabular-nums;
+  z-index: 3;
+}
+.tkm-wrap:hover { z-index: 600 !important; }
+.tkm-wrap:hover .tkm__badge { transform: scale(1.1); }
+.tkm--active .tkm__badge { background: var(--orange); transform: scale(1.1); }
+.tkm--active .tkm__ring { border-color: var(--orange); }
+.tkm--active .tkm__flag { color: var(--orange); border-color: var(--orange); }
+.tkm--dim { opacity: 0.3; }
+.tkm--dim .tkm__ring { animation: none; }
+
+/* Muted/disabled look for the other trucks while one is selected. */
+.tkm--muted { opacity: 0.45; transition: opacity 200ms var(--ease); }
+.tkm--muted .tkm__ring { animation: none; opacity: 0; }
+.tkm--muted .tkm__badge { background: var(--mut); box-shadow: none; }
+.tkm--muted .tkm__flag { color: var(--ink-3); }
+
+@keyframes tkm-ring {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .tkm__ring { animation: none; } }
+
+/* Numbered pickup (1) / drop-off (2) endpoint badges */
+.tke-wrap { overflow: visible !important; }
+.tke {
+  display: flex; align-items: center; justify-content: center;
+  inline-size: 28px; block-size: 28px;
+  border-radius: 50%; border: 2px solid #fff;
+  font-family: var(--font); font-size: 13px; font-weight: 700; color: #fff;
+  box-shadow: 0 3px 8px rgba(20, 26, 46, 0.35);
+}
+.tke--pickup { background: var(--navy); }
+.tke--drop { background: var(--orange); }
+
+/* Search */
+.fm__search { position: absolute; inset-block-start: 14px; inset-inline-start: 14px; inline-size: min(320px, calc(100% - 28px)); z-index: 3; }
+.fm__field {
+  display: flex; align-items: center; gap: 8px;
+  block-size: 44px; padding-inline: 12px;
+  border-radius: 12px; background: var(--card);
+  border: 1px solid var(--line); box-shadow: var(--shadow-lift);
+}
+.fm__field:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px var(--ring), var(--shadow-lift); }
+.fm__sico { color: var(--ink-3); flex: none; }
+.fm__input { flex: 1; min-inline-size: 0; border: none; background: none; outline: none; font-family: var(--font); font-size: 14px; color: var(--strong); }
+.fm__clear {
+  flex: none; inline-size: 26px; block-size: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: none; border-radius: 7px; color: var(--ink-3);
+}
+.fm__clear:hover { background: var(--line-soft); color: var(--strong); }
+.fm__results {
+  margin-block-start: 8px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 12px; box-shadow: var(--shadow-lift); overflow: hidden;
+}
+.fm__res {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px;
+  inline-size: 100%; padding: 10px 12px; border: none; background: none;
+  text-align: start; font-family: var(--font); border-block-end: 1px solid var(--line);
+}
+.fm__res:last-child { border-block-end: none; }
+.fm__res:hover { background: var(--line-soft); }
+.fm__res-id { font-size: 12.5px; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+.fm__res-cust { font-size: 13px; color: var(--strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fm__res-route { font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+.fm__none { margin: 0; padding: 12px; font-size: 12.5px; color: var(--ink-3); }
+
+/* Legend */
+.fm__legend {
+  position: absolute; inset-block-end: 14px; inset-inline-start: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 600; color: var(--ink-2); box-shadow: var(--shadow);
+}
+.fm__ldot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--ok); }
+
+/* Selected truck card */
+.tcard {
+  position: absolute; inset-block-end: 16px; inset-inline-start: 50%; z-index: 4;
+  transform: translateX(-50%);
+  inline-size: min(320px, calc(100% - 28px));
+  padding: 14px; border-radius: 16px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-lift);
+  animation: tcard-in 200ms var(--ease);
+}
+.tcard__x {
+  position: absolute; inset-block-start: 10px; inset-inline-end: 10px;
+  inline-size: 26px; block-size: 26px; display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: none; border-radius: 7px; color: var(--ink-3);
+}
+.tcard__x:hover { background: var(--line-soft); color: var(--strong); }
+.tcard__top { display: flex; align-items: center; gap: 10px; }
+.tcard__id { font-size: 14px; font-weight: 700; color: var(--strong); font-variant-numeric: tabular-nums; }
+.tcard__eta { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--ink-2); }
+.tcard__cust { font-size: 12.5px; color: var(--ink-2); margin-block-start: 2px; }
+.tcard__route { display: flex; align-items: center; gap: 8px; margin-block: 10px 8px; }
+.tcard__city { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.tcard__arrow { color: var(--mut); }
+.tcard__bar { block-size: 6px; border-radius: 999px; background: var(--line-soft); overflow: hidden; }
+.tcard__fill { display: block; block-size: 100%; border-radius: 999px; background: var(--navy); transition: inline-size 500ms var(--ease); }
+.tcard__foot { display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; color: var(--ink-3); margin-block-start: 8px; }
+.tcard__ping { display: inline-flex; align-items: center; gap: 5px; }
+.tcard__pingdot { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--ok); }
+.tcard__cta { display: flex; gap: 8px; margin-block-start: 14px; }
+.tcard__btn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  block-size: 40px; border-radius: 11px; border: 1px solid transparent;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+}
+.tcard__btn--ghost { background: var(--card); border-color: var(--line); color: var(--ink); }
+.tcard__btn--ghost:hover { background: var(--line-soft); }
+.tcard__btn--primary { background: var(--navy); color: #fff; }
+.tcard__btn--primary:hover { background: var(--navy-700); }
+
+@keyframes tcard-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }

@@ -1,0 +1,244 @@
+<!-- Title -->
+<header class="fd__ttl">
+  <button class="fd__back" type="button" (click)="back()" aria-label="Back to shipments"><app-icon name="arrow-left" [size]="18" /></button>
+  <h1 class="fd__id">{{ shipment().id }}</h1>
+  <app-status-chip [label]="chip().label" [tone]="chip().tone" [pulse]="chip().pulse" />
+</header>
+
+<div class="fd__tabs" role="tablist">
+  @for (t of tabs; track t.key) {
+    <button class="fd__tab" type="button" role="tab" [class.is-on]="tab() === t.key" (click)="tab.set(t.key)">{{ t.label }}</button>
+  }
+</div>
+
+<div class="fd__layout" [class.fd__layout--status]="tab() === 'status'">
+  <!-- ===== MAIN ===== -->
+  <div class="fd__main">
+    <!-- ===== DETAILS ===== -->
+    @if (tab() === 'details') {
+      <!-- Route: origin → destination -->
+      <div class="fd__route">
+        <section class="fd__loc">
+          <div class="fd__loc-h"><span class="fd__loc-tile fd__loc-tile--from"><app-icon name="pin" [size]="15" /></span><span class="fd__loc-lbl">Origin</span></div>
+          <div class="fd__loc-city">{{ origin().city }}</div>
+          <div class="fd__loc-place">{{ origin().place }}</div>
+          <div class="fd__contact">
+            <app-avatar [name]="origin().contact.name" [size]="30" tone="neutral" [square]="true" />
+            <div class="fd__cbody"><span class="fd__cname">{{ origin().contact.name }}</span><span class="fd__crole">Loading in charge</span></div>
+            <button class="fd__ccall" type="button" [attr.aria-label]="'Call ' + origin().contact.name" (click)="call(origin().contact.name)"><app-icon name="phone" [size]="14" /> {{ origin().contact.phone }}</button>
+          </div>
+        </section>
+
+        <div class="fd__route-arrow"><app-icon name="arrow-right" [size]="18" /></div>
+
+        <section class="fd__loc">
+          <div class="fd__loc-h"><span class="fd__loc-tile fd__loc-tile--to"><app-icon name="flag" [size]="15" /></span><span class="fd__loc-lbl">Destination</span></div>
+          <div class="fd__loc-city">{{ dest().city }}</div>
+          <div class="fd__loc-place">{{ dest().place }}</div>
+          <div class="fd__contact">
+            <app-avatar [name]="dest().contact.name" [size]="30" tone="neutral" [square]="true" />
+            <div class="fd__cbody"><span class="fd__cname">{{ dest().contact.name }}</span><span class="fd__crole">Receiving in charge</span></div>
+            <button class="fd__ccall" type="button" [attr.aria-label]="'Call ' + dest().contact.name" (click)="call(dest().contact.name)"><app-icon name="phone" [size]="14" /> {{ dest().contact.phone }}</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Pickup / drop-off map — distance + searching state live on the map -->
+      <app-shipment-map class="fd__map" [origin]="mapOrigin()" [dest]="mapDest()" [searching]="preAssigned()" [height]="240">
+        <div class="fd__mapmeta">
+          <span class="fd__mm"><app-icon name="route" [size]="14" /> {{ distanceKm() }} km</span>
+          <span class="fd__mm"><app-icon name="clock" [size]="14" /> ~{{ driveDuration() }}</span>
+        </div>
+        @if (preAssigned()) {
+          <div class="fd__mapfind">
+            <span class="fd__beacon" aria-hidden="true"><app-icon name="search" [size]="15" /></span>
+            <span class="fd__mapfind-txt">Finding a carrier near pickup<span class="fd__mapfind-sub">You'll be notified the moment one accepts</span></span>
+            <span class="fd__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+        }
+      </app-shipment-map>
+
+      <!-- Shipment attributes — one clean, icon-led list -->
+      <section class="fd__card">
+        @if (extra().name !== '—') { <div class="fd__specname">{{ extra().name }}</div> }
+        <ul class="fd__props">
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="calendar" [size]="16" /> Scheduled pick-up</span><span class="fd__prop-v">{{ dt(trip().scheduledPickup) }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="clock" [size]="16" /> Requested delivery</span><span class="fd__prop-v">{{ dt(trip().requestedDelivery) }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="check" [size]="16" /> Actual pick-up</span>@if (trip().actualPickup) { <span class="fd__prop-v fd__prop-v--ok">{{ dt(trip().actualPickup) }}</span> } @else { <span class="fd__prop-v fd__prop-v--mut">Pending</span> }</li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="package" [size]="16" /> Product</span><span class="fd__prop-v">{{ load().product }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="gauge" [size]="16" /> Expected weight</span><span class="fd__prop-v">{{ weight() }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="truck" [size]="16" /> Vehicle type</span><span class="fd__prop-v">{{ load().vehicle }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="truck" [size]="16" /> Alternative truck</span><span class="fd__prop-v">{{ load().optionalTruck }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="receipt" [size]="16" /> Purchase order</span><span class="fd__prop-v"><a class="fd__link" (click)="openPo(load().poId)">{{ load().poId }}</a></span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="wallet" [size]="16" /> Product value <span class="fd__int">Internal</span></span><span class="fd__prop-v">@if (load().productPrice; as p) { SAR {{ fmt(p.amount) }} } @else { — }</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="user" [size]="16" /> Created by</span><span class="fd__prop-v">{{ extra().createdBy }}</span></li>
+        </ul>
+        <div class="fd__notes">
+          <span class="fd__prop-k"><app-icon class="fd__prop-ic" name="messages" [size]="16" /> Notes</span>
+          <p class="fd__notes-body" [class.fd__notes-body--mut]="extra().notes === '—'">{{ extra().notes === '—' ? 'No notes added.' : extra().notes }}</p>
+        </div>
+      </section>
+
+      <!-- Carrier & driver -->
+      <section class="fd__card">
+        <span class="fd__ck">Carrier &amp; driver</span>
+        @if (shipment().driver; as dv) {
+          <div class="fd__driver">
+            <app-avatar [name]="dv.name" [size]="44" tone="neutral" [square]="true" />
+            <div class="fd__dinfo"><span class="fd__dname">{{ dv.name }}</span><span class="fd__dmeta">{{ dv.truck }} · {{ dv.plate }}</span></div>
+            <div class="fd__dact">
+              <button class="fd__btn fd__btn--ghost" type="button" (click)="chat()"><app-icon name="messages" [size]="15" /> Chat</button>
+              <button class="fd__btn fd__btn--ghost" type="button" (click)="call(dv.name)"><app-icon name="phone" [size]="15" /> Call</button>
+            </div>
+          </div>
+        } @else {
+          <p class="fd__empty">No carrier assigned yet — the carrier and driver will appear here once your shipment is matched.</p>
+        }
+      </section>
+    }
+
+    <!-- ===== DOCUMENTS ===== -->
+    @if (tab() === 'documents') {
+      <section class="fd__card">
+        <span class="fd__ck">Documents</span>
+        @if (shipment().documents.length) {
+          <ul class="fd__doclist">
+            @for (d of shipment().documents; track d.id) {
+              <li class="fd__doc">
+                <span class="fd__docic"><app-icon [name]="docIcon[d.type]" [size]="16" /></span>
+                <span class="fd__docbody"><span class="fd__docname">{{ docLabel[d.type] }}</span>@if (d.signedAt) { <span class="fd__docsub">Signed · {{ dt(d.signedAt) }}</span> } @else if (d.issuedAt) { <span class="fd__docsub">Issued · {{ dt(d.issuedAt) }}</span> }</span>
+                @if (d.emailedAt) { <span class="fd__docmail" [title]="'Sent to your email · ' + dt(d.emailedAt)"><app-icon name="send" [size]="11" /> Emailed</span> }
+                <app-icon name="eye" [size]="15" class="fd__docgo" />
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="fd__empty">Documents (waybill, delivery note, POD, invoice) appear here as the shipment progresses.</p>
+        }
+      </section>
+    }
+
+    <!-- ===== TRACKING ===== -->
+    @if (tab() === 'tracking') {
+      @if (preAssigned()) {
+        <section class="fd__card">
+          <div class="fd__finding">
+            <span class="fd__beacon" aria-hidden="true"><app-icon name="navigation" [size]="18" /></span>
+            <div class="fd__wbody">
+              <span class="fd__wt">Not dispatched yet</span>
+              <span class="fd__ws">Live tracking begins once a carrier is assigned and the driver departs.</span>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <app-shipment-map class="fd__map" [origin]="mapOrigin()" [dest]="mapDest()" [live]="isMoving()" [progress]="livePct()" [height]="440" />
+        <div class="fd__trackbar">
+          @if (isMoving()) {
+            <span class="fd__trackstate fd__trackstate--live"><i></i> En route</span>
+            <span class="fd__trackmeta">ETA {{ dt(shipment().etaAt) }}</span>
+          } @else if (delivered()) {
+            <span class="fd__trackstate fd__trackstate--ok"><app-icon name="check" [size]="14" /> Delivered</span>
+            <span class="fd__trackmeta">{{ dt(shipment().etaAt) }}</span>
+          } @else {
+            <span class="fd__trackstate">Awaiting departure</span>
+            <span class="fd__trackmeta">Live tracking starts when the driver departs.</span>
+          }
+        </div>
+      }
+    }
+
+    <!-- ===== BILLING ===== -->
+    @if (tab() === 'billing') {
+      <section class="fd__card">
+        <span class="fd__ck">Charges</span>
+        <ul class="fd__bill">
+          <li class="fd__bill-row"><span>Agreed rate</span><b>SAR {{ fmt(billing().base) }}</b></li>
+          @for (sc of billing().surcharges; track sc.label) {
+            <li class="fd__bill-row"><span>{{ sc.label }}</span><b>SAR {{ fmt(sc.amount) }}</b></li>
+          }
+          @if (!billing().surcharges.length) {
+            <li class="fd__bill-empty">No additional charges yet — waiting time or other surcharges would appear here.</li>
+          }
+          <li class="fd__bill-total"><span>Total{{ billing().paid ? '' : ' so far' }}</span><b>SAR {{ fmt(billing().total) }}</b></li>
+        </ul>
+      </section>
+
+      <section class="fd__card">
+        <span class="fd__ck">Payment</span>
+        <ul class="fd__props">
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="wallet" [size]="16" /> Terms</span><span class="fd__prop-v">{{ billing().isSpot ? 'Paid on booking (spot)' : 'Net 60' }}</span></li>
+          <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="clock" [size]="16" /> Status</span><span class="fd__prop-v"><span class="fd__pill" [attr.data-tone]="paymentState().tone">{{ paymentState().label }}</span></span></li>
+          @if (billing().invoiceId) {
+            <li class="fd__prop"><span class="fd__prop-k"><app-icon class="fd__prop-ic" name="receipt" [size]="16" /> Invoice</span><span class="fd__prop-v"><a class="fd__link" (click)="act('invoice')">{{ billing().invoiceId }}</a></span></li>
+          }
+        </ul>
+        <div class="fd__bill-actions">
+          @if (!billing().paid) {
+            <button class="fd__pcta" type="button" (click)="payBill()">Pay from wallet <app-icon name="arrow-right" [size]="15" /></button>
+          }
+          @if (billing().invoiceId) {
+            <button class="fd__btn fd__btn--ghost" type="button" (click)="act('invoice')"><app-icon name="receipt" [size]="15" /> View invoice</button>
+          }
+        </div>
+        <p class="fd__bill-hint"><app-icon name="info" [size]="14" /> The agreed rate isn't the final amount — surcharges (e.g. waiting time) may be billed and settled here.</p>
+      </section>
+    }
+
+    <!-- ===== SHIPMENT STATUS ===== -->
+    @if (tab() === 'status') {
+      <section class="fd__card fd__card--activity">
+        <span class="fd__ck">Activity</span>
+        @if (cancelled()) {
+          <div class="fd__cancelled"><app-icon name="x" [size]="18" /> This shipment is {{ chip().label }}.</div>
+        }
+        <ol class="fd__tl" [style.--done]="doneFrac()">
+          @for (j of journey(); track j.label) {
+            <li class="fd__ti" [class.is-done]="j.done" [class.is-upcoming]="!j.done" [class.is-latest]="j.latest">
+              <span class="fd__tdot"></span>
+              <span class="fd__tbody">
+                <span class="fd__tlabel">{{ j.label }}</span>
+                @if (j.at) { <span class="fd__ttime">{{ dt(j.at) }}</span> }
+              </span>
+            </li>
+          }
+        </ol>
+      </section>
+    }
+  </div>
+
+  <!-- ===== STICKY PRICE PANEL ===== -->
+  <aside class="fd__panel">
+    <div class="fd__pcard">
+      <!-- Highlighted price -->
+      <div class="fd__phi">
+        <div class="fd__ptop"><span class="fd__plabel">Agreed rate</span><span class="fd__ptag">{{ priceTag() }}</span></div>
+        <div class="fd__pfig tabular">SAR {{ fmt(shipment().price.amount) }}</div>
+        <div class="fd__pstate">
+          <span class="fd__pill" [attr.data-tone]="paymentState().tone">{{ paymentState().label }}</span>
+          @if (billing().surcharges.length) {
+            <button class="fd__psurch" type="button" (click)="tab.set('billing')">+ SAR {{ fmt(billing().total - billing().base) }} surcharges</button>
+          }
+        </div>
+      </div>
+
+      <!-- Shipment summary -->
+      <ul class="fd__psum">
+        <li><span>From</span><b>{{ origin().city }}</b></li>
+        <li><span>To</span><b>{{ dest().city }}</b></li>
+        <li><span>Vehicle</span><b>{{ shipment().truckType }}</b></li>
+        <li><span>Product</span><b>{{ shipment().cargo.type }}</b></li>
+        <li><span>Weight</span><b>{{ weight() }}</b></li>
+        <li><span>Price basis</span><b>{{ priceTag() }}</b></li>
+        @if (shipment().etaAt) { <li><span>ETA</span><b>{{ dt(shipment().etaAt) }}</b></li> }
+      </ul>
+
+      @if (cta(); as c) {
+        <button class="fd__pcta" type="button" (click)="act(c.kind)">{{ c.label }} <app-icon name="arrow-right" [size]="15" /></button>
+      }
+      @if (preAssigned()) {
+        <button class="fd__psecondary" type="button" (click)="cancelOrder()">Cancel order</button>
+        <p class="fd__pnote"><app-icon name="info" [size]="14" /> You can still edit this shipment until a carrier accepts.</p>
+      }
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,71 @@
+:host { display: block; }
+
+.rmap {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 80% 0%, rgba(80, 141, 214, 0.10), transparent 60%),
+    var(--sky-bg, #eef3fb);
+  border: 1px solid var(--line);
+}
+.rmap__svg { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; }
+
+.rmap__truck {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: left 900ms var(--ease), top 900ms var(--ease);
+}
+.rmap__badge {
+  position: relative;
+  inline-size: 30px; block-size: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--navy); color: #fff;
+  box-shadow: 0 4px 10px rgba(34, 50, 103, 0.35);
+  border: 2px solid #fff;
+}
+.rmap__pulse {
+  position: absolute; inset: 50%;
+  inline-size: 30px; block-size: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  background: var(--navy);
+  opacity: 0.35;
+  animation: rmap-pulse 2s var(--ease) infinite;
+}
+
+.rmap__tag {
+  position: absolute;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px; font-weight: 600;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  color: var(--strong);
+}
+.rmap__tag--from { inset-inline-start: 12px; inset-block-end: 12px; color: var(--navy); }
+.rmap__tag--to { inset-inline-end: 12px; inset-block-start: 12px; color: var(--orange); }
+
+.rmap__live {
+  position: absolute; inset-inline-start: 12px; inset-block-start: 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line);
+  font-size: 11px; font-weight: 600; color: var(--ok); box-shadow: var(--shadow);
+}
+.rmap__livedot { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--ok); }
+
+@keyframes rmap-pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  70% { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rmap__truck { transition: none; }
+  .rmap__pulse, .rmap__livedot { animation: none; }
+}

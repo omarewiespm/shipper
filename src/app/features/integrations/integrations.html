@@ -1,0 +1,51 @@
+<header class="ig__head">
+  <div class="ig__head-main">
+    <h1 class="ig__title">Integrations</h1>
+    <p class="ig__sub">Connect Madar to the tools you already run — vehicle tracking, ERPs, accounting and government services.</p>
+  </div>
+  <div class="ig__search">
+    <app-icon name="search" [size]="18" class="ig__search-icon" />
+    <input type="search" class="ig__search-input" [value]="store.query()" (input)="store.query.set($any($event.target).value)"
+      placeholder="Search integrations" aria-label="Search integrations" />
+    @if (store.query()) { <button class="ig__search-clear" type="button" aria-label="Clear" (click)="store.query.set('')"><app-icon name="x" [size]="16" /></button> }
+  </div>
+</header>
+
+<div class="ig__cats" role="tablist">
+  @for (c of chips(); track c.key) {
+    <button class="ig__cat" type="button" role="tab" [class.is-on]="store.category() === c.key" (click)="store.category.set(c.key)">
+      {{ c.label }} <span class="ig__cat-n">{{ c.count }}</span>
+    </button>
+  }
+</div>
+
+@if (store.filtered().length) {
+  <div class="ig__grid">
+    @for (a of store.filtered(); track a.id) {
+      <article class="igc" tabindex="0" (click)="openDetail(a)" (keydown.enter)="openDetail(a)">
+        <div class="igc__head">
+          <app-int-logo [domain]="a.domain" [initials]="a.initials" [color]="a.color" [name]="a.name" [size]="44" [radius]="12" />
+          <div class="igc__id">
+            <span class="igc__name">{{ a.name }}</span>
+            <span class="igc__meta">
+              <span class="igc__stars"><app-icon name="star" [size]="13" /> {{ a.rating }}</span>
+              <span class="igc__dot">·</span>{{ installs(a.installs) }} installs
+            </span>
+          </div>
+          @if (a.connected) {
+            <button class="igc__cta igc__cta--on" type="button" (click)="disconnect(a, $event)"><app-icon name="check" [size]="13" /> Connected</button>
+          } @else {
+            <button class="igc__cta" type="button" (click)="connect(a, $event)">Connect</button>
+          }
+        </div>
+        <p class="igc__sub">{{ a.tagline }}</p>
+      </article>
+    }
+  </div>
+} @else {
+  <div class="ig__empty">
+    <span class="ig__empty-ic"><app-icon name="integrations" [size]="26" /></span>
+    <p class="ig__empty-t">No integrations found</p>
+    <p class="ig__empty-b">Try another category or a different search.</p>
+  </div>
+}

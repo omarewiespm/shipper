@@ -1,0 +1,156 @@
+<nav class="sb" aria-label="Primary">
+  <!-- Logo -->
+  <a class="sb__logo" routerLink="/home" (click)="closeMobile()" aria-label="Madar — Logistics Platform">
+    <img class="sb__logo-full" src="/brand/madar-logo.png" alt="Madar — Logistics Platform" />
+  </a>
+
+  <!-- Zone 1 — Navigation (scrolls if needed) -->
+  <div class="sb__nav">
+    <div class="sb__group">
+      @for (item of primaryNav; track item.route) {
+        @if (item.children) {
+          <button
+            type="button"
+            class="sb__item sb__item--parent"
+            [class.is-parent-active]="isParentActive(item)"
+            (click)="toggleGroup(item.label)"
+            [attr.aria-expanded]="isGroupOpen(item.label)"
+          >
+            <span class="sb__marker"></span>
+            <span class="sb__icon"><app-icon [name]="item.icon" [size]="18" /></span>
+            <span class="sb__label">{{ item.label }}</span>
+            <span class="sb__chevron" [class.is-open]="isGroupOpen(item.label)">
+              <app-icon name="chevron-down" [size]="16" />
+            </span>
+          </button>
+          @if (isGroupOpen(item.label)) {
+            <div class="sb__children">
+              @for (child of item.children; track child.route) {
+                <a
+                  class="sb__child"
+                  [routerLink]="child.route"
+                  routerLinkActive="is-active"
+                  (click)="closeMobile()"
+                >{{ child.label }}</a>
+              }
+            </div>
+          }
+        } @else {
+          <a
+            class="sb__item"
+            [routerLink]="item.route"
+            routerLinkActive="is-active"
+            (click)="closeMobile()"
+          >
+            <span class="sb__marker"></span>
+            <span class="sb__icon"><app-icon [name]="item.icon" [size]="18" /></span>
+            <span class="sb__label">{{ item.label }}</span>
+            @if (badgeFor(item.badgeKey); as n) {
+              <app-badge class="sb__badge" [count]="n" />
+            }
+          </a>
+        }
+      }
+    </div>
+
+    <div class="sb__group">
+      @for (item of secondaryNav; track item.route) {
+        @if (item.children) {
+          <button
+            type="button"
+            class="sb__item sb__item--parent"
+            [class.is-parent-active]="isParentActive(item)"
+            (click)="toggleGroup(item.label)"
+            [attr.aria-expanded]="isGroupOpen(item.label)"
+          >
+            <span class="sb__marker"></span>
+            <span class="sb__icon"><app-icon [name]="item.icon" [size]="18" /></span>
+            <span class="sb__label">{{ item.label }}</span>
+            <span class="sb__chevron" [class.is-open]="isGroupOpen(item.label)">
+              <app-icon name="chevron-down" [size]="16" />
+            </span>
+          </button>
+          @if (isGroupOpen(item.label)) {
+            <div class="sb__children">
+              @for (child of item.children; track child.route) {
+                <a
+                  class="sb__child"
+                  [routerLink]="child.route"
+                  routerLinkActive="is-active"
+                  (click)="closeMobile()"
+                >{{ child.label }}</a>
+              }
+            </div>
+          }
+        } @else {
+          <a
+            class="sb__item"
+            [routerLink]="item.route"
+            routerLinkActive="is-active"
+            (click)="closeMobile()"
+          >
+            <span class="sb__marker"></span>
+            <span class="sb__icon"><app-icon [name]="item.icon" [size]="18" /></span>
+            <span class="sb__label">{{ item.label }}</span>
+          </a>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Pinned bottom section: utility strip + create CTA (never scrolls) -->
+  <div class="sb__bottom">
+    <!-- Zone 2 — Utility strip -->
+    <div class="sb__utils" role="group" aria-label="Tools">
+      <button
+        class="sb__util" type="button"
+        (click)="openNotifications()"
+        [attr.aria-label]="notificationsLabel()"
+        [appTooltip]="'Notifications'"
+      >
+        <app-icon name="bell" [size]="18" />
+        @if (notificationsUnread()) {
+          <span class="sb__util-dot" aria-hidden="true"></span>
+          <span class="sb__sr">Unread notifications</span>
+        }
+      </button>
+
+      <button
+        class="sb__util" type="button"
+        (click)="openMessages()"
+        [attr.aria-label]="messagesLabel()"
+        [appTooltip]="'Messages'"
+      >
+        <app-icon name="messages" [size]="18" />
+        @if (messagesUnread()) {
+          <app-badge class="sb__util-badge" [count]="messagesUnread()" />
+          <span class="sb__sr">{{ messagesUnread() }} unread messages</span>
+        }
+      </button>
+
+      <button
+        class="sb__util" type="button"
+        (click)="openSupport()"
+        aria-label="Support"
+        [appTooltip]="'Support'"
+      >
+        <app-icon name="support" [size]="18" />
+      </button>
+
+      <button
+        class="sb__util" type="button"
+        (click)="openMadarAi()"
+        aria-label="Madar AI"
+        [appTooltip]="'Madar AI'"
+      >
+        <app-icon name="sparkles" [size]="18" />
+      </button>
+    </div>
+
+    <!-- Zone 3 — Create shipment CTA (action, not a nav item) -->
+    <button class="sb__create" type="button" (click)="openCreate()">
+      <app-icon name="plus" [size]="18" [stroke]="2.2" />
+      <span>{{ createNav.label }}</span>
+    </button>
+  </div>
+</nav>
