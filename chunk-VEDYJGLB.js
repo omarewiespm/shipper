@@ -1,0 +1,1 @@
+import{a as i}from"./chunk-LJL52OFQ.js";import{N as e,P as t,ac as o}from"./chunk-IQHZA577.js";var I=new e("INVOICES_API"),r=class{http=t(o);list(){return i(this.http,"invoices.json")}};export{I as a,r as b};

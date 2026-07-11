@@ -1,0 +1,918 @@
+[
+  {
+    "id": "SH-2036",
+    "receiverId": "RCV-003",
+    "origin": {
+      "id": "OR-2036",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2036",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "cargo": {
+      "type": "Dry goods",
+      "weightKg": 9000
+    },
+    "truckType": "Box 12m",
+    "status": "draft",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2750,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [],
+    "createdAt": "2026-07-05T14:00:00+03:00"
+  },
+  {
+    "id": "SH-2050",
+    "receiverId": "RCV-001",
+    "origin": {
+      "id": "OR-2050",
+      "line": "Al Khumrah Industrial",
+      "city": "Jeddah",
+      "region": "Makkah",
+      "lat": 21.4225,
+      "lng": 39.2176
+    },
+    "destination": {
+      "id": "DS-2050",
+      "line": "Al Awali District",
+      "city": "Makkah",
+      "region": "Makkah",
+      "lat": 21.3891,
+      "lng": 39.8579
+    },
+    "cargo": {
+      "type": "Dry goods",
+      "weightKg": 6000
+    },
+    "truckType": "Box 12m",
+    "status": "posted",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 1450,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00"
+  },
+  {
+    "id": "SH-2051",
+    "receiverId": "RCV-004",
+    "origin": {
+      "id": "OR-2051",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2051",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "cargo": {
+      "type": "Pharmacy stock",
+      "weightKg": 5000
+    },
+    "truckType": "Box 12m",
+    "status": "accepted",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2600,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-004",
+    "driver": {
+      "name": "Khalid Al Otaibi",
+      "phone": "+966 53 220 4410",
+      "plate": "RUH 7781",
+      "truck": "Box 12m"
+    }
+  },
+  {
+    "id": "SH-2052",
+    "receiverId": "RCV-005",
+    "origin": {
+      "id": "OR-2052",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "destination": {
+      "id": "DS-2052",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "cargo": {
+      "type": "Hardware",
+      "weightKg": 11000
+    },
+    "truckType": "Curtain-side 13.6m",
+    "status": "at_pickup",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2900,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-004",
+    "driver": {
+      "name": "Khalid Al Otaibi",
+      "phone": "+966 53 220 4410",
+      "plate": "RUH 7781",
+      "truck": "Box 12m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  },
+  {
+    "id": "SH-2053",
+    "receiverId": "RCV-002",
+    "origin": {
+      "id": "OR-2053",
+      "line": "Al Khumrah Industrial",
+      "city": "Jeddah",
+      "region": "Makkah",
+      "lat": 21.4225,
+      "lng": 39.2176
+    },
+    "destination": {
+      "id": "DS-2053",
+      "line": "Industrial Area, Phase 5",
+      "city": "Madinah",
+      "region": "Madinah",
+      "lat": 24.47,
+      "lng": 39.61
+    },
+    "cargo": {
+      "type": "Packaged food",
+      "weightKg": 8000
+    },
+    "truckType": "Curtain-side 12m",
+    "status": "loaded",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2100,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2053-WB",
+        "shipmentId": "SH-2053",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-005",
+    "driver": {
+      "name": "Ibrahim Al Sharif",
+      "phone": "+966 55 013 9922",
+      "plate": "JED 5540",
+      "truck": "Curtain-side 12m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  },
+  {
+    "id": "SH-2042",
+    "receiverId": "RCV-001",
+    "origin": {
+      "id": "OR-2042",
+      "line": "Al Khumrah Industrial",
+      "city": "Jeddah",
+      "region": "Makkah",
+      "lat": 21.4225,
+      "lng": 39.2176
+    },
+    "destination": {
+      "id": "DS-2042",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "cargo": {
+      "type": "Dry goods",
+      "weightKg": 12000
+    },
+    "truckType": "Curtain-side 13.6m",
+    "status": "in_transit",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 3200,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2042-WB",
+        "shipmentId": "SH-2042",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-001",
+    "driver": {
+      "name": "Saeed Al Ghamdi",
+      "phone": "+966 55 660 1122",
+      "plate": "RUH 4821",
+      "truck": "Curtain-side 13.6m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  },
+  {
+    "id": "SH-2054",
+    "receiverId": "RCV-004",
+    "origin": {
+      "id": "OR-2054",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2054",
+      "line": "Al Awali District",
+      "city": "Makkah",
+      "region": "Makkah",
+      "lat": 21.3891,
+      "lng": 39.8579
+    },
+    "cargo": {
+      "type": "Pharmacy stock",
+      "weightKg": 4000
+    },
+    "truckType": "Box 12m",
+    "status": "arrived",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2400,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2054-WB",
+        "shipmentId": "SH-2054",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      },
+      {
+        "status": "arrived",
+        "at": "2026-07-08T18:30:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-004",
+    "driver": {
+      "name": "Khalid Al Otaibi",
+      "phone": "+966 53 220 4410",
+      "plate": "RUH 7781",
+      "truck": "Box 12m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  },
+  {
+    "id": "SH-2037",
+    "receiverId": "RCV-002",
+    "origin": {
+      "id": "OR-2037",
+      "line": "Al Khumrah Industrial",
+      "city": "Jeddah",
+      "region": "Makkah",
+      "lat": 21.4225,
+      "lng": 39.2176
+    },
+    "destination": {
+      "id": "DS-2037",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "cargo": {
+      "type": "Dry goods",
+      "weightKg": 10000
+    },
+    "truckType": "Curtain-side 13.6m",
+    "status": "delivered",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 3100,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2037-WB",
+        "shipmentId": "SH-2037",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      },
+      {
+        "id": "SH-2037-BYN",
+        "shipmentId": "SH-2037",
+        "type": "bayan",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "customs"
+      },
+      {
+        "id": "SH-2037-DN",
+        "shipmentId": "SH-2037",
+        "type": "delivery_note",
+        "signedAt": "2026-07-08T19:10:00+03:00",
+        "signedBy": "receiver"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      },
+      {
+        "status": "arrived",
+        "at": "2026-07-08T18:30:00+03:00"
+      },
+      {
+        "status": "delivered",
+        "at": "2026-07-08T19:10:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-005",
+    "driver": {
+      "name": "Ibrahim Al Sharif",
+      "phone": "+966 55 013 9922",
+      "plate": "JED 5540",
+      "truck": "Curtain-side 12m"
+    }
+  },
+  {
+    "id": "SH-2055",
+    "receiverId": "RCV-005",
+    "origin": {
+      "id": "OR-2055",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "destination": {
+      "id": "DS-2055",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "cargo": {
+      "type": "Hardware",
+      "weightKg": 9500
+    },
+    "truckType": "Flatbed 13.5m",
+    "status": "completed",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2850,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2055-WB",
+        "shipmentId": "SH-2055",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      },
+      {
+        "id": "SH-2055-BYN",
+        "shipmentId": "SH-2055",
+        "type": "bayan",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "customs"
+      },
+      {
+        "id": "SH-2055-DN",
+        "shipmentId": "SH-2055",
+        "type": "delivery_note",
+        "signedAt": "2026-07-08T19:10:00+03:00",
+        "signedBy": "receiver"
+      },
+      {
+        "id": "SH-2055-INV",
+        "shipmentId": "SH-2055",
+        "type": "invoice",
+        "signedAt": "2026-07-09T10:00:00+03:00",
+        "signedBy": "madar"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      },
+      {
+        "status": "arrived",
+        "at": "2026-07-08T18:30:00+03:00"
+      },
+      {
+        "status": "delivered",
+        "at": "2026-07-08T19:10:00+03:00"
+      },
+      {
+        "status": "completed",
+        "at": "2026-07-09T10:00:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-003",
+    "driver": {
+      "name": "Turki Al Anazi",
+      "phone": "+966 50 771 3390",
+      "plate": "DMM 3187",
+      "truck": "Flatbed 13.5m"
+    }
+  },
+  {
+    "id": "SH-2056",
+    "receiverId": "RCV-003",
+    "origin": {
+      "id": "OR-2056",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2056",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "cargo": {
+      "type": "Dry goods",
+      "weightKg": 7000
+    },
+    "truckType": "Box 12m",
+    "status": "cancelled",
+    "capacitySource": "own_carrier",
+    "priceModel": "contract",
+    "price": {
+      "amount": 2500,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "cancelled",
+        "at": "2026-07-06T11:30:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00"
+  },
+  {
+    "id": "SH-2040",
+    "receiverId": "RCV-001",
+    "origin": {
+      "id": "OR-2040",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2040",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "cargo": {
+      "type": "Steel coils",
+      "weightKg": 18000
+    },
+    "truckType": "Flatbed 13.5m",
+    "status": "posted",
+    "capacitySource": "marketplace",
+    "priceModel": "accepted_bid",
+    "price": {
+      "amount": 0,
+      "currency": "SAR"
+    },
+    "documents": [],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00"
+  },
+  {
+    "id": "SH-2041",
+    "receiverId": "RCV-002",
+    "origin": {
+      "id": "OR-2041",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "destination": {
+      "id": "DS-2041",
+      "line": "Al Khumrah Industrial",
+      "city": "Jeddah",
+      "region": "Makkah",
+      "lat": 21.4225,
+      "lng": 39.2176
+    },
+    "cargo": {
+      "type": "Chilled food",
+      "weightKg": 8000
+    },
+    "truckType": "Reefer 12m",
+    "status": "in_transit",
+    "capacitySource": "marketplace",
+    "priceModel": "accepted_bid",
+    "price": {
+      "amount": 4650,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2041-WB",
+        "shipmentId": "SH-2041",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-002",
+    "driver": {
+      "name": "Majed Al Dossari",
+      "phone": "+966 50 771 8890",
+      "plate": "DMM 9027",
+      "truck": "Reefer 12m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  },
+  {
+    "id": "SH-2035",
+    "receiverId": "RCV-005",
+    "origin": {
+      "id": "OR-2035",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "destination": {
+      "id": "DS-2035",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "cargo": {
+      "type": "Hardware",
+      "weightKg": 9000
+    },
+    "truckType": "Box 12m",
+    "status": "delivered",
+    "capacitySource": "marketplace",
+    "priceModel": "accepted_bid",
+    "price": {
+      "amount": 2700,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2035-WB",
+        "shipmentId": "SH-2035",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      },
+      {
+        "id": "SH-2035-BYN",
+        "shipmentId": "SH-2035",
+        "type": "bayan",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "customs"
+      },
+      {
+        "id": "SH-2035-DN",
+        "shipmentId": "SH-2035",
+        "type": "delivery_note",
+        "signedAt": "2026-07-08T19:10:00+03:00",
+        "signedBy": "receiver"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      },
+      {
+        "status": "arrived",
+        "at": "2026-07-08T18:30:00+03:00"
+      },
+      {
+        "status": "delivered",
+        "at": "2026-07-08T19:10:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-004",
+    "driver": {
+      "name": "Khalid Al Otaibi",
+      "phone": "+966 53 220 4410",
+      "plate": "RUH 7781",
+      "truck": "Box 12m"
+    }
+  },
+  {
+    "id": "SH-2039",
+    "receiverId": "RCV-004",
+    "origin": {
+      "id": "OR-2039",
+      "line": "2nd Industrial City",
+      "city": "Dammam",
+      "region": "Eastern",
+      "lat": 26.4207,
+      "lng": 50.0888
+    },
+    "destination": {
+      "id": "DS-2039",
+      "line": "Exit 18, Eastern Ring Rd",
+      "city": "Riyadh",
+      "region": "Riyadh",
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "cargo": {
+      "type": "Chilled goods",
+      "weightKg": 7000
+    },
+    "truckType": "Reefer 12m",
+    "status": "in_transit",
+    "capacitySource": "rental",
+    "priceModel": "signed_amendment",
+    "price": {
+      "amount": 5200,
+      "currency": "SAR"
+    },
+    "documents": [
+      {
+        "id": "SH-2039-WB",
+        "shipmentId": "SH-2039",
+        "type": "waybill",
+        "signedAt": "2026-07-07T07:20:00+03:00",
+        "signedBy": "origin-dock"
+      }
+    ],
+    "timeline": [
+      {
+        "status": "posted",
+        "at": "2026-07-06T09:00:00+03:00"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-07-06T11:30:00+03:00"
+      },
+      {
+        "status": "at_pickup",
+        "at": "2026-07-07T06:40:00+03:00"
+      },
+      {
+        "status": "loaded",
+        "at": "2026-07-07T07:20:00+03:00"
+      },
+      {
+        "status": "in_transit",
+        "at": "2026-07-07T08:10:00+03:00"
+      }
+    ],
+    "createdAt": "2026-07-06T09:00:00+03:00",
+    "carrierId": "CAR-003",
+    "driver": {
+      "name": "Turki Al Anazi",
+      "phone": "+966 50 771 3390",
+      "plate": "DMM 3187",
+      "truck": "Flatbed 13.5m"
+    },
+    "etaAt": "2026-07-11T20:00:00+03:00"
+  }
+]

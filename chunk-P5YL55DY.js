@@ -1,0 +1,1 @@
+import{a as n}from"./chunk-LJL52OFQ.js";import{N as t,P as r,ac as e}from"./chunk-IQHZA577.js";var m=new t("PARTNERS_API"),i=class{http=r(e);list(){return n(this.http,"partners.json")}};export{m as a,i as b};

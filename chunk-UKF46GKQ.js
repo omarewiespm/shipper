@@ -1,0 +1,1 @@
+import{K as t}from"./chunk-IQHZA577.js";var r=class o{track(n,e={}){typeof console<"u"&&console.debug("[shipper_web]",n,e)}static \u0275fac=function(e){return new(e||o)};static \u0275prov=t({token:o,factory:o.\u0275fac,providedIn:"root"})};export{r as a};

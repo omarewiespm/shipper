@@ -1,0 +1,1 @@
+import{K as o,fa as i}from"./chunk-IQHZA577.js";var r=class n{openId=i(null);isOpen(e){return this.openId()===e}toggle(e){this.openId.update(t=>t===e?null:e)}close(e){(!e||this.openId()===e)&&this.openId.set(null)}static \u0275fac=function(t){return new(t||n)};static \u0275prov=o({token:n,factory:n.\u0275fac,providedIn:"root"})};export{r as a};

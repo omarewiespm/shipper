@@ -1,0 +1,8 @@
+{
+  "balance": { "amount": 4200, "currency": "SAR" },
+  "transactions": [
+    { "id": "WTX-9001", "type": "debit", "amount": { "amount": 1450, "currency": "SAR" }, "ref": "INV-5501 · SH-2038", "at": "2026-07-01T14:00:00+03:00" },
+    { "id": "WTX-9000", "type": "credit", "amount": { "amount": 6000, "currency": "SAR" }, "ref": "Top-up · Mada", "at": "2026-06-29T10:15:00+03:00" },
+    { "id": "WTX-8999", "type": "debit", "amount": { "amount": 2100, "currency": "SAR" }, "ref": "INV-5480 · SH-2029", "at": "2026-06-27T09:40:00+03:00" }
+  ]
+}

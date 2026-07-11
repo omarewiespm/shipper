@@ -1,0 +1,30 @@
+[
+  { "id": "INV-5510", "shipmentId": "SH-2050", "amount": { "amount": 4820, "currency": "SAR" }, "status": "due", "attachments": [], "dueDate": "2026-07-18" },
+  { "id": "INV-5509", "shipmentId": "SH-2044", "amount": { "amount": 6150, "currency": "SAR" }, "status": "due", "attachments": [], "dueDate": "2026-07-16" },
+  { "id": "INV-5508", "shipmentId": "SH-2042", "amount": { "amount": 3350, "currency": "SAR" }, "status": "overdue", "attachments": [], "dueDate": "2026-07-01" },
+  { "id": "INV-5507", "shipmentId": "SH-2041", "amount": { "amount": 2760, "currency": "SAR" }, "status": "paid", "attachments": [], "dueDate": "2026-07-06" },
+  { "id": "INV-5506", "shipmentId": "SH-2040", "amount": { "amount": 8900, "currency": "SAR" }, "status": "paid", "attachments": [], "dueDate": "2026-07-04" },
+  { "id": "INV-5505", "shipmentId": "SH-2036", "amount": { "amount": 5120, "currency": "SAR" }, "status": "overdue", "attachments": [], "dueDate": "2026-06-28" },
+  {
+    "id": "INV-5504",
+    "shipmentId": "SH-2039",
+    "amount": { "amount": 5400, "currency": "SAR" },
+    "status": "due",
+    "attachments": [
+      { "id": "DOC-4", "shipmentId": "SH-2039", "type": "price_amendment", "signedAt": "2026-07-02T12:30:00+03:00", "signedBy": "USR-SIG-1" }
+    ],
+    "dueDate": "2026-07-12"
+  },
+  { "id": "INV-5503", "shipmentId": "SH-2035", "amount": { "amount": 2100, "currency": "SAR" }, "status": "overdue", "attachments": [], "dueDate": "2026-06-30" },
+  { "id": "INV-5502", "shipmentId": "SH-2037", "amount": { "amount": 3200, "currency": "SAR" }, "status": "due", "attachments": [], "dueDate": "2026-07-10" },
+  {
+    "id": "INV-5501",
+    "shipmentId": "SH-2038",
+    "amount": { "amount": 1450, "currency": "SAR" },
+    "status": "paid",
+    "attachments": [
+      { "id": "DOC-6", "shipmentId": "SH-2038", "type": "pod", "signedAt": "2026-07-01T13:20:00+03:00", "signedBy": "receiver" }
+    ],
+    "dueDate": "2026-07-05"
+  }
+]

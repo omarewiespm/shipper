@@ -1,0 +1,19 @@
+{
+  "id": "SH-2042",
+  "receiverName": "Al Othaim Markets",
+  "pickup": { "city": "Jeddah", "address": "Al Khumrah Industrial District" },
+  "dropoff": { "city": "Riyadh", "address": "Exit 18, Eastern Ring Road" },
+  "tags": {
+    "vehicleType": "Reefer Trailer",
+    "product": "Ceramic",
+    "pickupAt": "2026-06-04T15:02:00+03:00",
+    "deliveryAt": "2026-06-06T15:02:00+03:00"
+  },
+  "closesInMinutes": 125,
+  "bids": [
+    { "id": "BID-1", "carrierName": "Iron Clad Arabia", "verified": true, "shipmentsWithMadar": 5, "bidPrice": 550, "timestamp": "2026-06-04T15:09:00+03:00" },
+    { "id": "BID-2", "carrierName": "Madar® Fleet", "verified": true, "shipmentsWithMadar": 0, "bidPrice": 650, "timestamp": "2026-06-04T15:06:00+03:00" },
+    { "id": "BID-3", "carrierName": "Al Rajhi Transport", "verified": true, "shipmentsWithMadar": 1, "bidPrice": 700, "timestamp": "2026-06-04T15:05:00+03:00" },
+    { "id": "BID-4", "carrierName": "United Stars Logistics", "verified": true, "shipmentsWithMadar": 153, "bidPrice": 900, "timestamp": "2026-06-04T16:19:00+03:00" }
+  ]
+}
