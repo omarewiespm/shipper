@@ -1,9 +1,8 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { IntegrationsStore } from '../../../features/integrations/integrations.store';
 import { Icon } from '../../../shared/ui';
-import { AppTile, MADAR_APPS } from '../header.config';
+import { AppTile, APPS } from '../header.config';
 import { MenuStateService } from '../../../core/menu-state.service';
 
 const MENU_ID = 'appHub';
@@ -27,12 +26,10 @@ const POSITIONS: ConnectedPosition[] = [
 })
 export class AppHub {
   private readonly menu = inject(MenuStateService);
-  private readonly integrations = inject(IntegrationsStore);
   private readonly router = inject(Router);
 
   protected readonly positions = POSITIONS;
-  protected readonly madarApps = MADAR_APPS;
-  protected readonly connected = this.integrations.connected;
+  protected readonly apps = APPS;
 
   private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
 

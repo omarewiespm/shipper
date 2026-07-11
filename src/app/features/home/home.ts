@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Chart, ChartConfiguration, ChartData, ChartOptions, ScriptableContext } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ToastService } from '../../core/toast.service';
-import { Avatar, EmptyState, Icon, IconName, Skeleton } from '../../shared/ui';
+import { Avatar, Icon, IconName, Skeleton } from '../../shared/ui';
 import { AiChatService } from '../ai/ai-chat.service';
 import { CreateDrawerService } from '../create/create-drawer.service';
 import { InvoicesStore } from '../payments/invoices.store';
@@ -39,7 +39,7 @@ const STATUS_HEX: Record<string, string> = {
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [A11yModule, NgTemplateOutlet, RouterLink, Icon, Avatar, Skeleton, EmptyState, BaseChartDirective, VerifyBanner, FirstShipmentPaths, GettingStarted],
+  imports: [A11yModule, NgTemplateOutlet, RouterLink, Icon, Avatar, Skeleton, BaseChartDirective, VerifyBanner, FirstShipmentPaths, GettingStarted],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

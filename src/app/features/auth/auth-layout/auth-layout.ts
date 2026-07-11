@@ -14,7 +14,6 @@ import { RouterOutlet } from '@angular/router';
       <div class="al__card">
         <router-outlet />
       </div>
-      <p class="al__foot">A joint venture of Obeikan Digital &amp; Elm.</p>
     </div>
   `,
   styleUrl: './auth-layout.scss',

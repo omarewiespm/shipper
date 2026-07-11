@@ -17,10 +17,10 @@ export interface AppTile {
   active?: boolean;
 }
 
-/** Madar app family for the app-hub launcher. */
-export const MADAR_APPS: AppTile[] = [
-  { id: 'shipper', label: 'Shipper', icon: 'package', tone: 'navy', active: true },
-  { id: 'fleet', label: 'Fleet Manager', icon: 'truck', tone: 'info' },
-  { id: 'driver', label: 'Driver', icon: 'car', tone: 'sky' },
-  { id: 'admin', label: 'Admin', icon: 'shield', tone: 'warn' },
+/** Apps surfaced in the app-hub launcher. */
+export const APPS: AppTile[] = [
+  { id: 'fasah', label: 'Fasah', icon: 'shield', tone: 'warn' },
+  { id: 'afaqy', label: 'Afaqy', icon: 'truck', tone: 'info' },
+  { id: 'odoo', label: 'Odoo', icon: 'building', tone: 'sky' },
+  { id: 'zoho', label: 'Zoho', icon: 'receipt', tone: 'ok' },
 ];

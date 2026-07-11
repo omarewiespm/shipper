@@ -1,86 +1,56 @@
 <div class="wrap">
-  @if (onboarding.isFirstRun() && !onboarding.failed()) {
-    <!-- ===== FIRST-RUN HOME ===== -->
-    <header class="greet">
-      <p class="greet__cap">Welcome to Madar,</p>
-      <h1 class="greet__name">{{ onboarding.firstName() }}</h1>
-      <p class="greet__lede">You're all set up. Here's everything you need to get your first shipment moving.</p>
-    </header>
+  <!-- ===== HOME ===== -->
+  <header class="greet">
+    <p class="greet__cap">{{ greeting }}</p>
+    <h1 class="greet__name">{{ company }}</h1>
+  </header>
 
-    <ng-container [ngTemplateOutlet]="aiHero" />
+  <!-- Ask Madar AI comes right after the greeting -->
+  <ng-container [ngTemplateOutlet]="aiHero" />
 
-    @if (onboarding.showVerifyBanner()) { <app-verify-banner /> }
+  <!-- Verify your account — sits above Get started -->
+  @if (onboarding.showVerifyBanner()) { <app-verify-banner /> }
 
-    <app-first-shipment-paths />
-
-    <!-- Delivery notes entry point -->
-    <a class="dncta" routerLink="/carriers/delivery-notes">
-      <span class="dncta__ic"><app-icon name="file-check" [size]="22" /></span>
-      <span class="dncta__body">
-        <span class="dncta__t">Delivery notes</span>
-        <span class="dncta__s">View and manage the delivery notes issued for your shipments.</span>
-      </span>
-      <app-icon name="arrow-right" [size]="18" class="dncta__go" />
-    </a>
-
-    @if (!onboarding.gettingStartedDone()) {
-      <section class="block"><app-getting-started /></section>
-    }
-
-    <ng-container [ngTemplateOutlet]="emptyModules" />
-  } @else {
-    <!-- ===== STEADY / TRANSITIONAL HOME ===== -->
-    @if (onboarding.showVerifyBanner()) { <app-verify-banner /> }
-
-    <header class="greet">
-      <p class="greet__cap">{{ greeting }}</p>
-      <h1 class="greet__name">{{ company }}</h1>
-    </header>
-
-    <!-- Ask Madar AI comes right after the greeting -->
-    <ng-container [ngTemplateOutlet]="aiHero" />
-
-    <!-- Get started sits directly under Madar AI (hidden once all 5 are done) -->
-    @if (!onboarding.gettingStartedDone()) {
-      <section class="block"><app-getting-started [demoted]="true" /></section>
-    }
-
-    <!-- Create your first shipment -->
-    <app-first-shipment-paths />
-
-    <!-- Delivery notes entry point -->
-    <a class="dncta" routerLink="/carriers/delivery-notes">
-      <span class="dncta__ic"><app-icon name="file-check" [size]="22" /></span>
-      <span class="dncta__body">
-        <span class="dncta__t">Delivery notes</span>
-        <span class="dncta__s">View and manage the delivery notes issued for your shipments.</span>
-      </span>
-      <app-icon name="arrow-right" [size]="18" class="dncta__go" />
-    </a>
-
-    <!-- Ship again -->
-    <section class="block">
-      <div class="sec-h sec-h--sm"><h3>Ship again</h3><button class="sec-h__btn" type="button" (click)="openLanes()">View all</button></div>
-      <div class="again-row">
-        @if (store.loading()) {
-          @for (i of [1,2,3,4]; track i) { <div class="again again--sk"><app-skeleton width="40px" height="40px" radius="11px" /><app-skeleton width="80%" /><app-skeleton width="60%" /></div> }
-        } @else {
-          @for (r of store.receivers(); track r.id) {
-            <button class="again" type="button" [attr.aria-label]="'Ship again to ' + r.name" (click)="shipAgain(r.id)">
-              <div class="again__head">
-                <app-avatar [name]="r.name" [size]="40" [square]="true" tone="neutral" />
-                <div class="again__id"><span class="again__name">{{ r.name }}</span><span class="again__meta">{{ r.count }} shipments</span></div>
-              </div>
-              <span class="again__lane"><app-icon name="route" [size]="13" /> {{ r.lane }}</span>
-              <span class="again__cta">Ship again <app-icon name="arrow-right" [size]="14" /></span>
-            </button>
-          }
-        }
-      </div>
-    </section>
-
-    <ng-container [ngTemplateOutlet]="dataModules" />
+  <!-- Get started sits under Madar AI (hidden once all 5 are done) -->
+  @if (!onboarding.gettingStartedDone()) {
+    <section class="block"><app-getting-started [demoted]="true" /></section>
   }
+
+  <!-- Create your first shipment -->
+  <app-first-shipment-paths />
+
+  <!-- Delivery notes entry point -->
+  <a class="dncta" routerLink="/carriers/delivery-notes">
+    <span class="dncta__ic"><app-icon name="file-check" [size]="22" /></span>
+    <span class="dncta__body">
+      <span class="dncta__t">Delivery notes</span>
+      <span class="dncta__s">View and manage the delivery notes issued for your shipments.</span>
+    </span>
+    <app-icon name="arrow-right" [size]="18" class="dncta__go" />
+  </a>
+
+  <!-- Ship again -->
+  <section class="block">
+    <div class="sec-h sec-h--sm"><h3>Ship again</h3><button class="sec-h__btn" type="button" (click)="openLanes()">View all</button></div>
+    <div class="again-row">
+      @if (store.loading()) {
+        @for (i of [1,2,3,4]; track i) { <div class="again again--sk"><app-skeleton width="40px" height="40px" radius="11px" /><app-skeleton width="80%" /><app-skeleton width="60%" /></div> }
+      } @else {
+        @for (r of store.receivers(); track r.id) {
+          <button class="again" type="button" [attr.aria-label]="'Ship again to ' + r.name" (click)="shipAgain(r.id)">
+            <div class="again__head">
+              <app-avatar [name]="r.name" [size]="40" [square]="true" tone="neutral" />
+              <div class="again__id"><span class="again__name">{{ r.name }}</span><span class="again__meta">{{ r.count }} shipments</span></div>
+            </div>
+            <span class="again__lane"><app-icon name="route" [size]="13" /> {{ r.lane }}</span>
+            <span class="again__cta">Ship again <app-icon name="arrow-right" [size]="14" /></span>
+          </button>
+        }
+      }
+    </div>
+  </section>
+
+  <ng-container [ngTemplateOutlet]="dataModules" />
 </div>
 
 <!-- ===== Ask Madar AI (shared) ===== -->
@@ -119,7 +89,7 @@
   </section>
 </ng-template>
 
-<!-- ===== Data modules (steady-state only) ===== -->
+<!-- ===== Data modules ===== -->
 <ng-template #dataModules>
 
   <h2 class="dash-h">Dashboard</h2>
@@ -226,45 +196,6 @@
     </a>
   }
 
-</ng-template>
-
-<!-- ===== Familiar modules in empty state (first-run only) ===== -->
-<ng-template #emptyModules>
-  <section class="block">
-    <div class="sec-h"><h3>Shipments by status</h3></div>
-    <div class="empty-mod">
-      <app-empty-state icon="package" title="No shipments yet"
-        body="Create your first shipment and your status breakdown appears here." />
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="grid2">
-      <div class="chart-card">
-        <div class="chart-card__h"><p class="chart-card__t">Shipment volume</p><p class="chart-card__s">Last 8 months</p></div>
-        <div class="chart-card__b"><div class="empty-chart">No data yet</div></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card__h"><p class="chart-card__t">Spend</p><p class="chart-card__s">Last 8 months · SAR</p></div>
-        <div class="chart-card__b"><div class="empty-chart">No data yet</div></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="chart-card">
-      <div class="chart-card__h"><p class="chart-card__t">Top routes this month</p><p class="chart-card__s">SAR · ranked</p></div>
-      <div class="chart-card__b"><div class="empty-chart empty-chart--tall">No data yet</div></div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="sec-h"><h3>Ship again</h3></div>
-    <div class="empty-mod">
-      <app-empty-state icon="users" title="No receivers yet"
-        body="Add a receiver to ship to them again in two taps." />
-    </div>
-  </section>
 </ng-template>
 
 <!-- ===== Lanes drawer (Ship again → View all) ===== -->

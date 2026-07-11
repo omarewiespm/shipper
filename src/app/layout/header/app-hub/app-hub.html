@@ -26,31 +26,10 @@
   (overlayKeydown)="onKeydown($event)"
 >
   <div class="hub" role="menu" aria-label="Apps">
-    <p class="hub__label-sm">Madar apps</p>
+    <p class="hub__label-sm">Apps</p>
     <div class="hub__grid">
-      @for (app of madarApps; track app.id) {
-        <button
-          class="hub__tile"
-          type="button"
-          role="menuitem"
-          [class.is-active]="app.active"
-          [attr.aria-current]="app.active ? 'true' : null"
-          (click)="openApp(app)"
-        >
-          <span class="hub__ic" [attr.data-tone]="app.tone">
-            <app-icon [name]="app.icon" [size]="17" />
-          </span>
-          <span class="hub__name">{{ app.label }}</span>
-        </button>
-      }
-    </div>
-
-    <div class="hub__divider"></div>
-
-    <p class="hub__label-sm">Connected apps</p>
-    <div class="hub__grid">
-      @for (app of connected(); track app.id) {
-        <button class="hub__tile" type="button" role="menuitem" (click)="close()">
+      @for (app of apps; track app.id) {
+        <button class="hub__tile" type="button" role="menuitem" (click)="openApp(app)">
           <span class="hub__ic" [attr.data-tone]="app.tone">
             <app-icon [name]="app.icon" [size]="17" />
           </span>
