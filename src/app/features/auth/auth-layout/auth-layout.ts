@@ -9,7 +9,7 @@ import { RouterOutlet } from '@angular/router';
   template: `
     <div class="al">
       <div class="al__brand">
-        <img class="al__logo" src="/brand/madar-logo.png" alt="Madar — Logistics Platform" />
+        <img class="al__logo" src="brand/madar-logo.png" alt="Madar — Logistics Platform" />
       </div>
       <div class="al__card">
         <router-outlet />

@@ -7,8 +7,8 @@ export const environment = {
   production: false,
   /** Real backend base (unused until services swap from mock to HTTP impls). */
   apiBase: '/api',
-  /** Static JSON mock root, served from public/mock. */
-  dataBase: '/mock',
+  /** Static JSON mock root (relative — resolved against `<base href>`). */
+  dataBase: 'mock',
   /** Simulated latency (ms) for mock responses, so loading/skeleton states show. */
   mockLatencyMs: 350,
 };

@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
  * whole implementation with a plain `http.get(endpoint)` — consumers unchanged.
  */
 export function mockGet<T>(http: HttpClient, file: string): Observable<T> {
-  return http
-    .get<T>(`${environment.dataBase}/${file}`)
-    .pipe(delay(environment.mockLatencyMs));
+  // Resolve against the document base (`<base href>`) so the app works when
+  // served from a sub-path such as GitHub Pages' `/shipper/`, not just root.
+  const url = new URL(`${environment.dataBase}/${file}`, document.baseURI).href;
+  return http.get<T>(url).pipe(delay(environment.mockLatencyMs));
 }

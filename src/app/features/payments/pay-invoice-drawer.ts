@@ -70,10 +70,10 @@ function split(total: number, n: number): number[] {
                 <span class="tile__lb">Wallet</span>
               </button>
               <button class="tile" type="button" [class.is-on]="method() === 'tabby'" (click)="method.set('tabby')">
-                <img class="tile__logo" src="/brand/tabby_logo.webp" alt="Tabby" />
+                <img class="tile__logo" src="brand/tabby_logo.webp" alt="Tabby" />
               </button>
               <button class="tile" type="button" [class.is-on]="method() === 'tamara'" (click)="method.set('tamara')">
-                <img class="tile__logo" src="/brand/tamara.png" alt="Tamara" />
+                <img class="tile__logo" src="brand/tamara.png" alt="Tamara" />
               </button>
             </div>
 
