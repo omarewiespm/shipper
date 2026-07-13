@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { ToastService } from '../../core/toast.service';
 import { Avatar, Icon } from '../../shared/ui';
@@ -15,7 +16,7 @@ interface Eta { dayLabel: string; clock: string; nextDay: boolean; relative: str
 @Component({
   selector: 'app-find-truck',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, Avatar, FindTruckMap, FleetRequestDrawer],
+  imports: [NgTemplateOutlet, Icon, Avatar, FindTruckMap, FleetRequestDrawer],
   templateUrl: './find-truck.html',
   styleUrl: './find-truck.scss',
 })

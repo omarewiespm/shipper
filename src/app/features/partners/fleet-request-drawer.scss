@@ -27,5 +27,5 @@
 .fcr__send:hover { background: var(--navy-700); }
 
 .fcr__foot { padding: 10px var(--sp-4) var(--sp-4); border-block-start: 1px solid var(--line-soft); }
-.fcr__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; inline-size: 100%; block-size: 46px; border: none; border-radius: 12px; background: var(--ok); color: #fff; font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; transition: filter var(--dur-fast) var(--ease); }
-.fcr__cta:hover { filter: brightness(0.95); }
+.fcr__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; inline-size: 100%; block-size: 46px; border: none; border-radius: 12px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; transition: background var(--dur-fast) var(--ease); }
+.fcr__cta:hover { background: var(--navy-700); }

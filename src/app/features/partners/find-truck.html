@@ -15,8 +15,11 @@
 
   <!-- ===== MAP ===== -->
   @if (view() === 'map') {
-    <app-find-truck-map [trucks]="trucks()" [visibleIds]="visibleIds()" [selectedId]="selectedId()"
-      [warehouse]="warehouse()" [warehouseLabel]="warehouseLabel()" (select)="select($event)" />
+    <div class="ft__mapwrap">
+      <app-find-truck-map [trucks]="trucks()" [visibleIds]="visibleIds()" [selectedId]="selectedId()"
+        [warehouse]="warehouse()" [warehouseLabel]="warehouseLabel()" (select)="select($event)" />
+      <ng-container [ngTemplateOutlet]="selBar" />
+    </div>
     <p class="ft__hint"><app-icon name="info" [size]="15" /> The pin is your pickup warehouse — tap a nearby truck to see when it arrives.</p>
   } @else {
 
@@ -52,10 +55,16 @@
     } @else {
       <div class="ft__empty"><app-icon name="truck" [size]="26" /><p class="ft__empty-t">No trucks match your search</p><p class="ft__empty-b">Try a different city or clear the search.</p></div>
     }
+    <ng-container [ngTemplateOutlet]="selBar" />
   }
 
-  <!-- ===== Selection bar (ETA + assign) ===== -->
-  @if (selected(); as t) {
+  <!-- Fleet-manager chat (talk + create shipment) -->
+  <app-fleet-request-drawer [truck]="chatTruck()" [eta]="chatEta()" (closed)="closeChat()" (createShipment)="onCreateShipment($event)" />
+</div>
+
+<!-- Selected-truck bar: overlays the map bottom, or sits under the list. Hidden while the chat is open. -->
+<ng-template #selBar>
+  @if (!chatTruck() && selected(); as t) {
     <div class="ft__sel-bar">
       <app-avatar [name]="t.fleet" [size]="38" tone="neutral" [square]="true" />
       <div class="ft__sel-id">
@@ -77,7 +86,4 @@
       </div>
     </div>
   }
-
-  <!-- Fleet-manager chat (talk + create shipment) -->
-  <app-fleet-request-drawer [truck]="chatTruck()" [eta]="chatEta()" (closed)="closeChat()" (createShipment)="onCreateShipment($event)" />
-</div>
+</ng-template>

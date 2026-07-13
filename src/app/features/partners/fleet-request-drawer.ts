@@ -50,7 +50,7 @@ interface Msg { me: boolean; text: string; }
         </div>
 
         <div class="fcr__foot">
-          <button class="fcr__cta" type="button" (click)="createShipment.emit(t)"><app-icon name="package" [size]="16" /> Create shipment with this fleet</button>
+          <button class="fcr__cta" type="button" (click)="createShipment.emit(t)"><app-icon name="package" [size]="16" /> Create shipment</button>
         </div>
       </aside>
     }
