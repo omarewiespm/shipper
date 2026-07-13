@@ -1,4 +1,4 @@
-:host { display: block; max-inline-size: 1000px; margin-inline: auto; }
+:host { display: block; }
 
 .od__head { display: flex; align-items: center; gap: 12px; margin-block-end: 18px; flex-wrap: wrap; }
 .od__back { inline-size: 34px; block-size: 34px; flex: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }

@@ -15,8 +15,9 @@
 
   <!-- ===== MAP ===== -->
   @if (view() === 'map') {
-    <app-carrier-map [trucks]="trucks()" [visibleIds]="visibleIds()" ctaLabel="Select this truck" ctaIcon="check" [showProfile]="false" (offer)="select($event)" />
-    <p class="ft__hint"><app-icon name="info" [size]="15" /> Tap a truck to preview it, then select to see when it reaches your pickup.</p>
+    <app-find-truck-map [trucks]="trucks()" [visibleIds]="visibleIds()" [selectedId]="selectedId()"
+      [warehouse]="warehouse()" [warehouseLabel]="warehouseLabel()" (select)="select($event)" />
+    <p class="ft__hint"><app-icon name="info" [size]="15" /> The pin is your pickup warehouse — tap a nearby truck to see when it arrives.</p>
   } @else {
 
     <!-- ===== LIST ===== -->
@@ -72,8 +73,11 @@
 
       <div class="ft__sel-ctas">
         <button class="ft__sel-ghost" type="button" (click)="clearSel()">Change</button>
-        <button class="ft__sel-primary" type="button" (click)="assign()"><app-icon name="check" [size]="15" /> Assign truck</button>
+        <button class="ft__sel-primary" type="button" (click)="requestTruck()"><app-icon name="messages" [size]="15" /> Send request</button>
       </div>
     </div>
   }
+
+  <!-- Fleet-manager chat (talk + create shipment) -->
+  <app-fleet-request-drawer [truck]="chatTruck()" [eta]="chatEta()" (closed)="closeChat()" (createShipment)="onCreateShipment($event)" />
 </div>

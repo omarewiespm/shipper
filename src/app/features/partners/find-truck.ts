@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { ToastService } from '../../core/toast.service';
 import { Avatar, Icon } from '../../shared/ui';
-import { CarrierMap } from '../carriers/carrier-map';
+import { CreateDrawerService } from '../create/create-drawer.service';
+import { FindTruckMap } from './find-truck-map';
+import { FleetRequestDrawer } from './fleet-request-drawer';
 import { AvailableTruck, CarriersStore } from '../carriers/carriers.store';
 
 interface Eta { dayLabel: string; clock: string; nextDay: boolean; relative: string; short: string; }
@@ -13,20 +15,27 @@ interface Eta { dayLabel: string; clock: string; nextDay: boolean; relative: str
 @Component({
   selector: 'app-find-truck',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, Avatar, CarrierMap],
+  imports: [Icon, Avatar, FindTruckMap, FleetRequestDrawer],
   templateUrl: './find-truck.html',
   styleUrl: './find-truck.scss',
 })
 export class FindTruck {
   /** Where the goods are going — frames the ETA copy. */
   readonly destination = input<string>('');
+  /** Pickup warehouse the trucks gather around (label + coordinates). */
+  readonly warehouseLabel = input<string>('Warehouse');
+  readonly warehouse = input<[number, number]>([24.80, 46.72]);
 
   private readonly store = inject(CarriersStore);
   private readonly toast = inject(ToastService);
+  private readonly createDrawer = inject(CreateDrawerService);
 
   protected readonly view = signal<'map' | 'list'>('map');
   protected readonly query = signal('');
   protected readonly selectedId = signal<string | null>(null);
+  /** Truck whose fleet-manager chat is open (null = closed). */
+  protected readonly chatTruck = signal<AvailableTruck | null>(null);
+  protected readonly chatEta = computed(() => { const t = this.chatTruck(); return t ? this.eta(t).short.toLowerCase() : ''; });
 
   protected readonly trucks = this.store.trucks;
   protected readonly visible = computed(() => {
@@ -42,12 +51,19 @@ export class FindTruck {
   protected select(id: string): void { this.selectedId.set(id); }
   protected clearSel(): void { this.selectedId.set(null); }
 
-  protected assign(): void {
+  /** Send a request → open the chat with this fleet's manager. */
+  protected requestTruck(): void {
     const t = this.selected();
-    if (!t) return;
-    const e = this.eta(t);
-    this.toast.show(`${t.fleet} assigned · arrives ${e.short.toLowerCase()}`, 'success');
+    if (t) this.chatTruck.set(t);
+  }
+  protected closeChat(): void { this.chatTruck.set(null); }
+
+  /** Create the shipment directly from the chat with this fleet. */
+  protected onCreateShipment(t: AvailableTruck): void {
+    this.chatTruck.set(null);
     this.selectedId.set(null);
+    this.toast.show(`Creating shipment with ${t.fleet}…`, 'success');
+    this.createDrawer.open();
   }
 
   /** ETA of a truck reaching the pickup: readiness delay + drive time from its position. */

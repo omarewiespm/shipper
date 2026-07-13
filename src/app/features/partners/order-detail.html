@@ -32,7 +32,7 @@
       </div>
 
       @if (salesTab() === 'findtruck') {
-        <app-find-truck [destination]="d.shipTo" />
+        <app-find-truck [destination]="d.shipTo" [warehouseLabel]="d.seller.company" />
       } @else {
       <section class="od__doc">
         <div class="od__band">
