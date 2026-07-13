@@ -3,16 +3,18 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, si
 import { Router } from '@angular/router';
 import { ToastService } from '../../core/toast.service';
 import { Icon, StatusChip } from '../../shared/ui';
+import { FindTruck } from './find-truck';
 import { PartnersStore } from './partners.store';
 import { MY_COMPANY, OrdersStore, Party, buildDoc, customerPoRef, docTotals, lineTotal, orderChip, orderTypeView } from './orders.store';
 
 type Tab = 'po' | 'so' | 'fulfillment';
+type SalesTab = 'details' | 'findtruck';
 
 /** Full order detail — the PO document, the SO confirmation, and fulfilment. */
 @Component({
   selector: 'app-order-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, NgTemplateOutlet, Icon, StatusChip],
+  imports: [DatePipe, NgTemplateOutlet, Icon, StatusChip, FindTruck],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.scss',
 })
@@ -25,6 +27,8 @@ export class OrderDetail implements OnInit {
   private readonly toast = inject(ToastService);
 
   protected readonly tab = signal<Tab>('po');
+  /** Sales-order view tabs: the document vs. finding a truck to fulfil it. */
+  protected readonly salesTab = signal<SalesTab>('details');
 
   protected readonly order = computed(() => this.orders.byId(this.id()) ?? null);
   protected readonly statusView = computed(() => { const o = this.order(); return o ? orderChip(o) : { label: '', tone: 'neutral' as const }; });

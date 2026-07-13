@@ -3,7 +3,7 @@ import {
   inject, input, output, signal, viewChild, ViewEncapsulation,
 } from '@angular/core';
 import * as L from 'leaflet';
-import { Avatar, Icon } from '../../shared/ui';
+import { Avatar, Icon, IconName } from '../../shared/ui';
 import { AvailableTruck } from './carriers.store';
 
 const CITY: Record<string, [number, number]> = {
@@ -40,8 +40,8 @@ const TRUCK_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" s
           <div class="cmc__foot">
             <span class="cmc__price"><span class="cmc__pfrom">Fleet asks</span><span class="cmc__pval">SAR {{ t.suggestedPrice.toLocaleString() }}</span></span>
             <div class="cmc__ctas">
-              <button class="cmc__profile" type="button" (click)="profile.emit(t.fleet)">Profile</button>
-              <button class="cmc__cta" type="button" (click)="offer.emit(t.id)"><app-icon name="messages" [size]="14" /> Make offer</button>
+              @if (showProfile()) { <button class="cmc__profile" type="button" (click)="profile.emit(t.fleet)">Profile</button> }
+              <button class="cmc__cta" type="button" (click)="offer.emit(t.id)"><app-icon [name]="ctaIcon()" [size]="14" /> {{ ctaLabel() }}</button>
             </div>
           </div>
         </div>
@@ -54,6 +54,10 @@ export class CarrierMap {
   readonly trucks = input<AvailableTruck[]>([]);
   /** When set, only these truck ids stay visible on the map. */
   readonly visibleIds = input<string[] | null>(null);
+  /** Primary CTA on the truck card — reusable for "Make offer" or "Select". */
+  readonly ctaLabel = input('Make offer');
+  readonly ctaIcon = input<IconName>('messages');
+  readonly showProfile = input(true);
   readonly offer = output<string>();
   readonly profile = output<string>();
 

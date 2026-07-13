@@ -1,0 +1,79 @@
+<div class="ft">
+  <!-- Toolbar: search + view toggle -->
+  <div class="ft__bar">
+    <div class="ft__search">
+      <app-icon name="search" [size]="18" class="ft__search-icon" />
+      <input type="search" class="ft__search-input" [value]="query()" (input)="query.set($any($event.target).value)"
+        placeholder="Search fleet, truck type, city…" aria-label="Search available trucks" />
+      @if (query()) { <button class="ft__search-clear" type="button" aria-label="Clear" (click)="query.set('')"><app-icon name="x" [size]="16" /></button> }
+    </div>
+    <div class="ft__view" role="group" aria-label="View">
+      <button class="ft__viewbtn" type="button" [class.is-on]="view() === 'map'" (click)="view.set('map')"><app-icon name="map-pin" [size]="15" /> Map</button>
+      <button class="ft__viewbtn" type="button" [class.is-on]="view() === 'list'" (click)="view.set('list')"><app-icon name="grid" [size]="15" /> List</button>
+    </div>
+  </div>
+
+  <!-- ===== MAP ===== -->
+  @if (view() === 'map') {
+    <app-carrier-map [trucks]="trucks()" [visibleIds]="visibleIds()" ctaLabel="Select this truck" ctaIcon="check" [showProfile]="false" (offer)="select($event)" />
+    <p class="ft__hint"><app-icon name="info" [size]="15" /> Tap a truck to preview it, then select to see when it reaches your pickup.</p>
+  } @else {
+
+    <!-- ===== LIST ===== -->
+    @if (visible().length) {
+      <div class="ft__grid">
+        @for (t of visible(); track t.id) {
+          <article class="ft__card" [class.is-sel]="selectedId() === t.id" (click)="select(t.id)">
+            <div class="ft__top">
+              <app-avatar [name]="t.fleet" [size]="40" tone="neutral" [square]="true" />
+              <div class="ft__id">
+                <span class="ft__namerow"><span class="ft__name">{{ t.fleet }}</span>@if (t.verified) { <app-icon name="shield" [size]="13" class="ft__vf" /> }</span>
+                <span class="ft__meta"><app-icon name="star" [size]="12" /> {{ t.rating }} · {{ t.fleetShipments }} shipments · {{ t.driver }}</span>
+              </div>
+              <span class="ft__avail" [class.is-now]="t.availableIn === 'Now'">{{ t.availableIn }}</span>
+            </div>
+
+            <div class="ft__route"><span class="ft__city">{{ t.atCity }}</span><app-icon name="arrow-right" [size]="13" class="ft__rarrow" /><span class="ft__city">{{ t.headingCity }}</span><span class="ft__dist">{{ t.distanceKm }} km away</span></div>
+
+            <div class="ft__eta">
+              <app-icon name="clock" [size]="14" />
+              <span>Arrives <b>{{ eta(t).short }}</b></span>
+              @if (eta(t).nextDay) { <span class="ft__nd">Next day</span> }
+            </div>
+
+            <div class="ft__foot">
+              <span class="ft__tags"><span class="ft__tag"><app-icon name="truck" [size]="13" /> {{ t.truckType }}</span><span class="ft__tag"><app-icon name="package" [size]="13" /> {{ t.capacityT }}t</span></span>
+              <button class="ft__pick" type="button" (click)="select(t.id); $event.stopPropagation()">{{ selectedId() === t.id ? 'Selected' : 'Select' }}<app-icon name="arrow-right" [size]="14" /></button>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="ft__empty"><app-icon name="truck" [size]="26" /><p class="ft__empty-t">No trucks match your search</p><p class="ft__empty-b">Try a different city or clear the search.</p></div>
+    }
+  }
+
+  <!-- ===== Selection bar (ETA + assign) ===== -->
+  @if (selected(); as t) {
+    <div class="ft__sel-bar">
+      <app-avatar [name]="t.fleet" [size]="38" tone="neutral" [square]="true" />
+      <div class="ft__sel-id">
+        <span class="ft__sel-name">{{ t.fleet }}</span>
+        <span class="ft__sel-sub">{{ t.atCity }} → {{ t.headingCity }} · {{ t.truckType }}</span>
+      </div>
+
+      @if (selectedEta(); as e) {
+        <div class="ft__sel-eta" [class.is-nextday]="e.nextDay">
+          <span class="ft__sel-etacap"><app-icon name="clock" [size]="13" /> Arrives to pickup</span>
+          <span class="ft__sel-etaday">{{ e.dayLabel }}, {{ e.clock }}</span>
+          <span class="ft__sel-etarel">{{ e.relative }}@if (e.nextDay) { · reaches next day }</span>
+        </div>
+      }
+
+      <div class="ft__sel-ctas">
+        <button class="ft__sel-ghost" type="button" (click)="clearSel()">Change</button>
+        <button class="ft__sel-primary" type="button" (click)="assign()"><app-icon name="check" [size]="15" /> Assign truck</button>
+      </div>
+    </div>
+  }
+</div>

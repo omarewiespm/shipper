@@ -24,8 +24,16 @@
       }
     </header>
 
-    <!-- ===================== SALES ORDER (single document) ===================== -->
+    <!-- ===================== SALES ORDER ===================== -->
     @if (isSales()) {
+      <div class="od__tabs" role="tablist">
+        <button class="od__tab" [class.is-on]="salesTab() === 'details'" (click)="salesTab.set('details')" role="tab">Details</button>
+        <button class="od__tab" [class.is-on]="salesTab() === 'findtruck'" (click)="salesTab.set('findtruck')" role="tab">Find Truck</button>
+      </div>
+
+      @if (salesTab() === 'findtruck') {
+        <app-find-truck [destination]="d.shipTo" />
+      } @else {
       <section class="od__doc">
         <div class="od__band">
           <div class="od__fact"><span class="od__flabel">SO number</span><span class="od__fval tabular">{{ soNo() }}</span></div>
@@ -56,6 +64,7 @@
           </div>
         }
       </section>
+      }
     } @else {
 
     <!-- Tabs (purchase order — buyer side) -->
