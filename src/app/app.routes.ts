@@ -104,8 +104,8 @@ export const routes: Routes = [
       { path: 'settings', component: Placeholder, data: { title: 'Settings' }, title: 'Settings · Madar' },
       { path: 'settings/users', loadComponent: () => import('./features/team/team').then((m) => m.Team), title: 'Team · Madar' },
       { path: 'settings/users/:id', loadComponent: () => import('./features/team/team-member').then((m) => m.TeamMember), title: 'Team member · Madar' },
-      { path: 'settings/branches', loadComponent: () => import('./features/branches/branches').then((m) => m.Branches), title: 'Branches · Madar' },
-      { path: 'settings/branches/:id', loadComponent: () => import('./features/branches/branch').then((m) => m.Branch), title: 'Branch · Madar' },
+      { path: 'settings/branches', loadComponent: () => import('./features/branches/branches').then((m) => m.Branches), title: 'Locations · Madar' },
+      { path: 'settings/branches/:id', loadComponent: () => import('./features/branches/branch').then((m) => m.Branch), title: 'Location · Madar' },
       { path: 'settings/:section', component: Placeholder, data: { title: 'Settings' }, title: 'Settings · Madar' },
       { path: 'signing', component: Placeholder, data: { title: 'Signing' }, title: 'Signing · Madar' },
       {

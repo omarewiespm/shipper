@@ -1,0 +1,149 @@
+<a class="cb__back" routerLink="/shipments/create"><app-icon name="arrow-left" [size]="15" /> Create shipment</a>
+<h1 class="cb__title">Bulk upload</h1>
+
+<!-- Stepper -->
+<div class="cb__stepper">
+  @for (s of steps; track s.n) {
+    <div class="cb__sp" [class.is-on]="stepIndex() === s.n" [class.is-done]="stepIndex() > s.n">
+      <span class="cb__sp-n">@if (stepIndex() > s.n) { <app-icon name="check" [size]="13" /> } @else { {{ s.n }} }</span>
+      <span class="cb__sp-t">{{ s.t }}</span>
+    </div>
+    @if (!$last) { <span class="cb__sp-line" [class.is-done]="stepIndex() > s.n"></span> }
+  }
+</div>
+
+<!-- ============ STEP 1: UPLOAD ============ -->
+@if (step() === 'upload') {
+  <div class="cb">
+    <div class="cb__main">
+      <div class="cb__template">
+        <span class="cb__ttile"><app-icon name="download" [size]="18" /></span>
+        <div class="cb__tbody">
+          <p class="cb__tt">Shipment template</p>
+          <p class="cb__td">One row per shipment. Reference fields (location, customer, product, vehicle, carrier) must match your system — the <a class="cb__link" (click)="downloadReference()">valid values list</a> shows exactly what to type.</p>
+        </div>
+        <button class="cb__tbtn" type="button" (click)="downloadTemplate()"><app-icon name="download" [size]="15" /> Template</button>
+      </div>
+
+      <label class="cb__drop" [class.is-drag]="dragging()"
+        (dragover)="$event.preventDefault(); dragging.set(true)"
+        (dragleave)="dragging.set(false)"
+        (drop)="onDrop($event)">
+        <span class="cb__droptile"><app-icon name="upload" [size]="24" /></span>
+        <p class="cb__dropt">Drop your CSV here or browse</p>
+        <p class="cb__drops">CSV · up to 500 shipments per upload</p>
+        <span class="cb__choose">Choose file</span>
+        <input class="cb__file" type="file" accept=".csv,text/csv" (change)="onPick($event)" />
+      </label>
+    </div>
+
+    <aside class="cb__side">
+      <p class="cb__sh">How it works</p>
+      <ol class="cb__steps">
+        @for (s of steps; track s.n) {
+          <li class="cb__step"><span class="cb__num">{{ s.n }}</span><div><p class="cb__st">{{ s.t }}</p><p class="cb__ss">{{ s.d }}</p></div></li>
+        }
+      </ol>
+      <div class="cb__note"><app-icon name="info" [size]="16" /><span>Rows are created as <strong>drafts</strong> in Shipments. A reviewer confirms and publishes — nothing goes live automatically.</span></div>
+    </aside>
+  </div>
+}
+
+<!-- ============ STEP 2: REVIEW & FIX ============ -->
+@if (step() === 'review') {
+  <div class="cb__reviewbar">
+    <div class="cb__rb-stats">
+      <span class="cb__pill cb__pill--ok"><app-icon name="check" [size]="13" /> {{ readyCount() }} ready</span>
+      @if (errorCount()) { <span class="cb__pill cb__pill--err"><app-icon name="x" [size]="13" /> {{ errorCount() }} need fixing</span> }
+      @if (warnCount()) { <span class="cb__pill cb__pill--warn"><app-icon name="info" [size]="13" /> {{ warnCount() }} warnings</span> }
+      <span class="cb__rb-file">{{ fileName() }} · {{ total() }} rows</span>
+    </div>
+    <div class="cb__rb-actions">
+      <label class="cb__toggle"><input type="checkbox" [checked]="onlyIssues()" (change)="onlyIssues.set($any($event.target).checked)" /> Only rows with issues</label>
+      <button class="cb__btn cb__btn--ghost" type="button" (click)="reupload()">Re-upload</button>
+      <button class="cb__btn cb__btn--primary" type="button" [disabled]="!canSubmit()" (click)="submit()">Submit {{ readyCount() }} shipment{{ readyCount() === 1 ? '' : 's' }}</button>
+    </div>
+  </div>
+
+  @if (errorCount()) { <p class="cb__hint cb__hint--err"><app-icon name="info" [size]="14" /> Fix the highlighted cells to submit. Reference cells offer a dropdown of valid system values.</p> }
+  @else { <p class="cb__hint cb__hint--ok"><app-icon name="check" [size]="14" /> All rows are valid and ready to submit.</p> }
+
+  <div class="cb__gridwrap">
+    <table class="cb__grid">
+      <thead>
+        <tr>
+          <th class="cb__gh-n">#</th>
+          @for (c of cols; track c) { <th>{{ colLabel[c] }}</th> }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of visibleRows(); track row.n) {
+          <tr [class.is-err]="row.status === 'error'" [class.is-warn]="row.status === 'warn'">
+            <td class="cb__gc-n">
+              <span class="cb__rowdot" [attr.data-s]="row.status"></span>{{ row.n }}
+            </td>
+            @for (c of cols; track c) {
+              <td class="cb__gc" [attr.data-s]="row.cells[c].status" [attr.title]="row.cells[c].message || null">
+                @if (refCols.has(c)) {
+                  <select class="cb__cellsel" [class.is-bad]="row.cells[c].status === 'error'"
+                    [value]="row.cells[c].id || ''" (change)="editCell($index, c, selText($event))">
+                    <option value="">{{ c === 'carrier' || c === 'driver' ? '— none —' : 'Select…' }}</option>
+                    @if (row.cells[c].status === 'error' && row.cells[c].raw) { <option [value]="row.cells[c].raw" disabled>“{{ row.cells[c].raw }}” — unknown</option> }
+                    @for (o of row.cells[c].options; track o.id) { <option [value]="o.label">{{ o.label }}{{ o.hint ? ' · ' + o.hint : '' }}</option> }
+                  </select>
+                } @else if (c === 'pickup_date') {
+                  <input class="cb__cellin" type="date" [value]="row.cells[c].raw" (change)="editCell($index, c, $any($event.target).value)" [class.is-bad]="row.cells[c].status === 'error'" />
+                } @else if (c === 'weight_kg' || c === 'pieces') {
+                  <input class="cb__cellin cb__cellin--num" type="number" min="1" [value]="row.cells[c].raw" (input)="editCell($index, c, $any($event.target).value)" [class.is-bad]="row.cells[c].status === 'error'" />
+                } @else {
+                  <input class="cb__cellin" [value]="row.cells[c].raw" (input)="editCell($index, c, $any($event.target).value)" [placeholder]="c === 'reference' || c === 'notes' ? 'optional' : ''" />
+                }
+                @if (row.cells[c].message) { <span class="cb__cellmsg">{{ row.cells[c].message }}</span> }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (!visibleRows().length) { <p class="cb__allgood"><app-icon name="check" [size]="18" /> No issues — every row is ready.</p> }
+  </div>
+}
+
+<!-- ============ STEP 3: PROCESSING ============ -->
+@if (step() === 'processing') {
+  <div class="cb__proc">
+    <span class="cb__proc-spin"></span>
+    <p class="cb__proc-t">Creating shipments…</p>
+    <p class="cb__proc-s">Your rows are queued and being created as drafts.</p>
+    <div class="cb__bar"><span class="cb__bar-fill" [style.inline-size.%]="progress()"></span></div>
+    <p class="cb__proc-pct tabular">{{ progress() }}%</p>
+  </div>
+}
+
+<!-- ============ STEP 4: RESULTS LOG ============ -->
+@if (step() === 'done') {
+  <div class="cb__done">
+    <div class="cb__done-head" [class.is-clean]="!failedCount()">
+      <span class="cb__done-ic"><app-icon [name]="failedCount() ? 'info' : 'check'" [size]="26" /></span>
+      <div>
+        <h2 class="cb__done-t">{{ failedCount() ? 'Upload finished with some issues' : 'All shipments created' }}</h2>
+        <p class="cb__done-s">{{ createdCount() }} created@if (failedCount()) { · {{ failedCount() }} not created }. Drafts are waiting in Shipments for review.</p>
+      </div>
+    </div>
+
+    @if (failures().length) {
+      <div class="cb__log">
+        <div class="cb__log-h"><span class="cb__log-ht">Rows not created</span><button class="cb__btn cb__btn--ghost cb__btn--sm" type="button" (click)="retryFailed()"><app-icon name="navigation" [size]="14" /> Retry all</button></div>
+        @for (f of failures(); track f.n) {
+          <div class="cb__logrow"><span class="cb__logrow-ic"><app-icon name="x" [size]="14" /></span><span class="cb__logrow-n">Row {{ f.n }}</span><span class="cb__logrow-r">{{ f.reason }}</span></div>
+        }
+      </div>
+    }
+
+    <div class="cb__done-cta">
+      <button class="cb__btn cb__btn--ghost" type="button" (click)="downloadResults()"><app-icon name="download" [size]="15" /> Download results</button>
+      <button class="cb__btn cb__btn--ghost" type="button" (click)="done()">Upload another file</button>
+      <button class="cb__btn cb__btn--primary" type="button" (click)="goToDrafts()">View drafts <app-icon name="arrow-right" [size]="15" /></button>
+    </div>
+  </div>
+}

@@ -1,9 +1,9 @@
 <header class="br__head">
   <div class="br__head-main">
-    <h1 class="br__title">Branches</h1>
+    <h1 class="br__title">Locations</h1>
     <p class="br__sub">Your company's locations — managers, contacts and status.</p>
   </div>
-  <button class="br__add" type="button" (click)="openAdd()"><app-icon name="plus" [size]="16" /> Add branch</button>
+  <button class="br__add" type="button" (click)="openAdd()"><app-icon name="plus" [size]="16" /> Add location</button>
 </header>
 
 <section class="br__section">
@@ -13,7 +13,7 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Branch</th>
+            <th scope="col">Location</th>
             <th scope="col">City</th>
             <th scope="col">Manager</th>
             <th scope="col">Mobile number</th>
@@ -26,7 +26,7 @@
           @for (b of paged(); track b.id) {
             <tr class="br__row" tabindex="0" (click)="view(b)" (keydown.enter)="view(b)">
               <td data-label="ID"><span class="br__code tabular">{{ b.code }}</span></td>
-              <td data-label="Branch">
+              <td data-label="Location">
                 <span class="br__name-cell">
                   <app-avatar [name]="b.name" [size]="32" tone="neutral" [square]="true" />
                   <span class="br__namerow"><span class="br__name">{{ b.name }}</span>@if (b.primary) { <span class="br__primary">Primary</span> }</span>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="br__footer">
-      <span class="br__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} branches</span>
+      <span class="br__count">Showing {{ showingFrom() }}–{{ showingTo() }} of {{ total() }} locations</span>
       @if (pageCount() > 1) {
         <div class="br__pager">
           <button class="br__page-btn" type="button" [disabled]="page() === 1" aria-label="Previous page" (click)="goToPage(page() - 1)"><app-icon name="chevron-left" [size]="16" /></button>
@@ -62,30 +62,30 @@
   </div>
 </section>
 
-<!-- Add branch drawer -->
+<!-- Add location drawer -->
 @if (addOpen()) {
   <div class="sd-scrim" (click)="addOpen.set(false)"></div>
-  <aside class="sd bd" role="dialog" aria-modal="true" aria-label="Add branch"
+  <aside class="sd bd" role="dialog" aria-modal="true" aria-label="Add location"
     cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="addOpen.set(false)">
     <header class="sd__head">
       <span class="sd__tile" style="background:var(--nav-active);color:var(--navy)"><app-icon name="building" [size]="18" /></span>
-      <h2 class="sd__title">Add branch</h2>
+      <h2 class="sd__title">Add location</h2>
       <button class="sd__close" type="button" aria-label="Close" (click)="addOpen.set(false)"><app-icon name="x" [size]="18" /></button>
     </header>
 
     <form class="sd__body bd__body" (submit)="$event.preventDefault(); save()">
-      <div class="bd__field"><label class="bd__label">Branch name</label><input class="bd__input" [value]="bName()" (input)="bName.set($any($event.target).value)" placeholder="e.g. Riyadh HQ" aria-label="Branch name" /></div>
+      <div class="bd__field"><label class="bd__label">Location name</label><input class="bd__input" [value]="bName()" (input)="bName.set($any($event.target).value)" placeholder="e.g. Riyadh HQ" aria-label="Location name" /></div>
       <div class="bd__field"><label class="bd__label">City</label><input class="bd__input" [value]="bCity()" (input)="bCity.set($any($event.target).value)" placeholder="e.g. Riyadh" aria-label="City" /></div>
       <div class="bd__field"><label class="bd__label">Address</label><input class="bd__input" [value]="bAddress()" (input)="bAddress.set($any($event.target).value)" placeholder="Street / district" aria-label="Address" /></div>
       <div class="bd__2col">
-        <div class="bd__field"><label class="bd__label">Branch manager</label><input class="bd__input" [value]="bManager()" (input)="bManager.set($any($event.target).value)" placeholder="Full name" aria-label="Manager" /></div>
+        <div class="bd__field"><label class="bd__label">Location manager</label><input class="bd__input" [value]="bManager()" (input)="bManager.set($any($event.target).value)" placeholder="Full name" aria-label="Manager" /></div>
         <div class="bd__field"><label class="bd__label">Mobile number</label><input class="bd__input" [value]="bMobile()" (input)="bMobile.set($any($event.target).value)" placeholder="+966…" aria-label="Mobile" /></div>
       </div>
     </form>
 
     <div class="bd__foot">
       <button class="br__pbtn br__pbtn--ghost" type="button" (click)="addOpen.set(false)">Cancel</button>
-      <button class="bd__save" type="button" [disabled]="!canAdd()" (click)="save()"><app-icon name="plus" [size]="15" /> Add branch</button>
+      <button class="bd__save" type="button" [disabled]="!canAdd()" (click)="save()"><app-icon name="plus" [size]="15" /> Add location</button>
     </div>
   </aside>
 }

@@ -86,7 +86,7 @@ export const SECONDARY_NAV: NavItem[] = [
     icon: 'settings',
     children: [
       { label: 'Team', route: '/settings/users' },
-      { label: 'Branches', route: '/settings/branches' },
+      { label: 'Locations', route: '/settings/branches' },
     ],
   },
   { label: 'Integrations', route: '/integrations', icon: 'integrations' },

@@ -160,13 +160,10 @@ export class CreateDrawer {
     this.router.navigate(['/shipments']);
   }
 
-  // Bulk
-  protected onDrop(e: DragEvent): void { e.preventDefault(); this.dragging.set(false); this.upload(); }
-  protected upload(): void {
-    this.analytics.track('bulk_uploaded', { rows: 0 });
-    this.toast.show('Uploaded — rows saved as drafts');
+  // Bulk — the full validate/fix/queue flow lives on its own page.
+  protected openBulkPage(): void {
     this.svc.close();
-    this.router.navigate(['/shipments']);
+    this.router.navigate(['/shipments/create/bulk']);
   }
-  protected downloadTemplate(): void { this.toast.show('Template downloaded'); }
+  protected onDrop(e: DragEvent): void { e.preventDefault(); this.dragging.set(false); this.openBulkPage(); }
 }

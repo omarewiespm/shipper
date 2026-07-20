@@ -1,4 +1,4 @@
-<a class="bp__back" routerLink="/settings/branches"><app-icon name="arrow-left" [size]="16" /> Branches</a>
+<a class="bp__back" routerLink="/settings/branches"><app-icon name="arrow-left" [size]="16" /> Locations</a>
 
 @if (branch(); as b) {
   <header class="bp__hero">
@@ -24,7 +24,7 @@
     <section class="bp__card">
       <h2 class="bp__h">Location</h2>
       <dl class="bp__kv">
-        <div class="bp__row"><dt><app-icon name="building" [size]="14" /> Branch</dt><dd>{{ b.name }}</dd></div>
+        <div class="bp__row"><dt><app-icon name="building" [size]="14" /> Location</dt><dd>{{ b.name }}</dd></div>
         <div class="bp__row"><dt><app-icon name="pin" [size]="14" /> City</dt><dd>{{ b.city }}</dd></div>
         <div class="bp__row"><dt><app-icon name="map-pin" [size]="14" /> Address</dt><dd>{{ b.address }}</dd></div>
         <div class="bp__row"><dt><app-icon name="clock" [size]="14" /> Created</dt><dd>{{ b.createdAt }}</dd></div>
@@ -52,7 +52,7 @@
   </div>
 } @else {
   <div class="bp__missing">
-    <p class="bp__missing-t">Branch not found</p>
-    <a class="bp__btn bp__btn--primary" routerLink="/settings/branches">Back to Branches</a>
+    <p class="bp__missing-t">Location not found</p>
+    <a class="bp__btn bp__btn--primary" routerLink="/settings/branches">Back to Locations</a>
   </div>
 }

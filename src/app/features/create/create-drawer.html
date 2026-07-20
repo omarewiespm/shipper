@@ -177,20 +177,14 @@
         </button>
       </div>
     } @else {
-      <!-- Bulk upload -->
+      <!-- Bulk upload — hands off to the full-page flow -->
       <div class="sd__body cd__bulk">
-        <div class="cd__template">
-          <span class="cd__ttile"><app-icon name="download" [size]="18" /></span>
-          <div class="cd__tbody"><p class="cd__tt">Shipment template</p><p class="cd__td">Download, fill one row per shipment, then upload.</p></div>
-          <button class="cd__tbtn" type="button" (click)="downloadTemplate()">Template</button>
-        </div>
-
         <label class="cd__drop" [class.is-drag]="dragging()"
-          (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
-          <input type="file" accept=".csv,.xlsx" hidden (change)="upload()" />
+          (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)"
+          (click)="openBulkPage()">
           <span class="cd__droptile"><app-icon name="upload" [size]="24" /></span>
-          <p class="cd__dropt">Drop your file here or browse</p>
-          <p class="cd__drops">CSV or Excel · up to 500 shipments per upload</p>
+          <p class="cd__dropt">Upload multiple shipments</p>
+          <p class="cd__drops">Download a template, fill one row per shipment, then validate & fix in the browser.</p>
         </label>
 
         <p class="cd__sh">How it works</p>
@@ -200,6 +194,8 @@
           }
         </ol>
         <div class="cd__note"><app-icon name="info" [size]="16" /><span>Uploads are saved as <strong>drafts</strong> in the Shipments tab. A reviewer confirms them, then publishes — nothing goes live automatically.</span></div>
+
+        <button class="cd__bulkgo" type="button" (click)="openBulkPage()">Open bulk upload <app-icon name="arrow-right" [size]="15" /></button>
       </div>
     }
     }

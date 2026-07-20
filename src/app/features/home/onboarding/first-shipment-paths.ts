@@ -47,7 +47,11 @@ export class FirstShipmentPaths {
 
   protected go(path: 'single' | 'bulk'): void {
     this.analytics.track('first_shipment_path_clicked', { path });
-    this.createDrawer.open(path === 'bulk' ? 'bulk' : 'create');
+    if (path === 'bulk') {
+      this.router.navigate(['/shipments/create/bulk']);
+      return;
+    }
+    this.createDrawer.open('create');
   }
   protected goErp(): void {
     this.analytics.track('first_shipment_path_clicked', { path: 'erp' });

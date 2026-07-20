@@ -57,6 +57,8 @@
 .cd__num { inline-size: 24px; block-size: 24px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--nav-active); color: var(--navy); font-size: 12px; font-weight: 700; }
 .cd__st { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: var(--strong); }
 .cd__ss { margin: 2px 0 0; font-size: 12px; color: var(--ink-2); }
+.cd__bulkgo { display: inline-flex; align-items: center; justify-content: center; gap: 7px; block-size: 44px; border: none; border-radius: 11px; background: var(--navy); color: #fff; font-family: var(--font); font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.cd__bulkgo:hover { background: var(--navy-700); }
 .cd__note { display: flex; gap: 9px; padding: 12px; border-radius: 12px; background: var(--info-bg); color: var(--info); font-size: 12px; line-height: 1.5; }
 .cd__note app-icon { flex: none; }
 .cd__note strong { font-weight: 700; }
